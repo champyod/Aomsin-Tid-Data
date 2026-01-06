@@ -66,6 +66,13 @@ This project provides a comprehensive data analysis environment with Jupyter not
    .venv\Scripts\activate
    ```
 
+5. **Verify the setup** (optional but recommended):
+   ```bash
+   uv run python verify_setup.py
+   ```
+
+   This will check that all dependencies are properly installed.
+
 ## 📖 Usage
 
 ### Running Jupyter Notebooks
