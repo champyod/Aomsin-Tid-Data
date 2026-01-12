@@ -232,5 +232,3 @@ uv run streamlit run src/dashboard/app.py --server.port 8502
 For issues and questions, please open an issue on the GitHub repository.
 
 ---
-
-**Happy Data Analysis! 📊✨**
