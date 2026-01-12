@@ -15,6 +15,7 @@ dependencies = [
     "ipykernel>=6.25.0",
     "openpyxl>=3.1.0",
     "scipy>=1.11.0",
+    "polars>=1.37.0",
 ]
 
 [project.optional-dependencies]
