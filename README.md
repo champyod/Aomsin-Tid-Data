@@ -4,6 +4,15 @@ Aomsin likes to collect data, so he built a HAREM of beautiful datasets.
 
 This project provides a comprehensive data analysis environment with Jupyter notebooks and an interactive dashboard for exploring and visualizing datasets.
 
+## 📊 Dataset
+
+This project uses the **Raw Car Sales Data Set** from Kaggle.
+
+**Dataset Owner**: Yukesh GK  
+**Source**: [Raw Car Sales Data Set on Kaggle](https://www.kaggle.com/datasets/yukeshgk/raw-car-sales-data-set?select=Sales.csv)
+
+We gratefully acknowledge and credit Yukesh GK for providing this dataset, which enables the data analysis and visualization features of this project.
+
 ## ✨ Features
 
 - 📊 **Jupyter Notebooks**: Interactive data analysis with comprehensive visualization templates
