@@ -55,10 +55,27 @@
 
 ---
 
-## Phase 2: EDA 📈
+## Phase 2: Exploratory Data Analysis 📈
 
-- [ ] Correlation matrices
-- [ ] etc.
+### 2.1 Univariate Analysis
+- [ ] **Numerical Distributions**: Histograms and KDE plots for `Price`, `Year`, and customer `Age`
+- [ ] **Categorical Frequencies**: Bar charts for `Brand`, `Model`, `Engine_Type`, `Transmission`, and `Region`
+- [ ] **Outlier Detection**: Box plots to identify anomalies in `Price` and `Quantity`
+
+### 2.2 Bivariate & Multivariate Analysis
+- [ ] **Correlation Analysis**: Heatmap to identify linear relationships between numerical features
+- [ ] **Sales Performance by Category**: 
+    - Average `Price` per `Brand` and `Engine_Type`
+    - Sales volume per `Region` and `Payment_Method`
+- [ ] **Scatter Plot Matrix**: Pairwise relationships to identify clusters or non-linear patterns
+
+### 2.3 Temporal Analysis (Time-Series)
+- [ ] **Sales Trends**: Line plots of sales volume and revenue over time
+- [ ] **Seasonality**: Analyze sales patterns by month/quarter or day of the week
+
+### 2.4 Data Integrity Check
+- [ ] **Data Shape Verify**: Confirm row/column counts across joins
+- [ ] **Cross-Table Consistency**: Ensure `Car_ID` and `Customer_ID` integrity between `Sales` and primary tables
 
 ---
 
