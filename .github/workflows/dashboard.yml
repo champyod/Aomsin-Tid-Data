@@ -27,5 +27,5 @@ jobs:
           uv run python -c "import src.dashboard.app" || echo "Dashboard import failed, but continuing for now as it might need streamlit context"
       - name: Check Streamlit Syntax
         run: |
-            # Check for syntax errors in the streamlit app
-            uv run python -m py_compile src/dashboard/app.py
+          # Check for syntax errors in the streamlit app
+          uv run python -m py_compile src/dashboard/app.py
