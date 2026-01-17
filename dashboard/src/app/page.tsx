@@ -34,7 +34,15 @@ interface ModelData {
   feature_importance: { feature: string; importance: number }[];
 }
 
-const COLORS = ["#3b82f6", "#8b5cf6", "#06b6d4", "#10b981", "#f59e0b", "#ec4899", "#6366f1"];
+const COLORS = [
+  "#f5c2e7", // Pink
+  "#cba6f7", // Mauve
+  "#89b4fa", // Blue
+  "#a6e3a1", // Green
+  "#fab387", // Peach
+  "#f9e2af", // Yellow
+  "#eba0ac", // Maroon
+];
 
 import { getBasePath } from "@/utils/basePath";
 
