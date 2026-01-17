@@ -66,7 +66,7 @@ export function Sidebar() {
         </nav>
         
         <div className="p-6 text-xs text-gray-500 text-center font-light">
-           &copy; 2025 Aomsin Tid Data
+           &copy; {new Date().getFullYear()} Aomsin Tid Data
         </div>
       </div>
     </aside>
