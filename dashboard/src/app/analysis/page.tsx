@@ -46,7 +46,7 @@ export default function AnalysisPage() {
     <Layout>
       <div className="space-y-6 animate-in fade-in duration-500">
         <h2 className="text-2xl font-bold text-white">Detailed Analysis</h2>
-        <div className="glass-panel p-6 rounded-2xl">
+        <div className="liquid-glass p-6 rounded-2xl">
           <h3 className="text-lg font-semibold text-white mb-6">Average Price per Year</h3>
           <div className="h-[400px]">
             <ResponsiveContainer width="100%" height="100%">

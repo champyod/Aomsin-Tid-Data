@@ -20,16 +20,16 @@ export function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex min-h-screen font-sans text-gray-100 bg-transparent">
       {/* Sidebar */}
-      <aside className="fixed inset-y-0 left-0 z-50 w-64 hidden lg:block transform transition-transform duration-300 ease-in-out glass-panel m-4 rounded-2xl border-white/5">
+      <aside className="fixed inset-y-0 left-0 z-50 w-64 hidden lg:block transform transition-transform duration-300 ease-in-out glass-panel m-4 rounded-3xl border-white/5">
         <div className="flex flex-col h-full">
-          <div className="p-6">
-            <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent">
-              Satasci
+          <div className="p-8">
+            <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent font-display">
+              Aomsin<br />Tid Data
             </h1>
-            <p className="text-xs text-gray-400 mt-1">Data Science Dashboard</p>
+            <p className="text-xs text-gray-400 mt-2 font-light tracking-wide">Car Market Intelligence</p>
           </div>
 
-          <nav className="flex-1 px-4 space-y-2">
+          <nav className="flex-1 px-4 space-y-3">
             {navItems.map((item) => {
               const isActive = pathname === item.href;
               return (
@@ -37,23 +37,23 @@ export function Layout({ children }: { children: React.ReactNode }) {
                   key={item.href}
                   href={item.href}
                   className={cn(
-                    "flex items-center w-full px-4 py-3 text-sm font-medium rounded-xl transition-all duration-200 group relative overflow-hidden",
+                    "flex items-center w-full px-5 py-4 text-sm font-medium rounded-2xl transition-all duration-300 group relative overflow-hidden",
                     isActive
-                      ? "text-white bg-primary/20 shadow-lg shadow-primary/10 border border-primary/20"
-                      : "text-gray-400 hover:text-white hover:bg-white/5"
+                      ? "text-white bg-primary/20 shadow-lg shadow-primary/20 border border-primary/20"
+                      : "text-gray-400 hover:text-white hover:bg-white/5 hover:translate-x-1"
                   )}
                 >
                   {isActive && (
                     <motion.div
                       layoutId="activeTab"
-                      className="absolute inset-0 bg-primary/10 rounded-xl"
+                      className="absolute inset-0 bg-gradient-to-r from-primary/10 to-transparent rounded-2xl"
                       initial={false}
                       transition={{ type: "spring", stiffness: 300, damping: 30 }}
                     />
                   )}
                   <item.icon
                     className={cn(
-                      "w-5 h-5 mr-3 transition-colors",
+                      "w-5 h-5 mr-4 transition-colors duration-300",
                       isActive ? "text-primary" : "text-gray-500 group-hover:text-gray-300"
                     )}
                   />
@@ -62,17 +62,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
               );
             })}
           </nav>
-
-          <div className="p-4 border-t border-white/5">
-            <div className="flex items-center p-3 rounded-xl bg-white/5">
-              <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-primary to-secondary flex items-center justify-center text-xs font-bold text-white">
-                TD
-              </div>
-              <div className="ml-3">
-                <p className="text-sm font-medium text-white">Team Data</p>
-                <p className="text-xs text-gray-400">View Only</p>
-              </div>
-            </div>
+          
+          <div className="p-6 text-xs text-gray-500 text-center font-light">
+             &copy; 2025 Aomsin Tid Data
           </div>
         </div>
       </aside>

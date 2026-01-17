@@ -74,41 +74,52 @@ export default function Home() {
 
   return (
     <Layout>
-      <div className="space-y-8 animate-in fade-in duration-500">
+      <div className="space-y-8 animate-in fade-in duration-700">
+        
+        {/* Project Intro Section */}
+        <section className="liquid-glass p-8">
+            <h2 className="text-2xl font-bold text-white mb-2">Welcome to Aomsin Tid Data Dashboard</h2>
+            <p className="text-gray-300 leading-relaxed font-light">
+                This project provides comprehensive intelligence on the automotive market, analyzing trends, pricing models, and inventory distribution.
+                Leveraging the <strong>Cleaned Cars Dateset</strong> (sourced from <code>/data/cleaned/Cars_cleaned.csv</code>), we employ 
+                machine learning models to predict market values and identify key economic indicators.
+            </p>
+        </section>
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <StatCard
-            label="Total Cars"
+            label="Total Cars Tracked"
             value={analysisData?.total_records?.toLocaleString() || "0"}
             icon={Database}
             trend={{ value: 5, isPositive: true }}
           />
           <StatCard
-            label="Model Accuracy"
+            label="Prediction Accuracy"
             value={`${((modelData?.accuracy || 0) * 100).toFixed(1)}%`}
             icon={Brain}
             trend={{ value: 1.2, isPositive: true }}
           />
           <StatCard
-            label="Avg Price"
+            label="Market Average Price"
             value={`$${analysisData?.average_price?.toLocaleString(undefined, { maximumFractionDigits: 0 }) || "0"}`}
             icon={Activity}
           />
           <StatCard
-            label="Total Stock"
+            label="Available Stock"
             value={analysisData?.total_stock?.toLocaleString() || "0"}
             icon={Database}
           />
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <div className="glass-panel p-6 rounded-2xl">
+          <div className="liquid-glass p-6">
             <h3 className="text-lg font-semibold text-white mb-6">Price Trend (Yearly)</h3>
             <div className="h-80">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={analysisData?.price_trend || []}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#ffffff10" />
-                  <XAxis dataKey="year" stroke="#9ca3af" fontSize={12} />
-                  <YAxis stroke="#9ca3af" fontSize={12} />
+                  <XAxis dataKey="year" stroke="#9ca3af" fontSize={12} tickLine={false} axisLine={false} />
+                  <YAxis stroke="#9ca3af" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(val) => `$${val/1000}k`} />
                   <Tooltip
                     contentStyle={{ backgroundColor: "#18181b", border: "1px solid #ffffff20", borderRadius: "8px" }}
                     itemStyle={{ color: "#fff" }}
@@ -117,13 +128,13 @@ export default function Home() {
                       "Avg Price"
                     ]}
                   />
-                  <Line type="monotone" dataKey="avg_price" stroke="#3b82f6" strokeWidth={3} dot={false} activeDot={{ r: 8 }} />
+                  <Line type="monotone" dataKey="avg_price" stroke="#3b82f6" strokeWidth={3} dot={false} activeDot={{ r: 8, fill: "#3b82f6" }} />
                 </LineChart>
               </ResponsiveContainer>
             </div>
           </div>
 
-          <div className="glass-panel p-6 rounded-2xl">
+          <div className="liquid-glass p-6">
             <h3 className="text-lg font-semibold text-white mb-6">Brand Distribution</h3>
             <div className="h-80">
               <ResponsiveContainer width="100%" height="100%">
@@ -132,18 +143,18 @@ export default function Home() {
                     data={analysisData?.brand_distribution || []}
                     cx="50%"
                     cy="50%"
-                    innerRadius={60}
+                    innerRadius={70}
                     outerRadius={100}
                     fill="#8884d8"
                     paddingAngle={5}
                     dataKey="value"
                   >
                     {(analysisData?.brand_distribution || []).map((_: any, index: number) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} stroke="rgba(0,0,0,0.2)" />
                     ))}
                   </Pie>
-                  <Tooltip contentStyle={{ backgroundColor: "#18181b", borderRadius: "8px" }} />
-                  <Legend />
+                  <Tooltip contentStyle={{ backgroundColor: "#18181b", borderRadius: "12px", border: "1px solid rgba(255,255,255,0.1)" }} />
+                  <Legend iconType="circle" />
                 </PieChart>
               </ResponsiveContainer>
             </div>

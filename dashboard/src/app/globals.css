@@ -1,44 +1,28 @@
 @import "tailwindcss";
 
-@theme {
-  --color-background: #09090b;
-  --color-surface: #18181b;
+:root {
   --color-primary: #3b82f6;
   --color-secondary: #8b5cf6;
   --color-accent: #06b6d4;
-}
-
-:root {
-  color-scheme: dark;
+  --color-surface: #18181b;
 }
 
 body {
-  @apply bg-background text-white antialiased;
+  @apply bg-zinc-950 text-gray-100;
   background-image: 
-    radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.15) 0px, transparent 50%), 
-    radial-gradient(at 100% 0%, rgba(139, 92, 246, 0.15) 0px, transparent 50%);
-  background-attachment: fixed;
+    radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.15) 0%, transparent 20%),
+    radial-gradient(circle at 90% 80%, rgba(139, 92, 246, 0.15) 0%, transparent 20%);
 }
 
-/* Glassmorphism Utilities */
 .glass-panel {
-  @apply bg-surface/60 backdrop-blur-xl border border-white/10 shadow-xl;
+  @apply bg-black/20 backdrop-blur-xl border border-white/10 shadow-xl;
 }
 
-.glass-card {
-  @apply bg-white/5 backdrop-blur-lg border border-white/10 rounded-xl hover:bg-white/10 transition-colors duration-200;
+.liquid-glass {
+  @apply bg-white/5 backdrop-blur-lg border border-white/10 shadow-lg rounded-2xl;
+  transition: all 0.3s ease-in-out;
 }
 
-/* Scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-::-webkit-scrollbar-track {
-  @apply bg-transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  @apply bg-white/20 rounded-full hover:bg-white/30;
+.liquid-glass:hover {
+  @apply bg-white/10 border-white/20 transform -translate-y-1 shadow-2xl shadow-primary/10;
 }
