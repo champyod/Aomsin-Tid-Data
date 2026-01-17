@@ -6,7 +6,8 @@ import { DataTable } from "@/components/DataTable";
 import { Activity } from "lucide-react";
 
 interface AnalysisData {
-  time_series: { date: string; value: number }[];
+  brand_distribution: { name: string; value: number }[];
+  price_trend: { year: string; avg_price: number }[];
 }
 
 export default function DataPage() {
@@ -35,14 +36,24 @@ export default function DataPage() {
     <Layout>
       <div className="space-y-6 animate-in fade-in duration-500">
         <h2 className="text-2xl font-bold text-white">Raw Data Explorer</h2>
-        <DataTable 
-          title="Recent Records"
-          columns={[
-            { header: "Date", accessorKey: "date" },
-            { header: "Value", accessorKey: "value" },
-          ]}
-          data={data?.time_series || []}
-        />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <DataTable 
+              title="Brand Distribution"
+              columns={[
+                { header: "Brand", accessorKey: "name" },
+                { header: "Count", accessorKey: "value" },
+              ]}
+              data={data?.brand_distribution || []}
+            />
+            <DataTable 
+              title="Yearly Price Trend"
+              columns={[
+                { header: "Year", accessorKey: "year" },
+                { header: "Avg Price", accessorKey: "avg_price" },
+              ]}
+              data={data?.price_trend || []}
+            />
+        </div>
       </div>
     </Layout>
   );

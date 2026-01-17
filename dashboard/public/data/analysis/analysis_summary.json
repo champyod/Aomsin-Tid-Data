@@ -1,17 +1,27 @@
 {
-  "total_records": 1250,
-  "average_value": 450.75,
-  "distributions": [
-    { "name": "Category A", "value": 400 },
-    { "name": "Category B", "value": 300 },
-    { "name": "Category C", "value": 350 },
-    { "name": "Category D", "value": 200 }
+  "total_records": 500,
+  "average_price": 55000.50,
+  "total_stock": 2500,
+  "brand_distribution": [
+    { "name": "Toyota", "value": 80 },
+    { "name": "Tesla", "value": 95 },
+    { "name": "BMW", "value": 70 },
+    { "name": "Mercedes", "value": 85 },
+    { "name": "Nissan", "value": 60 },
+    { "name": "Kia", "value": 55 },
+    { "name": "Hyundai", "value": 55 }
   ],
-  "time_series": [
-    { "date": "2024-01-01", "value": 100 },
-    { "date": "2024-01-02", "value": 150 },
-    { "date": "2024-01-03", "value": 120 },
-    { "date": "2024-01-04", "value": 200 },
-    { "date": "2024-01-05", "value": 180 }
+  "price_trend": [
+    { "year": "2015", "avg_price": 42000 },
+    { "year": "2016", "avg_price": 46000 },
+    { "year": "2017", "avg_price": 48000 },
+    { "year": "2018", "avg_price": 51000 },
+    { "year": "2019", "avg_price": 53000 },
+    { "year": "2020", "avg_price": 56000 },
+    { "year": "2021", "avg_price": 60000 },
+    { "year": "2022", "avg_price": 64000 },
+    { "year": "2023", "avg_price": 68000 },
+    { "year": "2024", "avg_price": 72000 },
+    { "year": "2025", "avg_price": 75000 }
   ]
 }

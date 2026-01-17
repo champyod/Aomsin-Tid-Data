@@ -14,7 +14,7 @@ import {
 import { Activity } from "lucide-react";
 
 interface AnalysisData {
-  time_series: { date: string; value: number }[];
+  price_trend: { year: string; avg_price: number }[];
 }
 
 export default function AnalysisPage() {
@@ -44,15 +44,19 @@ export default function AnalysisPage() {
       <div className="space-y-6 animate-in fade-in duration-500">
         <h2 className="text-2xl font-bold text-white">Detailed Analysis</h2>
         <div className="glass-panel p-6 rounded-2xl">
-          <h3 className="text-lg font-semibold text-white mb-6">Time Series Detailed</h3>
+          <h3 className="text-lg font-semibold text-white mb-6">Average Price per Year</h3>
           <div className="h-[400px]">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={data?.time_series || []}>
+              <BarChart data={data?.price_trend || []}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#ffffff10" />
-                <XAxis dataKey="date" stroke="#9ca3af" />
+                <XAxis dataKey="year" stroke="#9ca3af" />
                 <YAxis stroke="#9ca3af" />
-                <Tooltip cursor={{fill: '#ffffff10'}} contentStyle={{ backgroundColor: "#18181b", borderRadius: "8px" }} />
-                <Bar dataKey="value" fill="#8b5cf6" radius={[4, 4, 0, 0]} />
+                <Tooltip 
+                  cursor={{fill: '#ffffff10'}} 
+                  contentStyle={{ backgroundColor: "#18181b", borderRadius: "8px" }} 
+                  formatter={(value: number) => [`$${value.toLocaleString()}`, "Avg Price"]}
+                />
+                <Bar dataKey="avg_price" fill="#8b5cf6" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>

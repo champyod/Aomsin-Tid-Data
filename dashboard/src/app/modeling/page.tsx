@@ -16,7 +16,7 @@ import { Activity } from "lucide-react";
 interface ModelData {
   model_name: string;
   accuracy: number;
-  f1_score: number;
+  r2_score: number;
   feature_importance: { feature: string; importance: number }[];
 }
 
@@ -75,8 +75,8 @@ export default function ModelingPage() {
                 <p className="text-3xl font-bold text-emerald-400 mt-2">{((data?.accuracy || 0) * 100).toFixed(1)}%</p>
               </div>
               <div className="p-4 bg-white/5 rounded-xl text-center">
-                <p className="text-sm text-gray-400">F1 Score</p>
-                <p className="text-3xl font-bold text-blue-400 mt-2">{((data?.f1_score || 0) * 100).toFixed(1)}%</p>
+                <p className="text-sm text-gray-400">R² Score</p>
+                <p className="text-3xl font-bold text-blue-400 mt-2">{((data?.r2_score || 0) * 100).toFixed(1)}%</p>
               </div>
             </div>
           </div>
