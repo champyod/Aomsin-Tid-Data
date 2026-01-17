@@ -48,14 +48,41 @@ export function Sidebar() {
                 {isActive && (
                   <motion.div
                     layoutId="activeTab"
-                    className="absolute inset-0 bg-gradient-to-r from-primary/10 to-transparent rounded-2xl"
+                    className="absolute inset-0 bg-primary/20 rounded-2xl overflow-hidden"
                     initial={false}
-                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                  />
+                    transition={{ 
+                      type: "spring", 
+                      stiffness: 400, 
+                      damping: 30,
+                      mass: 0.8 // lighter mass for quicker initial movement
+                    }}
+                  >
+                    {/* Internal Liquid Flow */}
+                    <motion.div
+                      className="absolute -inset-[100%] opacity-30"
+                      style={{
+                        background: "radial-gradient(circle, rgba(245,194,231,0.6) 0%, rgba(203,166,247,0.2) 50%, transparent 80%)",
+                      }}
+                      animate={{
+                        transform: [
+                          "translate(0%, 0%) scale(1)",
+                          "translate(10%, -10%) scale(1.2)",
+                          "translate(-5%, 5%) scale(0.9)",
+                          "translate(0%, 0%) scale(1)",
+                        ],
+                      }}
+                      transition={{
+                        duration: 8,
+                        repeat: Infinity,
+                        repeatType: "reverse",
+                        ease: "easeInOut",
+                      }}
+                    />
+                  </motion.div>
                 )}
                 <item.icon
                   className={cn(
-                    "w-5 h-5 mr-4 transition-colors duration-300",
+                    "w-5 h-5 mr-4 transition-colors duration-300 relative z-10",
                     isActive ? "text-primary" : "text-gray-500 group-hover:text-gray-300"
                   )}
                 />
