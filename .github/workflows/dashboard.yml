@@ -2,8 +2,9 @@ name: Deploy Dashboard
 
 on:
   push:
-    branches: ["main"]
+    branches: ["main", "releases"]
   pull_request:
+    branches: ["main", "releases"]
     types: [opened, synchronize, reopened]
   workflow_dispatch:
 
