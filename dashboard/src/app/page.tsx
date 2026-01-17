@@ -35,6 +35,8 @@ interface ModelData {
 
 const COLORS = ["#3b82f6", "#8b5cf6", "#06b6d4", "#10b981", "#f59e0b", "#ec4899", "#6366f1"];
 
+import { getBasePath } from "@/utils/basePath";
+
 export default function Home() {
   const [analysisData, setAnalysisData] = useState<AnalysisData | null>(null);
   const [modelData, setModelData] = useState<ModelData | null>(null);
@@ -43,9 +45,10 @@ export default function Home() {
   useEffect(() => {
     async function fetchData() {
       try {
+        const basePath = getBasePath();
         const [analysisRes, modelRes] = await Promise.all([
-          fetch("/data/analysis/analysis_summary.json"),
-          fetch("/data/modeling/model_metrics.json"),
+          fetch(`${basePath}/data/analysis/analysis_summary.json`),
+          fetch(`${basePath}/data/modeling/model_metrics.json`),
         ]);
 
         if (analysisRes.ok) setAnalysisData(await analysisRes.json());

@@ -17,12 +17,15 @@ interface AnalysisData {
   price_trend: { year: string; avg_price: number }[];
 }
 
+import { getBasePath } from "@/utils/basePath";
+
 export default function AnalysisPage() {
   const [data, setData] = useState<AnalysisData | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/data/analysis/analysis_summary.json")
+    const basePath = getBasePath();
+    fetch(`${basePath}/data/analysis/analysis_summary.json`)
       .then((res) => res.json())
       .then(setData)
       .catch((err) => console.error(err))

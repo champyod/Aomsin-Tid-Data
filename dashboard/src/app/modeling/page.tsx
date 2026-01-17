@@ -20,12 +20,15 @@ interface ModelData {
   feature_importance: { feature: string; importance: number }[];
 }
 
+import { getBasePath } from "@/utils/basePath";
+
 export default function ModelingPage() {
   const [data, setData] = useState<ModelData | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/data/modeling/model_metrics.json")
+    const basePath = getBasePath();
+    fetch(`${basePath}/data/modeling/model_metrics.json`)
       .then((res) => res.json())
       .then(setData)
       .catch((err) => console.error(err))
