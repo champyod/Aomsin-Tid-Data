@@ -54,7 +54,10 @@ export default function AnalysisPage() {
                 <Tooltip 
                   cursor={{fill: '#ffffff10'}} 
                   contentStyle={{ backgroundColor: "#18181b", borderRadius: "8px" }} 
-                  formatter={(value: number) => [`$${value.toLocaleString()}`, "Avg Price"]}
+                  formatter={(value: any) => [
+                    typeof value === "number" ? `$${value.toLocaleString()}` : value,
+                    "Avg Price"
+                  ]}
                 />
                 <Bar dataKey="avg_price" fill="#8b5cf6" radius={[4, 4, 0, 0]} />
               </BarChart>

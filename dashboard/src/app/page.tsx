@@ -109,7 +109,10 @@ export default function Home() {
                   <Tooltip
                     contentStyle={{ backgroundColor: "#18181b", border: "1px solid #ffffff20", borderRadius: "8px" }}
                     itemStyle={{ color: "#fff" }}
-                    formatter={(value: number) => [`$${value.toLocaleString()}`, "Avg Price"]}
+                    formatter={(value: any) => [
+                      typeof value === "number" ? `$${value.toLocaleString()}` : value,
+                      "Avg Price"
+                    ]}
                   />
                   <Line type="monotone" dataKey="avg_price" stroke="#3b82f6" strokeWidth={3} dot={false} activeDot={{ r: 8 }} />
                 </LineChart>
