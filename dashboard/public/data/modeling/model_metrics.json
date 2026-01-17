@@ -1,0 +1,12 @@
+{
+  "model_name": "Car_Price_Predictor_XGBoost",
+  "accuracy": 0.96,
+  "r2_score": 0.94,
+  "feature_importance": [
+    { "feature": "Year", "importance": 0.35 },
+    { "feature": "Engine_Type", "importance": 0.25 },
+    { "feature": "Brand", "importance": 0.15 },
+    { "feature": "Transmission", "importance": 0.10 },
+    { "feature": "Quantity_In_Stock", "importance": 0.05 }
+  ]
+}
