@@ -13,6 +13,8 @@ interface StatCardProps {
   className?: string;
 }
 
+export function StatCard({ label, value, trend, icon: Icon, className }: StatCardProps) {
+  return (
     <GlassCard 
       className={cn("p-6 relative overflow-hidden group", className)}
       whileHover={{ y: -5 }}
