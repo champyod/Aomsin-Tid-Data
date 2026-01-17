@@ -1,0 +1,17 @@
+{
+  "total_records": 1250,
+  "average_value": 450.75,
+  "distributions": [
+    { "name": "Category A", "value": 400 },
+    { "name": "Category B", "value": 300 },
+    { "name": "Category C", "value": 350 },
+    { "name": "Category D", "value": 200 }
+  ],
+  "time_series": [
+    { "date": "2024-01-01", "value": 100 },
+    { "date": "2024-01-02", "value": 150 },
+    { "date": "2024-01-03", "value": 120 },
+    { "date": "2024-01-04", "value": 200 },
+    { "date": "2024-01-05", "value": 180 }
+  ]
+}
