@@ -1,6 +1,6 @@
 import { ArrowDownRight, ArrowUpRight } from "lucide-react";
-import { motion } from "framer-motion";
 import { cn } from "../utils/cn";
+import { GlassCard } from "./ui/GlassCard";
 
 interface StatCardProps {
   label: string;
@@ -13,11 +13,10 @@ interface StatCardProps {
   className?: string;
 }
 
-export function StatCard({ label, value, trend, icon: Icon, className }: StatCardProps) {
-  return (
-    <motion.div 
-      className={cn("liquid-glass p-6 relative overflow-hidden group", className)}
+    <GlassCard 
+      className={cn("p-6 relative overflow-hidden group", className)}
       whileHover={{ y: -5 }}
+      variant="hover"
       transition={{ type: "spring", stiffness: 300 }}
     >
       <div className="flex justify-between items-start">
@@ -55,6 +54,6 @@ export function StatCard({ label, value, trend, icon: Icon, className }: StatCar
       
       {/* Decorative gradient blob */}
       <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-gradient-to-br from-primary/20 to-secondary/20 blur-2xl rounded-full group-hover:opacity-100 opacity-50 transition-opacity" />
-    </motion.div>
+    </GlassCard>
   );
 }

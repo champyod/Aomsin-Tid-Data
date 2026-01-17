@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { Layout } from "@/components/Layout";
 import { StatCard } from "@/components/StatCard";
+import { GlassCard } from "@/components/ui/GlassCard";
 import {
   LineChart,
   Line,
@@ -77,14 +78,14 @@ export default function Home() {
       <div className="space-y-8 animate-in fade-in duration-700">
         
         {/* Project Intro Section */}
-        <section className="liquid-glass p-8">
+        <GlassCard className="p-8" variant="hover">
             <h2 className="text-2xl font-bold text-white mb-2">Welcome to Aomsin Tid Data Dashboard</h2>
             <p className="text-gray-300 leading-relaxed font-light">
                 This project provides comprehensive intelligence on the automotive market, analyzing trends, pricing models, and inventory distribution.
                 Leveraging the <strong>Cleaned Cars Dateset</strong> (sourced from <code>/data/cleaned/Cars_cleaned.csv</code>), we employ 
                 machine learning models to predict market values and identify key economic indicators.
             </p>
-        </section>
+        </GlassCard>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <StatCard
@@ -112,7 +113,7 @@ export default function Home() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <div className="liquid-glass p-6">
+          <GlassCard className="p-6" variant="hover">
             <h3 className="text-lg font-semibold text-white mb-6">Price Trend (Yearly)</h3>
             <div className="h-80">
               <ResponsiveContainer width="100%" height="100%">
@@ -132,9 +133,9 @@ export default function Home() {
                 </LineChart>
               </ResponsiveContainer>
             </div>
-          </div>
+          </GlassCard>
 
-          <div className="liquid-glass p-6">
+          <GlassCard className="p-6" variant="hover">
             <h3 className="text-lg font-semibold text-white mb-6">Brand Distribution</h3>
             <div className="h-80">
               <ResponsiveContainer width="100%" height="100%">
@@ -158,7 +159,7 @@ export default function Home() {
                 </PieChart>
               </ResponsiveContainer>
             </div>
-          </div>
+          </GlassCard>
         </div>
       </div>
     </Layout>

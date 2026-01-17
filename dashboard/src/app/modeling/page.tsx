@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Layout } from "@/components/Layout";
+import { GlassCard } from "@/components/ui/GlassCard";
 import {
   BarChart,
   Bar,
@@ -56,7 +57,7 @@ export default function ModelingPage() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="liquid-glass p-6 rounded-2xl">
+          <GlassCard className="p-6" variant="hover">
             <h3 className="text-lg font-semibold text-white mb-6">Feature Importance</h3>
             <div className="h-80">
               <ResponsiveContainer width="100%" height="100%">
@@ -69,8 +70,8 @@ export default function ModelingPage() {
                 </BarChart>
               </ResponsiveContainer>
             </div>
-          </div>
-          <div className="liquid-glass p-6 rounded-2xl">
+          </GlassCard>
+          <GlassCard className="p-6" variant="hover">
             <h3 className="text-lg font-semibold text-white mb-6">Key Metrics</h3>
             <div className="grid grid-cols-2 gap-4">
               <div className="p-4 bg-white/5 rounded-xl text-center">
@@ -82,7 +83,7 @@ export default function ModelingPage() {
                 <p className="text-3xl font-bold text-blue-400 mt-2">{((data?.r2_score || 0) * 100).toFixed(1)}%</p>
               </div>
             </div>
-          </div>
+          </GlassCard>
         </div>
       </div>
     </Layout>

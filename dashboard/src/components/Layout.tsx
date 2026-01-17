@@ -20,7 +20,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex min-h-screen font-sans text-gray-100 bg-transparent">
       {/* Sidebar */}
-      <aside className="fixed inset-y-0 left-0 z-50 w-64 hidden lg:block transform transition-transform duration-300 ease-in-out glass-panel m-4 rounded-3xl border-white/5">
+      <aside className="fixed inset-y-0 left-0 z-50 w-64 hidden lg:block transform transition-transform duration-300 ease-in-out bg-black/20 backdrop-blur-xl border border-white/10 shadow-xl m-4 rounded-3xl">
         <div className="flex flex-col h-full">
           <div className="p-8">
             <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent font-display">

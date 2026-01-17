@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Layout } from "@/components/Layout";
+import { GlassCard } from "@/components/ui/GlassCard";
 import {
   BarChart,
   Bar,
@@ -46,7 +47,7 @@ export default function AnalysisPage() {
     <Layout>
       <div className="space-y-6 animate-in fade-in duration-500">
         <h2 className="text-2xl font-bold text-white">Detailed Analysis</h2>
-        <div className="liquid-glass p-6 rounded-2xl">
+        <GlassCard className="p-6" variant="hover">
           <h3 className="text-lg font-semibold text-white mb-6">Average Price per Year</h3>
           <div className="h-[400px]">
             <ResponsiveContainer width="100%" height="100%">
@@ -66,7 +67,7 @@ export default function AnalysisPage() {
               </BarChart>
             </ResponsiveContainer>
           </div>
-        </div>
+        </GlassCard>
       </div>
     </Layout>
   );
