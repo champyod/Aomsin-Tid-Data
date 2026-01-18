@@ -4,6 +4,12 @@ import { cn } from "@/utils/cn";
 import { motion } from "framer-motion";
 import { GlassCard } from "./GlassCard";
 
+// Fallback icons for when external icons fail to load
+const FALLBACK_ICONS = {
+  python: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg",
+  web: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg",
+};
+
 interface TechItem {
   name: string;
   icon: string; // URL to icon image
@@ -14,9 +20,14 @@ interface TechTickerProps {
   direction?: "left" | "right";
   className?: string;
   speed?: number;
+  fallbackIcon?: "python" | "web";
 }
 
-export function TechTicker({ items, direction = "left", className, speed = 25 }: TechTickerProps) {
+export function TechTicker({ items, direction = "left", className, speed = 25, fallbackIcon = "python" }: TechTickerProps) {
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
+    e.currentTarget.src = FALLBACK_ICONS[fallbackIcon];
+  };
+
   return (
     <GlassCard className={cn("relative overflow-hidden py-4 px-2", className)}>
       {/* Edge fades - matching GlassCard background */}
@@ -43,7 +54,8 @@ export function TechTicker({ items, direction = "left", className, speed = 25 }:
                     <img 
                         src={item.icon} 
                         alt={item.name} 
-                        className="w-6 h-6 object-contain" 
+                        className="w-6 h-6 object-contain"
+                        onError={handleImageError}
                     />
                     <span className="text-sm md:text-base font-medium whitespace-nowrap">
                         {item.name}

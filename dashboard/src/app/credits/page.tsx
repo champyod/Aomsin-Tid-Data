@@ -108,6 +108,7 @@ export default function CreditsPage() {
                 <TechTicker 
                     speed={30}
                     direction="left"
+                    fallbackIcon="python"
                     items={[
                         { name: "Python", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" },
                         { name: "uv", icon: "https://docs.astral.sh/uv/assets/logo-letter-dark.svg" },
@@ -133,6 +134,7 @@ export default function CreditsPage() {
                 <TechTicker 
                     speed={35}
                     direction="right"
+                    fallbackIcon="web"
                     items={[
                         { name: "Next.js 16", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg" },
                         { name: "React 19", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" },
