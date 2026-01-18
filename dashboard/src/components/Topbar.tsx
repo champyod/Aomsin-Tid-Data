@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Github, ExternalLink } from "lucide-react";
-import { motion } from "framer-motion";
 
 const REPO_URL = "https://github.com/champyod/Aomsin-Tid-Data";
 
@@ -22,11 +21,13 @@ export function Topbar() {
   };
 
   return (
-    <motion.header
-      initial={{ y: -20, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.4, ease: "easeOut" }}
-      className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2rem)] max-w-4xl"
+    <header
+      className="hidden lg:block fixed top-4 z-50"
+      style={{
+        // Center in content area: starts at sidebar width (18rem = 288px), ends at screen edge
+        left: "calc(18rem + 1rem)", // sidebar + padding
+        right: "1rem",
+      }}
     >
       <div className="flex items-center justify-between px-6 py-3 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 shadow-xl shadow-black/10">
         {/* Left: Project Name */}
@@ -55,6 +56,6 @@ export function Topbar() {
           </Link>
         </div>
       </div>
-    </motion.header>
+    </header>
   );
 }
