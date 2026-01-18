@@ -7,21 +7,9 @@ import {
     Database, 
     Server, 
     Cpu, 
-    BarChart2, 
-    ArrowUpRight, 
-    FileJson, 
-    Table, 
-    Calculator, 
-    Terminal, 
-    Globe, 
-    Code2, 
-    Paintbrush, 
-    Zap, 
-    PieChart as PieChartIcon, 
-    Box,
-    Monitor,
-    BrainCircuit,
-    Bot
+    BarChart2,
+    Bot,
+    ArrowUpRight
 } from "lucide-react";
 
 export default function CreditsPage() {
@@ -111,9 +99,9 @@ export default function CreditsPage() {
         </div>
 
         {/* Tech Stack Tickers */}
-        <div className="space-y-12 pt-12 border-t border-white/5">
+        <div className="space-y-6 pt-12 border-t border-white/5">
             <div>
-                <h3 className="text-sm font-semibold text-primary uppercase tracking-wider mb-6 pl-4 flex items-center gap-2">
+                <h3 className="text-sm font-semibold text-primary uppercase tracking-wider mb-4 pl-4 flex items-center gap-2">
                     <img className="w-4 h-4" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" alt="" />
                     Python & Data Science Stack
                 </h3>
@@ -121,33 +109,32 @@ export default function CreditsPage() {
                     speed={30}
                     direction="left"
                     items={[
-                        { name: "Python", icon: FileJson },
-                        { name: "Pandas", icon: Table },
-                        { name: "NumPy", icon: Calculator },
-                        { name: "Scikit-learn", icon: BrainCircuit },
-                        { name: "Matplotlib", icon: BarChart2 },
-                        { name: "Jupyter", icon: Terminal },
-                        { name: "Kaggle", icon: Database },
+                        { name: "Python", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" },
+                        { name: "Pandas", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/pandas/pandas-original.svg" },
+                        { name: "NumPy", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/numpy/numpy-original.svg" },
+                        { name: "Scikit-learn", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/scikitlearn/scikitlearn-original.svg" },
+                        { name: "Matplotlib", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/matplotlib/matplotlib-original.svg" },
+                        { name: "Jupyter", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/jupyter/jupyter-original.svg" },
+                        { name: "Kaggle", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kaggle/kaggle-original.svg" },
                     ]}
                 />
             </div>
             
             <div>
-                <h3 className="text-sm font-semibold text-blue-400 uppercase tracking-wider mb-6 pl-4 flex items-center gap-2">
-                     <Monitor className="w-4 h-4" />
+                <h3 className="text-sm font-semibold text-blue-400 uppercase tracking-wider mb-4 pl-4 flex items-center gap-2">
+                     <img className="w-4 h-4" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg" alt="" />
                      Web & Dashboard Stack
                 </h3>
                 <TechTicker 
                     speed={35}
                     direction="right"
                     items={[
-                        { name: "Next.js 15", icon: Globe },
-                        { name: "TypeScript", icon: Code2 },
-                        { name: "Tailwind CSS", icon: Paintbrush },
-                        { name: "Framer Motion", icon: Zap },
-                        { name: "Recharts", icon: PieChartIcon },
-                        { name: "Lucide", icon: Box },
-                        { name: "Bun", icon: Cpu },
+                        { name: "Next.js", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg" },
+                        { name: "TypeScript", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg" },
+                        { name: "Tailwind CSS", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-original.svg" },
+                        { name: "Framer Motion", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/framermotion/framermotion-original.svg" },
+                        { name: "React", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" },
+                        { name: "Bun", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bun/bun-original.svg" },
                     ]}
                 />
             </div>
