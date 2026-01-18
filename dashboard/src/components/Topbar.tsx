@@ -9,16 +9,39 @@ const REPO_URL = "https://github.com/champyod/Aomsin-Tid-Data";
 export function Topbar() {
   const pathname = usePathname();
   
-  const getCurrentPageTitle = () => {
-    switch (pathname) {
-      case "/": return "Overview";
-      case "/analysis": return "Analysis";
-      case "/modeling": return "Modeling";
-      case "/data": return "Data";
-      case "/credits": return "Credits";
-      default: return "Dashboard";
-    }
+  const getBreadcrumbs = () => {
+    // 1. Handle root path
+    if (pathname === "/") return ["Overview"];
+
+    // 2. Split path into segments
+    const segments = pathname.split("/").filter(Boolean);
+
+    // 3. Map segments to formatted titles
+    return segments.map(segment => {
+      // Decode URI components (e.g. "my%20page" -> "my page")
+      const decoded = decodeURIComponent(segment);
+      
+      // Handle special cases or generic formatting
+      // You can add a map here if needed, e.g. { "api": "API" }
+      const customTitles: Record<string, string> = {
+        "api": "API",
+        "ui": "UI",
+        "faq": "FAQ"
+      };
+
+      if (customTitles[decoded.toLowerCase()]) {
+        return customTitles[decoded.toLowerCase()];
+      }
+
+      // Default: Capitalize first letter of each word
+      return decoded
+        .split("-")
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(" ");
+    });
   };
+
+  const breadcrumbs = getBreadcrumbs();
 
   return (
     <header
@@ -38,9 +61,18 @@ export function Topbar() {
             Aomsin Tid Data
           </span>
           <span className="text-white/30">/</span>
-          <span className="text-sm font-semibold text-white">
-            {getCurrentPageTitle()}
-          </span>
+          
+          {/* Dynamic Breadcrumbs */}
+          <div className="flex items-center gap-2">
+            {breadcrumbs.map((crumb, index) => (
+              <div key={index} className="flex items-center gap-2">
+                {index > 0 && <span className="text-white/30">/</span>}
+                <span className={`text-sm font-semibold ${index === breadcrumbs.length - 1 ? "text-white" : "text-white/60"}`}>
+                  {crumb}
+                </span>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Right: Actions */}
