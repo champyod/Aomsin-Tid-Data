@@ -89,9 +89,27 @@ export default function CreditsPage() {
                 </GlassCard>
             ))}
         </div>
+
+        {/* Tech Stack Tickers */}
+        <div className="space-y-4 pt-8 border-t border-white/5">
+            <h3 className="text-xl font-bold text-white mb-4 px-2">Technology Stack</h3>
+            
+            <TechTicker 
+                label="Python & Data"
+                items={["Python", "Pandas", "NumPy", "Scikit-learn", "Matplotlib", "Seaborn", "Jupyter", "Kaggle API"]}
+                direction="left"
+            />
+            
+            <TechTicker 
+                label="Web & Dashboard"
+                items={["Next.js 15", "TypeScript", "Tailwind CSS", "Framer Motion", "Recharts", "Lucide React", "Bun", "Glassmorphism"]}
+                direction="right"
+            />
+        </div>
       </div>
     </Layout>
   );
 }
 
 import { ArrowUpRight } from "lucide-react";
+import { TechTicker } from "@/components/ui/TechTicker";
