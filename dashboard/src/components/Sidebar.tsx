@@ -16,7 +16,7 @@ const navItems = [
   { label: "Overview", icon: LayoutDashboard, href: "/" },
   { label: "Analysis", icon: BarChart2, href: "/analysis" },
   { label: "Modeling", icon: Brain, href: "/modeling" },
-  { label: "Data", icon: Database, href: "/data" },
+    { label: "Data", icon: Database, href: "/data" },
   { label: "Credits", icon: Users, href: "/credits" },
 ];
 

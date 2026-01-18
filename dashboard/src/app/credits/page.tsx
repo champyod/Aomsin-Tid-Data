@@ -91,25 +91,64 @@ export default function CreditsPage() {
         </div>
 
         {/* Tech Stack Tickers */}
-        <div className="space-y-4 pt-8 border-t border-white/5">
-            <h3 className="text-xl font-bold text-white mb-4 px-2">Technology Stack</h3>
+        <div className="space-y-12 pt-12 border-t border-white/5">
+            <div>
+                <h3 className="text-sm font-semibold text-primary uppercase tracking-wider mb-6 pl-4 flex items-center gap-2">
+                    <img className="w-4 h-4" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" alt="" />
+                    Python & Data Science Stack
+                </h3>
+                <TechTicker 
+                    speed={30}
+                    direction="left"
+                    items={[
+                        { name: "Python", icon: FileJson },
+                        { name: "Pandas", icon: Table },
+                        { name: "NumPy", icon: Calculator },
+                        { name: "Scikit-learn", icon: Brain },
+                        { name: "Matplotlib", icon: BarChart },
+                        { name: "Jupyter", icon: Terminal },
+                        { name: "Kaggle", icon: Database },
+                    ]}
+                />
+            </div>
             
-            <TechTicker 
-                label="Python & Data"
-                items={["Python", "Pandas", "NumPy", "Scikit-learn", "Matplotlib", "Seaborn", "Jupyter", "Kaggle API"]}
-                direction="left"
-            />
-            
-            <TechTicker 
-                label="Web & Dashboard"
-                items={["Next.js 15", "TypeScript", "Tailwind CSS", "Framer Motion", "Recharts", "Lucide React", "Bun", "Glassmorphism"]}
-                direction="right"
-            />
+            <div>
+                <h3 className="text-sm font-semibold text-blue-400 uppercase tracking-wider mb-6 pl-4 flex items-center gap-2">
+                     <Monitor className="w-4 h-4" />
+                     Web & Dashboard Stack
+                </h3>
+                <TechTicker 
+                    speed={35}
+                    direction="right"
+                    items={[
+                        { name: "Next.js 15", icon: Globe },
+                        { name: "TypeScript", icon: Code2 },
+                        { name: "Tailwind CSS", icon: Paintbrush },
+                        { name: "Framer Motion", icon: Zap },
+                        { name: "Recharts", icon: PieChartIcon },
+                        { name: "Lucide", icon: Box },
+                        { name: "Bun", icon: Cpu },
+                    ]}
+                />
+            </div>
         </div>
       </div>
     </Layout>
   );
 }
 
-import { ArrowUpRight } from "lucide-react";
+import { 
+    ArrowUpRight, 
+    FileJson, 
+    Table, 
+    Calculator, 
+    Terminal, 
+    Globe, 
+    Code2, 
+    Paintbrush, 
+    Zap, 
+    PieChart as PieChartIcon, 
+    Box,
+    Monitor
+} from "lucide-react";
 import { TechTicker } from "@/components/ui/TechTicker";
