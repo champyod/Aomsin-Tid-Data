@@ -4,10 +4,10 @@
 
 | **ชื่อ AI** | **วัตถุประสงค์การใช้** | **ตัวอย่าง Prompt / Action** | **สิ่งที่ได้เรียนรู้จาก AI** |
 | :--- | :--- | :--- | :--- |
-| **Google DeepMind Agent** | **ช่วยเขียน Code** | "ช่วยสร้าง component สำหรับแสดง stats" | วิธีเขียน React component ที่ดี, การใช้ TypeScript types |
-| **Google DeepMind Agent** | **ช่วยแก้ปัญหา** | "มี error ตรง Tooltip formatter" | วิธี debug TypeScript errors ใน Recharts |
-| **Google DeepMind Agent** | **ช่วยออกแบบ UI** | "อยากให้ sidebar มี animation สวยๆ" | การใช้ Framer Motion layoutId สำหรับ smooth transitions |
-| **Google DeepMind Agent** | **ช่วยตั้งค่า Project** | "ช่วย setup Next.js กับ Tailwind v4" | การ configure Next.js App Router และ Tailwind CSS v4 |
+| **Google DeepMind Agent** | **ช่วยเขียน Code** | "help create a stats component" | วิธีเขียน React component ที่ดี, การใช้ TypeScript types |
+| **Google DeepMind Agent** | **ช่วยแก้ปัญหา** | "there's an error in Tooltip formatter" | วิธี debug TypeScript errors ใน Recharts |
+| **Google DeepMind Agent** | **ช่วยออกแบบ UI** | "make web ui more professional look and more dynamic" | การใช้ Framer Motion layoutId สำหรับ smooth transitions |
+| **Google DeepMind Agent** | **ช่วยตั้งค่า Project** | "setup Next.js with Tailwind v4" | การ configure Next.js App Router และ Tailwind CSS v4 |
 | **GitHub Copilot** | **Autocomplete** | ใช้สำหรับ autocomplete code ขณะพิมพ์ | การเขียน code ได้เร็วขึ้น, เรียนรู้ patterns ที่ดี |
 
 **ส่วนที่ 2: สรุปสิ่งที่ได้จากการใช้ AI**
@@ -23,7 +23,7 @@
 
 **ตัวอย่างการใช้งานจริง:**
 
-- เมื่อต้องการสร้าง animation สำหรับ sidebar เราบอก AI ว่าอยากได้ "indicator ที่เลื่อนไปมาได้" แล้ว AI แนะนำให้ใช้ `layoutId` ของ Framer Motion ซึ่งเราไม่เคยรู้มาก่อน
+- เมื่อต้องการสร้าง animation สำหรับ sidebar เราบอก AI ว่า "sidebar selector use 1 div that move around" แล้ว AI แนะนำให้ใช้ `layoutId` ของ Framer Motion
 - เมื่อเจอ TypeScript error เราให้ AI ช่วยอธิบายว่า error หมายความว่าอย่างไร และควรแก้อย่างไร
 
 **สิ่งที่ได้เรียนรู้:**
