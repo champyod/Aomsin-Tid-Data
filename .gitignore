@@ -45,10 +45,9 @@ venv.bak/
 *~
 .DS_Store
 
-# Data files (optional - uncomment if you want to exclude large data files)
-# data/raw/*.csv
-# data/raw/*.xlsx
-# data/processed/*.csv
+# Data files
+data/*
+!data/raw/
 
 # Logs
 *.log
