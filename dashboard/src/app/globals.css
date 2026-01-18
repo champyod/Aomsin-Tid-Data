@@ -1,13 +1,6 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary: #f5c2e7; /* Mocha Pink */
-  --color-secondary: #cba6f7; /* Mocha Mauve */
-  --color-accent: #f5c2e7; /* Mocha Pink */
-  --color-surface: #1e1e2e; /* Mocha Base */
-  --font-display: "Outfit", sans-serif;
-  --font-sans: "Inter", sans-serif;
-  
   /* Chart Colors */
   --color-chart-1: #f5c2e7; /* Pink */
   --color-chart-2: #cba6f7; /* Mauve */
@@ -16,6 +9,14 @@
   --color-chart-5: #fab387; /* Peach */
   --color-chart-6: #f9e2af; /* Yellow */
   --color-chart-7: #eba0ac; /* Maroon */
+  
+  /* Semantic Colors - referencing chart colors */
+  --color-primary: var(--color-chart-1); /* Mocha Pink */
+  --color-secondary: var(--color-chart-2); /* Mocha Mauve */
+  --color-accent: var(--color-chart-1); /* Mocha Pink */
+  --color-surface: #1e1e2e; /* Mocha Base */
+  --font-display: "Outfit", sans-serif;
+  --font-sans: "Inter", sans-serif;
 }
 
 body {
