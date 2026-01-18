@@ -100,7 +100,7 @@ export default function AnalysisPage() {
                     outerRadius={90}
                     paddingAngle={4}
                     dataKey="value"
-                    label={({ name, percent }) => `${name} (${((percent ?? 0) * 100).toFixed(0)}%)`}
+                    label={({ name, percent }) => `${name ?? 'Unknown'} (${((percent ?? 0) * 100).toFixed(0)}%)`}
                     labelLine={false}
                   >
                     {(data?.engine_distribution || []).map((entry, index) => (
