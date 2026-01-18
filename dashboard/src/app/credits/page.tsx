@@ -2,7 +2,27 @@
 
 import { Layout } from "@/components/Layout";
 import { GlassCard } from "@/components/ui/GlassCard";
-import { Github, Database, User, Server, Cpu, BarChart } from "lucide-react";
+import { TechTicker } from "@/components/ui/TechTicker";
+import { 
+    Database, 
+    Server, 
+    Cpu, 
+    BarChart2, 
+    ArrowUpRight, 
+    FileJson, 
+    Table, 
+    Calculator, 
+    Terminal, 
+    Globe, 
+    Code2, 
+    Paintbrush, 
+    Zap, 
+    PieChart as PieChartIcon, 
+    Box,
+    Monitor,
+    BrainCircuit,
+    Bot
+} from "lucide-react";
 
 export default function CreditsPage() {
   const contributors = [
@@ -10,7 +30,7 @@ export default function CreditsPage() {
       name: "ก้องภพ รักษาธรรม",
       id: "10",
       role: "Data Analysis",
-      icon: BarChart,
+      icon: BarChart2,
       description: "Led the exploratory data analysis (EDA), uncovering key trends and insights from the raw car sales data."
     },
     {
@@ -104,8 +124,8 @@ export default function CreditsPage() {
                         { name: "Python", icon: FileJson },
                         { name: "Pandas", icon: Table },
                         { name: "NumPy", icon: Calculator },
-                        { name: "Scikit-learn", icon: Brain },
-                        { name: "Matplotlib", icon: BarChart },
+                        { name: "Scikit-learn", icon: BrainCircuit },
+                        { name: "Matplotlib", icon: BarChart2 },
                         { name: "Jupyter", icon: Terminal },
                         { name: "Kaggle", icon: Database },
                     ]}
@@ -132,23 +152,16 @@ export default function CreditsPage() {
                 />
             </div>
         </div>
+
+        {/* AI Tools Credit */}
+        <div className="pt-8 border-t border-white/5">
+            <div className="flex items-center gap-3 text-gray-500 text-sm font-light">
+                <Bot className="w-4 h-4 text-gray-600" />
+                <p>Built with assistance from <span className="text-gray-400">GitHub Copilot</span>, <span className="text-gray-400">Claude</span>, and <span className="text-gray-400">Gemini</span>.</p>
+            </div>
+        </div>
       </div>
     </Layout>
   );
 }
 
-import { 
-    ArrowUpRight, 
-    FileJson, 
-    Table, 
-    Calculator, 
-    Terminal, 
-    Globe, 
-    Code2, 
-    Paintbrush, 
-    Zap, 
-    PieChart as PieChartIcon, 
-    Box,
-    Monitor
-} from "lucide-react";
-import { TechTicker } from "@/components/ui/TechTicker";
