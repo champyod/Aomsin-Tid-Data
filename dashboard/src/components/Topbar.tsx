@@ -9,7 +9,7 @@ const REPO_URL = "https://github.com/champyod/Aomsin-Tid-Data";
 export function Topbar() {
   const pathname = usePathname();
   
-  const getPageTitle = () => {
+  const getCurrentPageTitle = () => {
     switch (pathname) {
       case "/": return "Overview";
       case "/analysis": return "Analysis";
@@ -39,7 +39,7 @@ export function Topbar() {
           </span>
           <span className="text-white/30">/</span>
           <span className="text-sm font-semibold text-white">
-            {getPageTitle()}
+            {getCurrentPageTitle()}
           </span>
         </div>
 
