@@ -24,8 +24,9 @@ export function Topbar() {
     <header
       className="hidden lg:block fixed top-4 z-50"
       style={{
-        // Center in content area: starts at sidebar width (18rem = 288px), ends at screen edge
-        left: "calc(18rem + 1rem)", // sidebar + padding
+        // Center in content area: start at sidebar width, configurable via CSS variable
+        // Uses --sidebar-width if defined; falls back to 18rem to preserve current behavior
+        left: "calc(var(--sidebar-width, 18rem) + 1rem)", // sidebar + padding
         right: "1rem",
       }}
     >
