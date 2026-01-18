@@ -24,7 +24,7 @@ export function StatCard({ label, value, trend, icon: Icon, className }: StatCar
       <div className="flex justify-between items-start">
         <div>
           <p className="text-sm font-medium text-gray-400 font-light tracking-wide">{label}</p>
-          <h3 className="text-3xl font-bold text-white mt-2 font-display bg-clip-text text-transparent bg-gradient-to-b from-white to-white/70">{value}</h3>
+          <h3 className="text-3xl font-bold mt-2 font-display bg-clip-text text-transparent bg-gradient-to-b from-white to-white/70">{value}</h3>
         </div>
         {Icon && (
           <div className="p-3 bg-white/5 rounded-xl text-primary group-hover:text-white group-hover:bg-primary/20 transition-colors duration-300">
