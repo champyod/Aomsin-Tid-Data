@@ -24,7 +24,7 @@ export function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="fixed inset-y-0 left-0 z-50 w-64 hidden lg:block bg-black/20 backdrop-blur-xl border border-white/10 shadow-xl m-4 rounded-3xl">
+    <aside className="fixed inset-y-0 left-0 z-50 w-64 hidden lg:block bg-black/20 backdrop-blur-xl border border-white/10 shadow-xl m-4 rounded-3xl select-none">
       <div className="flex flex-col h-full">
         <div className="p-8">
           <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent font-display">

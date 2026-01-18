@@ -10,34 +10,41 @@ export function Topbar() {
   const pathname = usePathname();
   
   const getBreadcrumbs = () => {
-    // 1. Handle root path
-    if (pathname === "/") return ["Overview"];
-
+    // 1. Always start with Home/Overview if you want the root to be clickable too? 
+    // The current design has "Aomsin Tid Data" separate. Let's keep that non-clickable or separate for now unless requested.
+    // The user asked for "navigate link".
+    
     // 2. Split path into segments
     const segments = pathname.split("/").filter(Boolean);
+    let currentPath = "";
 
-    // 3. Map segments to formatted titles
+    // 3. Map segments to formatted titles and hrefs
     return segments.map(segment => {
-      // Decode URI components (e.g. "my%20page" -> "my page")
+      currentPath += `/${segment}`;
+      const href = currentPath;
+      
+      // Decode URI components
       const decoded = decodeURIComponent(segment);
       
-      // Handle special cases or generic formatting
-      // You can add a map here if needed, e.g. { "api": "API" }
+      // Handle special cases
       const customTitles: Record<string, string> = {
         "api": "API",
         "ui": "UI",
         "faq": "FAQ"
       };
 
+      let title = decoded;
       if (customTitles[decoded.toLowerCase()]) {
-        return customTitles[decoded.toLowerCase()];
+        title = customTitles[decoded.toLowerCase()];
+      } else {
+        // Default: Capitalize first letter of each word
+        title = decoded
+          .split("-")
+          .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+          .join(" ");
       }
-
-      // Default: Capitalize first letter of each word
-      return decoded
-        .split("-")
-        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-        .join(" ");
+      
+      return { title, href };
     });
   };
 
@@ -45,11 +52,9 @@ export function Topbar() {
 
   return (
     <header
-      className="hidden lg:block fixed top-4 z-50"
+      className="hidden lg:block fixed top-4 z-50 select-none"
       style={{
-        // Center in content area: start at sidebar width, configurable via CSS variable
-        // Uses --sidebar-width if defined; falls back to 18rem to preserve current behavior
-        left: "calc(var(--sidebar-width, 18rem) + 1rem)", // sidebar + padding
+        left: "calc(var(--sidebar-width, 18rem) + 1rem)",
         right: "1rem",
       }}
     >
@@ -64,14 +69,24 @@ export function Topbar() {
           
           {/* Dynamic Breadcrumbs */}
           <div className="flex items-center gap-2">
-            {breadcrumbs.map((crumb, index) => (
-              <div key={index} className="flex items-center gap-2">
-                {index > 0 && <span className="text-white/30">/</span>}
-                <span className={`text-sm font-semibold ${index === breadcrumbs.length - 1 ? "text-white" : "text-white/60"}`}>
-                  {crumb}
-                </span>
-              </div>
-            ))}
+            {pathname === "/" ? (
+               <span className="text-sm font-semibold text-white">Overview</span>
+            ) : (
+                breadcrumbs.map((crumb, index) => (
+                  <div key={crumb.href} className="flex items-center gap-2">
+                    {index > 0 && <span className="text-white/30">/</span>}
+                    <Link 
+                      href={crumb.href}
+                      className={`text-sm font-semibold transition-colors hover:text-white ${
+                        index === breadcrumbs.length - 1 ? "text-white cursor-default" : "text-white/60"
+                      }`}
+                      aria-current={index === breadcrumbs.length - 1 ? "page" : undefined}
+                    >
+                      {crumb.title}
+                    </Link>
+                  </div>
+                ))
+            )}
           </div>
         </div>
 
