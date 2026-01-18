@@ -130,9 +130,15 @@ export default function Home() {
                   <XAxis dataKey="year" stroke="#9ca3af" fontSize={12} tickLine={false} axisLine={false} />
                   <YAxis stroke="#9ca3af" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(val) => `$${val/1000}k`} />
                   <Tooltip
-                    contentStyle={{ backgroundColor: "#18181b", border: "1px solid #ffffff20", borderRadius: "8px" }}
-                    itemStyle={{ color: "#fff" }}
-                    formatter={(value: any) => [
+                  contentStyle={{ 
+                    backgroundColor: "#1e1e2e", 
+                    color: "#f3f4f6",
+                    borderRadius: "12px", 
+                    border: "none", 
+                    boxShadow: "0 10px 15px -3px rgb(0 0 0 / 0.5)" 
+                  }}
+                  itemStyle={{ color: "#f3f4f6" }}
+                  formatter={(value: any) => [
                       typeof value === "number" ? `$${value.toLocaleString()}` : value,
                       "Avg Price"
                     ]}
