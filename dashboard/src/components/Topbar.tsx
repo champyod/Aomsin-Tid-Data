@@ -61,10 +61,12 @@ export function Topbar() {
       <div className="flex items-center justify-between px-6 py-3 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 shadow-xl shadow-black/10">
         {/* Left: Project Name */}
         <div className="flex items-center gap-3">
-          <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-          <span className="text-sm font-medium text-white/80">
-            Aomsin Tid Data
-          </span>
+          <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+            <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+            <span className="text-sm font-medium text-white/80">
+              Aomsin Tid Data
+            </span>
+          </Link>
           <span className="text-white/30">/</span>
           
           {/* Dynamic Breadcrumbs */}
