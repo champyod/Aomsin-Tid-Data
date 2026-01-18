@@ -8,7 +8,8 @@ import {
   LayoutDashboard, 
   BarChart2, 
   Database, 
-  Brain
+  Brain,
+  Users
 } from "lucide-react";
 
 const navItems = [
@@ -16,6 +17,7 @@ const navItems = [
   { label: "Analysis", icon: BarChart2, href: "/analysis" },
   { label: "Modeling", icon: Brain, href: "/modeling" },
   { label: "Data", icon: Database, href: "/data" },
+  { label: "Credits", icon: Users, href: "/credits" },
 ];
 
 export function Sidebar() {
@@ -41,20 +43,20 @@ export function Sidebar() {
                 className={cn(
                   "flex items-center w-full px-5 py-4 text-sm font-medium rounded-2xl transition-all duration-300 group relative overflow-hidden",
                   isActive
-                    ? "text-white bg-primary/20 shadow-lg shadow-primary/20 border border-primary/20"
+                    ? "text-white"
                     : "text-gray-400 hover:text-white hover:bg-white/5 hover:translate-x-1"
                 )}
               >
                 {isActive && (
                   <motion.div
                     layoutId="activeTab"
-                    className="absolute inset-0 bg-primary/20 rounded-2xl overflow-hidden"
+                    className="absolute inset-0 bg-primary/20 shadow-lg shadow-primary/20 border border-primary/20 rounded-2xl overflow-hidden"
                     initial={false}
                     transition={{ 
                       type: "spring", 
                       stiffness: 400, 
                       damping: 30,
-                      mass: 0.8 // lighter mass for quicker initial movement
+                      mass: 0.8
                     }}
                   >
                     {/* Internal Liquid Flow */}

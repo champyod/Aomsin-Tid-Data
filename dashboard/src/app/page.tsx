@@ -90,7 +90,7 @@ export default function Home() {
             <h2 className="text-2xl font-bold text-white mb-2">Welcome to Aomsin Tid Data Dashboard</h2>
             <p className="text-gray-300 leading-relaxed font-light">
                 This project provides comprehensive intelligence on the automotive market, analyzing trends, pricing models, and inventory distribution.
-                Leveraging the <strong>Cleaned Cars Dateset</strong> (sourced from <code>/data/cleaned/Cars_cleaned.csv</code>), we employ 
+                Leveraging the <strong><a href="https://www.kaggle.com/datasets/yukeshgk/raw-car-sales-data-set?select=Sales.csv" target="_blank" className="text-primary hover:underline">Raw Car Sales Data Set</a></strong> (sourced from Kaggle), we employ 
                 machine learning models to predict market values and identify key economic indicators.
             </p>
         </GlassCard>
