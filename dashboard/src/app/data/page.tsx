@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { Layout } from "@/components/Layout";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { DataTable } from "@/components/DataTable";
-import { Activity, Database, FileSpreadsheet, Download } from "lucide-react";
+import { Activity, FileSpreadsheet, Download } from "lucide-react";
 import { getBasePath } from "@/utils/basePath";
 
 interface AnalysisData {
