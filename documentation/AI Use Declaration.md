@@ -1,21 +1,25 @@
-**AI Use Declaration**
+# AI Use Declaration
 
-**ส่วนที่ 1: เครื่องมือ AI**
+**ชื่อหัวข้อ:** Aomsin Tid Data - Car Market Intelligence Dashboard
 
-| **ชื่อ AI** | **วัตถุประสงค์การใช้** | **ตัวอย่าง Prompt / Action** | **สิ่งที่ได้เรียนรู้จาก AI** |
+**ชื่อสมาชิก:** Champyod
+
+---
+
+## ส่วนที่ 1: เครื่องมือ AI
+
+| ชื่อ AI | วัตถุประสงค์การใช้ | ตัวอย่าง Prompt | สิ่งที่คุณได้เรียนรู้จาก AI |
 | :--- | :--- | :--- | :--- |
-| **Google DeepMind Agent** | **Coding & Refactoring** | "Move dashboard to root... using Next.js... Tailwind v4" | การตั้งค่า Project Structure ที่ดีสำหรับ Next.js, การใช้ Tailwind v4 (@theme), การเขียน GitHub Actions CI/CD ด้วย Bun |
-| **Google DeepMind Agent** | **Documentation** | "Convert AI Use Declaration.odt... do ai report" | การใช้ Pandoc แปลงเอกสาร, การเขียนรายงานการใช้งาน AI แบบอัตโนมัติ |
-| **Google DeepMind Agent** | **Data Integration** | "Verify dashboard with project-specific data structures" | การวิเคราะห์ CSV (Cars_cleaned.csv) เพื่อสร้าง JSON Schema ที่เหมาะสมสำหรับการแสดงผล Dashboard |
+| Google DeepMind Agent | Coding | "show more things in the dashboard both data analysis and modelling and raw data" | การออกแบบ dashboard ให้แสดงข้อมูลหลายมิติ (charts, tables, metrics) |
+| Google DeepMind Agent | Coding | "make web ui more professional look and more dynamic - dynamic scroll not only one way something like that" | การใช้ Framer Motion สร้าง scroll-triggered animations |
+| Google DeepMind Agent | Coding | "sidebar selector use 1 div that move around not an indicator on each one but move this one to hover that instead" | การใช้ layoutId ใน Framer Motion สำหรับ shared layout animations |
+| Google DeepMind Agent | ไอเดีย | "floating topbar please in the layout preserve the space for it and make it in the middle between rightside and sidebar" | การจัดวาง UI components ให้สมดุลและไม่ทับกัน |
+| GitHub Copilot | Coding | Autocomplete ขณะพิมพ์ | การเขียน code ได้เร็วขึ้น |
 
-**ส่วนที่ 2: สรุปสิ่งที่ได้จากการใช้ AI**
+---
 
-เราได้ใช้ AI (Google DeepMind Agent) ในการ Refactor และพัฒนา Dashboard ใหม่ทั้งหมด โดยเริ่มจากการเปลี่ยนจาก Python Streamlit เดิม มาเป็น **Next.js (App Router)** ร่วมกับ **Tailwind CSS v4** เพื่อความทันสมัยและประสิทธิภาพที่ดีขึ้น
+## ส่วนที่ 2: สรุปสิ่งที่ได้จากการใช้ AI
 
-AI ช่วยในการ:
-1.  **Project Initialization**: สร้าง Next.js project, ตั้งค่า Tailwind v4, และติดตั้ง dependencies ที่จำเป็น (Bun, Recharts, Framer Motion).
-2.  **Code Migration**: แปลง Components เดิม (StatCard, DataTable) มาเป็น React Components ที่รองรับ TypeScript และการ Responsive.
-3.  **Data Integration**: วิเคราะห์ไฟล์ข้อมูลรถยนต์ (`Cars.csv`) และปรับโครงสร้าง Dashboard ให้แสดงผลข้อมูลจริง เช่น ราคาเฉลี่ย, ยี่ห้อรถ, และแนวโน้มราคาตามปี.
-4.  **Deployment**: เขียน `workflow` สำหรับ GitHub Actions เพื่อให้ Deploy ขึ้น GitHub Pages ได้อัตโนมัติเมื่อมีการ Push code.
+เราได้ใช้ AI ชื่อ **Google DeepMind Agent** ในการช่วยพัฒนา Dashboard สำหรับวิเคราะห์ข้อมูลตลาดรถยนต์ โดย AI ช่วยในการเขียน code สำหรับ React components, ช่วย debug TypeScript errors, และแนะนำวิธีการใช้ libraries ต่างๆ เช่น Framer Motion สำหรับ animations และ Recharts สำหรับ data visualization
 
-ผลลัพธ์ที่ได้คือ Dashboard ที่มีความสวยงาม (Glassmorphism), ทำงานรวดเร็ว (Static Export), และรองรับการทำงานร่วมกับทีม Data Science ผ่าน JSON Data Contract ได้อย่างสมบูรณ์.
+AI ช่วยพัฒนา code สำหรับการแสดงผลข้อมูล เช่น กราฟแนวโน้มราคา, การกระจายตัวของยี่ห้อรถ, และ metrics ต่างๆ ของ Machine Learning model ผลลัพธ์ที่ได้คือ Dashboard ที่สามารถแสดงข้อมูลจาก JSON files ได้อย่างสวยงามและใช้งานง่าย รวมถึงมี animations ที่ลื่นไหลเมื่อ scroll และเปลี่ยนหน้า

@@ -2,6 +2,8 @@
   "total_records": 500,
   "average_price": 55000.50,
   "total_stock": 2500,
+  "min_price": 15000,
+  "max_price": 99000,
   "brand_distribution": [
     { "name": "Toyota", "value": 80 },
     { "name": "Tesla", "value": 95 },
@@ -10,6 +12,30 @@
     { "name": "Nissan", "value": 60 },
     { "name": "Kia", "value": 55 },
     { "name": "Hyundai", "value": 55 }
+  ],
+  "engine_distribution": [
+    { "name": "Petrol", "value": 145, "color": "#f5c2e7" },
+    { "name": "Electric", "value": 120, "color": "#89b4fa" },
+    { "name": "Hybrid", "value": 135, "color": "#a6e3a1" },
+    { "name": "Diesel", "value": 100, "color": "#fab387" }
+  ],
+  "status_distribution": [
+    { "name": "Available", "value": 280, "percentage": 56 },
+    { "name": "Reserved", "value": 120, "percentage": 24 },
+    { "name": "Sold", "value": 100, "percentage": 20 }
+  ],
+  "transmission_distribution": [
+    { "name": "Automatic", "value": 300 },
+    { "name": "Manual", "value": 200 }
+  ],
+  "color_distribution": [
+    { "name": "White", "value": 95 },
+    { "name": "Black", "value": 88 },
+    { "name": "Red", "value": 75 },
+    { "name": "Blue", "value": 70 },
+    { "name": "Gray", "value": 82 },
+    { "name": "Silver", "value": 50 },
+    { "name": "Green", "value": 40 }
   ],
   "price_trend": [
     { "year": "2015", "avg_price": 42000 },
@@ -23,5 +49,20 @@
     { "year": "2023", "avg_price": 68000 },
     { "year": "2024", "avg_price": 72000 },
     { "year": "2025", "avg_price": 75000 }
+  ],
+  "price_by_engine": [
+    { "engine": "Electric", "avg_price": 65000 },
+    { "engine": "Hybrid", "avg_price": 58000 },
+    { "engine": "Petrol", "avg_price": 48000 },
+    { "engine": "Diesel", "avg_price": 45000 }
+  ],
+  "stock_by_brand": [
+    { "brand": "Toyota", "stock": 450 },
+    { "brand": "Tesla", "stock": 520 },
+    { "brand": "BMW", "stock": 380 },
+    { "brand": "Mercedes", "stock": 410 },
+    { "brand": "Nissan", "stock": 340 },
+    { "brand": "Kia", "stock": 200 },
+    { "brand": "Hyundai", "stock": 200 }
   ]
 }
