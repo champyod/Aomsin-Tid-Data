@@ -2,6 +2,8 @@
 
 import { Layout } from "@/components/Layout";
 import { GlassCard } from "@/components/ui/GlassCard";
+import { ScrollGlassCard } from "@/components/ui/ScrollGlassCard";
+import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { TechTicker } from "@/components/ui/TechTicker";
 import { 
     Database, 
@@ -50,7 +52,8 @@ export default function CreditsPage() {
         </div>
 
         {/* Dataset Source */}
-        <GlassCard className="p-8" variant="hover">
+        {/* Dataset Source */}
+        <ScrollGlassCard direction="up" delay={0.1} className="p-8" variant="hover">
             <div className="flex items-start gap-4">
                 <div className="p-3 bg-primary/20 rounded-xl text-primary">
                     <Database className="w-6 h-6" />
@@ -71,12 +74,18 @@ export default function CreditsPage() {
                      </a>
                 </div>
             </div>
-        </GlassCard>
+        </ScrollGlassCard>
 
         {/* Contributors Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {contributors.map((member) => (
-                <GlassCard key={member.id} className="p-6 flex flex-col h-full" variant="hover">
+            {contributors.map((member, index) => (
+                <ScrollGlassCard 
+                    key={member.id} 
+                    direction="up" 
+                    delay={0.2 + (index * 0.1)} 
+                    className="p-6 flex flex-col h-full" 
+                    variant="hover"
+                >
                     <div className="flex justify-between items-start mb-4">
                         <div className="p-3 bg-white/5 rounded-xl text-primary">
                             <member.icon className="w-6 h-6" />
@@ -94,11 +103,12 @@ export default function CreditsPage() {
                             {member.description}
                         </p>
                     </div>
-                </GlassCard>
+                </ScrollGlassCard>
             ))}
         </div>
 
         {/* Tech Stack Tickers */}
+        <ScrollReveal direction="up" delay={0.4}>
         <div className="space-y-6 pt-12 border-t border-white/5">
             <div>
                 <h3 className="text-sm font-semibold text-primary uppercase tracking-wider mb-4 pl-4 flex items-center gap-2">
@@ -148,14 +158,17 @@ export default function CreditsPage() {
                 />
             </div>
         </div>
+        </ScrollReveal>
 
         {/* AI Tools Credit */}
+        <ScrollReveal direction="up" delay={0.5}>
         <div className="pt-8 border-t border-white/5">
             <div className="flex items-center gap-3 text-gray-500 text-sm font-light">
                 <Bot className="w-4 h-4 text-gray-600" />
                 <p>Built with assistance from <span className="text-gray-400">GitHub Copilot</span>, <span className="text-gray-400">Claude</span>, and <span className="text-gray-400">Gemini</span>.</p>
             </div>
         </div>
+        </ScrollReveal>
       </div>
     </Layout>
   );

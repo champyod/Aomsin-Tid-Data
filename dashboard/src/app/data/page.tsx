@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import { Layout } from "@/components/Layout";
 import { GlassCard } from "@/components/ui/GlassCard";
+import { ScrollGlassCard } from "@/components/ui/ScrollGlassCard";
+import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { DataTable } from "@/components/DataTable";
 import { Activity, FileSpreadsheet, Download } from "lucide-react";
 import { getBasePath } from "@/utils/basePath";
@@ -65,89 +67,102 @@ export default function DataPage() {
 
         {/* Summary Stats */}
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-          <GlassCard className="p-4 text-center">
+          <ScrollGlassCard direction="up" delay={0.1} className="p-4 text-center">
             <p className="text-xs text-gray-400 uppercase tracking-wider">Total Records</p>
             <p className="text-xl font-bold text-white mt-1">{data?.total_records?.toLocaleString()}</p>
-          </GlassCard>
-          <GlassCard className="p-4 text-center">
+          </ScrollGlassCard>
+          <ScrollGlassCard direction="up" delay={0.2} className="p-4 text-center">
             <p className="text-xs text-gray-400 uppercase tracking-wider">Avg Price</p>
             <p className="text-xl font-bold text-emerald-400 mt-1">${data?.average_price?.toLocaleString()}</p>
-          </GlassCard>
-          <GlassCard className="p-4 text-center">
+          </ScrollGlassCard>
+          <ScrollGlassCard direction="up" delay={0.3} className="p-4 text-center">
             <p className="text-xs text-gray-400 uppercase tracking-wider">Total Stock</p>
             <p className="text-xl font-bold text-blue-400 mt-1">{data?.total_stock?.toLocaleString()}</p>
-          </GlassCard>
-          <GlassCard className="p-4 text-center">
+          </ScrollGlassCard>
+          <ScrollGlassCard direction="up" delay={0.4} className="p-4 text-center">
             <p className="text-xs text-gray-400 uppercase tracking-wider">Min Price</p>
             <p className="text-xl font-bold text-amber-400 mt-1">${data?.min_price?.toLocaleString()}</p>
-          </GlassCard>
-          <GlassCard className="p-4 text-center">
+          </ScrollGlassCard>
+          <ScrollGlassCard direction="up" delay={0.5} className="p-4 text-center">
             <p className="text-xs text-gray-400 uppercase tracking-wider">Max Price</p>
             <p className="text-xl font-bold text-purple-400 mt-1">${data?.max_price?.toLocaleString()}</p>
-          </GlassCard>
+          </ScrollGlassCard>
         </div>
 
         {/* Tables */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <DataTable 
-            title="Brand Distribution"
-            columns={[
-              { header: "Brand", accessorKey: "name" },
-              { header: "Car Count", accessorKey: "value" },
-            ]}
-            data={data?.brand_distribution || []}
-          />
-          <DataTable 
-            title="Engine Type Distribution"
-            columns={[
-              { header: "Engine Type", accessorKey: "name" },
-              { header: "Count", accessorKey: "value" },
-            ]}
-            data={data?.engine_distribution || []}
-          />
+          <ScrollReveal direction="left" delay={0.1}>
+            <DataTable 
+              title="Brand Distribution"
+              columns={[
+                { header: "Brand", accessorKey: "name" },
+                { header: "Car Count", accessorKey: "value" },
+              ]}
+              data={data?.brand_distribution || []}
+            />
+          </ScrollReveal>
+          <ScrollReveal direction="right" delay={0.2}>
+            <DataTable 
+              title="Engine Type Distribution"
+              columns={[
+                { header: "Engine Type", accessorKey: "name" },
+                { header: "Count", accessorKey: "value" },
+              ]}
+              data={data?.engine_distribution || []}
+            />
+          </ScrollReveal>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <DataTable 
-            title="Inventory Status"
-            columns={[
-              { header: "Status", accessorKey: "name" },
-              { header: "Count", accessorKey: "value" },
-              { header: "Percentage", accessorKey: "percentage", cell: (item: { percentage: number }) => `${item.percentage}%` },
-            ]}
-            data={data?.status_distribution || []}
-          />
-          <DataTable 
-            title="Transmission Distribution"
-            columns={[
-              { header: "Transmission", accessorKey: "name" },
-              { header: "Count", accessorKey: "value" },
-            ]}
-            data={data?.transmission_distribution || []}
-          />
+          <ScrollReveal direction="left" delay={0.1}>
+            <DataTable 
+              title="Inventory Status"
+              columns={[
+                { header: "Status", accessorKey: "name" },
+                { header: "Count", accessorKey: "value" },
+                { header: "Percentage", accessorKey: "percentage", cell: (item: { percentage: number }) => `${item.percentage}%` },
+              ]}
+              data={data?.status_distribution || []}
+            />
+          </ScrollReveal>
+          <ScrollReveal direction="right" delay={0.2}>
+            <DataTable 
+              title="Transmission Distribution"
+              columns={[
+                { header: "Transmission", accessorKey: "name" },
+                { header: "Count", accessorKey: "value" },
+              ]}
+              data={data?.transmission_distribution || []}
+            />
+          </ScrollReveal>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <DataTable 
-            title="Stock by Brand"
-            columns={[
-              { header: "Brand", accessorKey: "brand" },
-              { header: "Stock Units", accessorKey: "stock" },
-            ]}
-            data={data?.stock_by_brand || []}
-          />
-          <DataTable 
-            title="Yearly Price Trend"
-            columns={[
-              { header: "Year", accessorKey: "year" },
-              { header: "Avg Price", accessorKey: "avg_price", cell: (item: { avg_price: number }) => `$${item.avg_price.toLocaleString()}` },
-            ]}
-            data={data?.price_trend || []}
-          />
+          <ScrollReveal direction="left" delay={0.1}>
+            <DataTable 
+              title="Stock by Brand"
+              columns={[
+                { header: "Brand", accessorKey: "brand" },
+                { header: "Stock Units", accessorKey: "stock" },
+              ]}
+              data={data?.stock_by_brand || []}
+            />
+          </ScrollReveal>
+          <ScrollReveal direction="right" delay={0.2}>
+            <DataTable 
+              title="Yearly Price Trend"
+              columns={[
+                { header: "Year", accessorKey: "year" },
+                { header: "Avg Price", accessorKey: "avg_price", cell: (item: { avg_price: number }) => `$${item.avg_price.toLocaleString()}` },
+              ]}
+              data={data?.price_trend || []}
+            />
+          </ScrollReveal>
         </div>
 
         {/* Dataset Info */}
-        <GlassCard className="p-6">
+        {/* Dataset Info */}
+        <ScrollGlassCard direction="up" delay={0.3} className="p-6">
           <div className="flex items-center gap-3 mb-4">
             <FileSpreadsheet className="w-5 h-5 text-primary" />
             <h3 className="text-lg font-semibold text-white">Dataset Information</h3>
@@ -166,7 +181,7 @@ export default function DataPage() {
               <p className="text-white mt-1 font-mono text-xs">Car_ID, Brand, Model, Year, Color, Engine_Type, Transmission, Price, Quantity_In_Stock, Status</p>
             </div>
           </div>
-        </GlassCard>
+        </ScrollGlassCard>
       </div>
     </Layout>
   );

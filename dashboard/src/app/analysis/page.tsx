@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { Layout } from "@/components/Layout";
 import { GlassCard } from "@/components/ui/GlassCard";
+import { ScrollGlassCard } from "@/components/ui/ScrollGlassCard";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import {
   BarChart,
@@ -62,7 +63,8 @@ export default function AnalysisPage() {
         </ScrollReveal>
         
         {/* Price Trend Chart */}
-        <GlassCard className="p-6" variant="hover">
+        {/* Price Trend Chart */}
+        <ScrollGlassCard direction="left" delay={0.1} className="p-6" variant="hover">
           <h3 className="text-lg font-semibold text-white mb-6">Average Price per Year</h3>
           <div className="h-[350px]">
             <ResponsiveContainer width="100%" height="100%">
@@ -79,12 +81,13 @@ export default function AnalysisPage() {
               </BarChart>
             </ResponsiveContainer>
           </div>
-        </GlassCard>
+        </ScrollGlassCard>
 
         {/* Two Column Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Engine Distribution */}
-          <GlassCard className="p-6" variant="hover">
+          {/* Engine Distribution */}
+          <ScrollGlassCard direction="left" delay={0.2} className="p-6" variant="hover">
             <div className="flex items-center gap-3 mb-6">
               <Fuel className="w-5 h-5 text-primary" />
               <h3 className="text-lg font-semibold text-white">Engine Type Distribution</h3>
@@ -114,10 +117,10 @@ export default function AnalysisPage() {
                 </PieChart>
               </ResponsiveContainer>
             </div>
-          </GlassCard>
+          </ScrollGlassCard>
 
           {/* Status Distribution */}
-          <GlassCard className="p-6" variant="hover">
+          <ScrollGlassCard direction="right" delay={0.3} className="p-6" variant="hover">
             <div className="flex items-center gap-3 mb-6">
               <Car className="w-5 h-5 text-primary" />
               <h3 className="text-lg font-semibold text-white">Inventory Status</h3>
@@ -146,11 +149,12 @@ export default function AnalysisPage() {
                 </PieChart>
               </ResponsiveContainer>
             </div>
-          </GlassCard>
+          </ScrollGlassCard>
         </div>
 
         {/* Price by Engine Type */}
-        <GlassCard className="p-6" variant="hover">
+        {/* Price by Engine Type */}
+        <ScrollGlassCard direction="left" delay={0.4} className="p-6" variant="hover">
           <div className="flex items-center gap-3 mb-6">
             <Palette className="w-5 h-5 text-primary" />
             <h3 className="text-lg font-semibold text-white">Average Price by Engine Type</h3>
@@ -170,10 +174,11 @@ export default function AnalysisPage() {
               </BarChart>
             </ResponsiveContainer>
           </div>
-        </GlassCard>
+        </ScrollGlassCard>
 
         {/* Color Distribution */}
-        <GlassCard className="p-6" variant="hover">
+        {/* Color Distribution */}
+        <ScrollGlassCard direction="right" delay={0.5} className="p-6" variant="hover">
           <div className="flex items-center gap-3 mb-6">
             <Palette className="w-5 h-5 text-primary" />
             <h3 className="text-lg font-semibold text-white">Color Distribution</h3>
@@ -197,7 +202,7 @@ export default function AnalysisPage() {
               </BarChart>
             </ResponsiveContainer>
           </div>
-        </GlassCard>
+        </ScrollGlassCard>
       </div>
     </Layout>
   );

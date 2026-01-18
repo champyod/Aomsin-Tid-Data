@@ -3,7 +3,8 @@
 import { useState, useEffect } from "react";
 import { Layout } from "@/components/Layout";
 import { GlassCard } from "@/components/ui/GlassCard";
-import { ScrollReveal, StaggerContainer, StaggerItem } from "@/components/ui/ScrollReveal";
+import { ScrollGlassCard } from "@/components/ui/ScrollGlassCard";
+import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import {
   BarChart,
   Bar,
@@ -85,29 +86,30 @@ export default function ModelingPage() {
         </div>
 
         {/* Key Metrics Grid */}
+        {/* Key Metrics Grid */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <GlassCard className="p-4 text-center">
+          <ScrollGlassCard direction="up" delay={0.1} className="p-4 text-center">
             <p className="text-xs text-gray-400 uppercase tracking-wider">Accuracy</p>
             <p className="text-2xl font-bold text-emerald-400 mt-1">{((data?.accuracy || 0) * 100).toFixed(1)}%</p>
-          </GlassCard>
-          <GlassCard className="p-4 text-center">
+          </ScrollGlassCard>
+          <ScrollGlassCard direction="up" delay={0.2} className="p-4 text-center">
             <p className="text-xs text-gray-400 uppercase tracking-wider">R² Score</p>
             <p className="text-2xl font-bold text-blue-400 mt-1">{((data?.r2_score || 0) * 100).toFixed(1)}%</p>
-          </GlassCard>
-          <GlassCard className="p-4 text-center">
+          </ScrollGlassCard>
+          <ScrollGlassCard direction="up" delay={0.3} className="p-4 text-center">
             <p className="text-xs text-gray-400 uppercase tracking-wider">RMSE</p>
             <p className="text-2xl font-bold text-amber-400 mt-1">${data?.rmse?.toLocaleString()}</p>
-          </GlassCard>
-          <GlassCard className="p-4 text-center">
+          </ScrollGlassCard>
+          <ScrollGlassCard direction="up" delay={0.4} className="p-4 text-center">
             <p className="text-xs text-gray-400 uppercase tracking-wider">MAE</p>
             <p className="text-2xl font-bold text-purple-400 mt-1">${data?.mae?.toLocaleString()}</p>
-          </GlassCard>
+          </ScrollGlassCard>
         </div>
 
         {/* Charts Row */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Feature Importance */}
-          <GlassCard className="p-6" variant="hover">
+          <ScrollGlassCard direction="left" delay={0.2} className="p-6" variant="hover">
             <div className="flex items-center gap-3 mb-6">
               <Layers className="w-5 h-5 text-primary" />
               <h3 className="text-lg font-semibold text-white">Feature Importance</h3>
@@ -126,10 +128,10 @@ export default function ModelingPage() {
                 </BarChart>
               </ResponsiveContainer>
             </div>
-          </GlassCard>
+          </ScrollGlassCard>
 
           {/* Cross Validation */}
-          <GlassCard className="p-6" variant="hover">
+          <ScrollGlassCard direction="right" delay={0.3} className="p-6" variant="hover">
             <div className="flex items-center gap-3 mb-6">
               <Target className="w-5 h-5 text-primary" />
               <h3 className="text-lg font-semibold text-white">Cross-Validation Scores</h3>
@@ -152,11 +154,12 @@ export default function ModelingPage() {
             <p className="text-xs text-gray-500 text-center mt-2">
               Mean: {((data?.cv_mean || 0) * 100).toFixed(1)}% ± {((data?.cv_std || 0) * 100).toFixed(2)}%
             </p>
-          </GlassCard>
+          </ScrollGlassCard>
         </div>
 
         {/* Predictions vs Actual */}
-        <GlassCard className="p-6" variant="hover">
+        {/* Predictions vs Actual */}
+        <ScrollGlassCard direction="up" delay={0.4} className="p-6" variant="hover">
           <div className="flex items-center gap-3 mb-6">
             <Target className="w-5 h-5 text-primary" />
             <h3 className="text-lg font-semibold text-white">Predictions vs Actual Prices</h3>
@@ -233,10 +236,11 @@ export default function ModelingPage() {
           <p className="text-xs text-gray-500 text-center mt-2">
             Points closer to the diagonal line indicate better predictions
           </p>
-        </GlassCard>
+        </ScrollGlassCard>
 
         {/* Hyperparameters */}
-        <GlassCard className="p-6" variant="hover">
+        {/* Hyperparameters */}
+        <ScrollGlassCard direction="up" delay={0.5} className="p-6" variant="hover">
           <div className="flex items-center gap-3 mb-4">
             <Settings className="w-5 h-5 text-primary" />
             <h3 className="text-lg font-semibold text-white">Model Hyperparameters</h3>
@@ -263,7 +267,7 @@ export default function ModelingPage() {
             <span>📊 Training: {data?.training_samples} samples</span>
             <span>🧪 Testing: {data?.testing_samples} samples</span>
           </div>
-        </GlassCard>
+        </ScrollGlassCard>
       </div>
     </Layout>
   );

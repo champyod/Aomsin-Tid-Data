@@ -1,7 +1,7 @@
 import { cn } from "@/utils/cn";
 import { motion, HTMLMotionProps } from "framer-motion";
 
-interface GlassCardProps extends HTMLMotionProps<"div"> {
+export interface GlassCardProps extends HTMLMotionProps<"div"> {
   children: React.ReactNode;
   className?: string;
   variant?: "default" | "hover";
