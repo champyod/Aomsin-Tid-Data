@@ -10,10 +10,10 @@
 
 | ชื่อ AI | วัตถุประสงค์การใช้ | ตัวอย่าง Prompt | สิ่งที่คุณได้เรียนรู้จาก AI |
 | :--- | :--- | :--- | :--- |
-| Google DeepMind Agent | Coding | "help create a stats component" | การเขียน React component ที่ดี และการใช้ TypeScript |
-| Google DeepMind Agent | Coding | "make web ui more professional look and more dynamic" | การใช้ Framer Motion สร้าง scroll animations |
-| Google DeepMind Agent | Coding | "sidebar selector use 1 div that move around" | การใช้ layoutId ใน Framer Motion สำหรับ smooth transitions |
-| Google DeepMind Agent | ไอเดีย | "show more things in the dashboard" | แนวคิดในการแสดงข้อมูลหลายมิติ (charts, tables, metrics) |
+| Google DeepMind Agent | Coding | "show more things in the dashboard both data analysis and modelling and raw data" | การออกแบบ dashboard ให้แสดงข้อมูลหลายมิติ (charts, tables, metrics) |
+| Google DeepMind Agent | Coding | "make web ui more professional look and more dynamic - dynamic scroll not only one way something like that" | การใช้ Framer Motion สร้าง scroll-triggered animations |
+| Google DeepMind Agent | Coding | "sidebar selector use 1 div that move around not an indicator on each one but move this one to hover that instead" | การใช้ layoutId ใน Framer Motion สำหรับ shared layout animations |
+| Google DeepMind Agent | ไอเดีย | "floating topbar please in the layout preserve the space for it and make it in the middle between rightside and sidebar" | การจัดวาง UI components ให้สมดุลและไม่ทับกัน |
 | GitHub Copilot | Coding | Autocomplete ขณะพิมพ์ | การเขียน code ได้เร็วขึ้น |
 
 ---
