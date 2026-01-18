@@ -188,7 +188,44 @@ export default function ModelingPage() {
                   contentStyle={{ backgroundColor: "#1e1e2e", borderRadius: "12px", border: "none", color: "#f3f4f6" }} 
                   formatter={(value: any) => [`$${Number(value).toLocaleString()}`, '']}
                 />
-                <ReferenceLine segment={[{ x: 20000, y: 20000 }, { x: 95000, y: 95000 }]} stroke="#a6e3a1" strokeDasharray="5 5" />
+                <ReferenceLine
+                  segment={(() => {
+                    const points = data?.predictions_sample || [];
+                    if (!points.length) {
+                      // Fallback diagonal if no data is available
+                      return [
+                        { x: 0, y: 0 },
+                        { x: 1, y: 1 },
+                      ];
+                    }
+                    let min = Infinity;
+                    let max = -Infinity;
+                    for (const p of points) {
+                      const actual = Number((p as any).actual);
+                      const predicted = Number((p as any).predicted);
+                      if (Number.isFinite(actual)) {
+                        if (actual < min) min = actual;
+                        if (actual > max) max = actual;
+                      }
+                      if (Number.isFinite(predicted)) {
+                        if (predicted < min) min = predicted;
+                        if (predicted > max) max = predicted;
+                      }
+                    }
+                    if (!Number.isFinite(min) || !Number.isFinite(max)) {
+                      return [
+                        { x: 0, y: 0 },
+                        { x: 1, y: 1 },
+                      ];
+                    }
+                    return [
+                      { x: min, y: min },
+                      { x: max, y: max },
+                    ];
+                  })()}
+                  stroke="#a6e3a1"
+                  strokeDasharray="5 5"
+                />
                 <Scatter name="Predictions" data={data?.predictions_sample || []} fill="#f5c2e7" />
               </ScatterChart>
             </ResponsiveContainer>
