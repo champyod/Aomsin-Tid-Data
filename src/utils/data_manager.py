@@ -6,7 +6,8 @@ from pathlib import Path
 from typing import Literal, Optional, Any
 
 # Define valid topics that match dashboard pages/folders
-Topic = Literal["analysis", "modeling", "cleaning", "general"]
+# "general" maps to the Overview/Home page
+Topic = Literal["analysis", "modeling", "data", "general"]
 
 def save_result(data: Any, filename: str, topic: Topic = "general", visual_type: Optional[str] = None):
     """

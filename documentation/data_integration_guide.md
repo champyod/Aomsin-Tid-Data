@@ -112,4 +112,32 @@ useEffect(() => {
     # Copy generated data to dashboard public folder
     cp -r data/* dashboard/public/data/
     ```
-3.  Run Dashboard ➡ `bun dev`.
+## 🗂️ Advanced: Handling Multiple Files & Sorting
+
+If your page needs to show a list of files (e.g., "Monthly Reports") or sort them (First/Last), you cannot rely on the browser's file system.
+
+**The Solution: Generate a Manifest.**
+
+When Python runs, have it save a `manifest.json` listing the available files.
+
+```python
+# Python side
+manifest = {
+    "latest": "report_2024.json",
+    "history": [
+        {"id": "2024", "file": "report_2024.json", "date": "2024-01-01"},
+        {"id": "2023", "file": "report_2023.json", "date": "2023-01-01"}
+    ]
+}
+save_result(manifest, "manifest.json", topic="analysis")
+```
+
+**Dashboard Side:**
+1. Fetch `manifest.json` first.
+2. Read the list.
+3. Sort it in JavaScript.
+4. Fetch the specific file you want (or loop through them).
+
+### ❌ What to Avoid
+- Do not assume `public/data` has any files in the repo initially. The pipeline fills it.
+- **Fallback**: If you strictly need fallback data (so the build doesn't crash locally), you can keep a minimal set in `dashboard/public/data` and check it in. The pipeline will overwrite strictly named files, but others will remain. **Best practice:** Use the pipeline artifacts.
