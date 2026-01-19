@@ -46,3 +46,8 @@
 - **Theme**: Glassmorphism (Dark Mode).
 - **Colors**: defined in `globals.css` (`--color-primary`, `--color-surface`, etc.).
 - **Components**: Reusable UI components in `src/components/` (Glass panels, Stat cards).
+
+## 6. Interaction Rules
+- **Git Operations**:
+    - **Commit**: Auto-commit is allowed and recommended after completing logical units of work.
+    - **Push**: **NEVER** auto-push to remote. Pushing must be triggered manually by the user or upon explicit request.

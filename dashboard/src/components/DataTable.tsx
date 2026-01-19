@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { Search, ChevronLeft, ChevronRight } from "lucide-react";
+import { GlassCard } from "@/components/ui/GlassCard";
 
 interface Column<T> {
   header: string;
@@ -35,7 +36,7 @@ export function DataTable<T extends Record<string, any>>({ data, columns, title 
   );
 
   return (
-    <div className="glass-panel rounded-2xl p-6">
+    <GlassCard className="rounded-2xl p-6">
       <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
         {title && <h2 className="text-xl font-bold text-white">{title}</h2>}
         <div className="relative w-full sm:w-64">
@@ -105,6 +106,6 @@ export function DataTable<T extends Record<string, any>>({ data, columns, title 
           </button>
         </div>
       </div>
-    </div>
+    </GlassCard>
   );
 }
