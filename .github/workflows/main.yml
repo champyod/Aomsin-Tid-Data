@@ -175,7 +175,7 @@ jobs:
   # JOB 1: Build Dashboard (Verified on PRs)
   dashboard-build:
     needs: [changes, cleaning, analysis, modeling]
-    if: ${{ always() && (needs.changes.outputs.dashboard == 'true' || needs.changes.outputs.modeling == 'true' || needs.changes.outputs.lib == 'true') && (needs.modeling.result == 'success' || needs.modeling.result == 'skipped') }}
+    if: ${{ always() && (needs.changes.outputs.dashboard == 'true' || needs.changes.outputs.modeling == 'true' || needs.changes.outputs.analysis == 'true' || needs.changes.outputs.clean == 'true' || needs.changes.outputs.lib == 'true') && (needs.modeling.result == 'success' || needs.modeling.result == 'skipped') }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
