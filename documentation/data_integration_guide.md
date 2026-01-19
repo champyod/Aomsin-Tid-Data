@@ -141,3 +141,62 @@ save_result(manifest, "manifest.json", topic="analysis")
 ### ❌ What to Avoid
 - Do not assume `public/data` has any files in the repo initially. The pipeline fills it.
 - **Fallback**: If you strictly need fallback data (so the build doesn't crash locally), you can keep a minimal set in `dashboard/public/data` and check it in. The pipeline will overwrite strictly named files, but others will remain. **Best practice:** Use the pipeline artifacts.
+
+---
+
+## 🚀 Advanced: Config-Driven Charts (TOML)
+
+We now support a configuration-driven approach using TOML files and the `UniversalChart` component. This allows you to define the chart type, labels, and data entirely from Python, without changing frontend code.
+
+### 1. Python Side: Using `ChartConfig`
+
+```python
+from src.utils.data_manager import save_result, ChartConfig
+
+# 1. Create Config
+chart = ChartConfig(
+    title="Sales Performance", 
+    chart_type="composed", # options: bar, line, area, pie, radar, scatter, composed
+    description="Monthly revenue and profit comparison",
+    x_axis_key="month",
+    x_axis_label="Month"
+)
+
+# 2. Add Series
+chart.add_series("revenue", "Revenue", color="#8884d8", type="bar")
+chart.add_series("profit", "Profit", color="#82ca9d", type="line")
+
+# 3. Set Data
+data = [
+    {"month": "Jan", "revenue": 4000, "profit": 2400},
+    {"month": "Feb", "revenue": 3000, "profit": 1398}
+]
+chart.set_data(data)
+
+# 4. Save as TOML
+save_result(chart, "sales_chart", topic="analysis", file_format="toml")
+```
+
+### 2. Dashboard Side: `UniversalChart`
+
+The dashboard can now render these TOML files automatically using the `UniversalChart` component.
+
+```tsx
+// Example usage in a page
+import { fetchToml } from "@/utils/tomlLoader";
+import { UniversalChart } from "@/components/UniversalChart";
+
+// ... inside component ...
+const [config, setConfig] = useState(null);
+
+useEffect(() => {
+    fetchToml('/data/analysis/sales_chart.toml').then(setConfig);
+}, []);
+
+return config ? <UniversalChart config={config} /> : null;
+```
+
+### Why TOML?
+- **Readability**: Easier to inspect raw data files.
+- **Performance**: Smaller file size and faster parsing for configuration-heavy structures.
+- **Flexibility**: Define chart types dynamically.

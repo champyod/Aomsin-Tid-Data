@@ -1,0 +1,64 @@
+title = "Sales Performance (TOML Demo)"
+type = "composed"
+description = "Monthly sales and profit data demonstrating the new TOML-based configuration and Composed Chart capability."
+
+[xAxis]
+dataKey = "month"
+label = "Month"
+
+[yAxis]
+label = "Amount ($)"
+
+[[series]]
+dataKey = "revenue"
+name = "Revenue"
+color = "#8884d8"
+type = "bar"
+
+[[series]]
+dataKey = "profit"
+name = "Profit"
+color = "#82ca9d"
+type = "line"
+
+[[series]]
+dataKey = "growth"
+name = "Growth %"
+color = "#ff7300"
+type = "area"
+
+[[data]]
+month = "Jan"
+revenue = 4000
+profit = 2400
+growth = 20
+
+[[data]]
+month = "Feb"
+revenue = 3000
+profit = 1398
+growth = 10
+
+[[data]]
+month = "Mar"
+revenue = 2000
+profit = 9800
+growth = 50
+
+[[data]]
+month = "Apr"
+revenue = 2780
+profit = 3908
+growth = 30
+
+[[data]]
+month = "May"
+revenue = 1890
+profit = 4800
+growth = 40
+
+[[data]]
+month = "Jun"
+revenue = 2390
+profit = 3800
+growth = 25
