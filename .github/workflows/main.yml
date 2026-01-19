@@ -58,8 +58,6 @@ jobs:
           uv sync
       - name: Run Cleaning
         run: |
-          # Runs all notebooks in preprocessing/ (e.g., 1_cleaning.ipynb)
-          # Using shell glob expansion for ordering
           for notebook in notebooks/preprocessing/*.ipynb; do
             echo "Running $notebook..."
             uv run jupyter nbconvert --to notebook --execute "$notebook"
@@ -87,7 +85,6 @@ jobs:
           pip install uv
           uv sync
 
-      # Download data: Either from current run (if cleaning ran) or latest (if skipped)
       - name: Download Clean Data (Current)
         if: ${{ needs.cleaning.result == 'success' }}
         uses: actions/download-artifact@v4
@@ -134,7 +131,6 @@ jobs:
           pip install uv
           uv sync
 
-      # Download data
       - name: Download Analysis Data (Current)
         if: ${{ needs.analysis.result == 'success' }}
         uses: actions/download-artifact@v4
@@ -153,17 +149,14 @@ jobs:
 
       - name: Run Modeling (Training & Testing)
         run: |
-          # Run Training Notebooks
-          echo "Running Training Notebooks..."
+          echo "Running Training..."
           for notebook in notebooks/modeling/train/*.ipynb; do
             if [ -f "$notebook" ]; then
               echo "Running $notebook..."
               uv run jupyter nbconvert --to notebook --execute "$notebook"
             fi
           done
-
-          # Run Testing Notebooks
-          echo "Running Testing Notebooks..."
+          echo "Running Testing..."
           for notebook in notebooks/modeling/test/*.ipynb; do
             if [ -f "$notebook" ]; then
               echo "Running $notebook..."
@@ -178,41 +171,21 @@ jobs:
           path: data/
           retention-days: 5
 
-  dashboard:
+  # JOB 1: Build Dashboard (Verified on PRs)
+  dashboard-build:
     needs: [changes, modeling]
-    # Dashboard always runs if dashboard changed OR if any upstream changed (and succeeded/skipped)
-    # If upstream failed, we shouldn't run.
     if: ${{ always() && (needs.changes.outputs.dashboard == 'true' || needs.changes.outputs.modeling == 'true' || needs.changes.outputs.lib == 'true') && (needs.modeling.result == 'success' || needs.modeling.result == 'skipped') }}
-    permissions:
-      contents: read
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # Download Model Data (JSONs needed for dashboard)
       - name: Download Model Data (Current)
         if: ${{ needs.modeling.result == 'success' }}
         uses: actions/download-artifact@v4
         with:
           name: model-data
           path: dashboard/public/data 
-          # Assuming dashboard expects data in public/data or similar. 
-          # Adjust path as necessary. If the app reads from 'data/', 
-          # we might need to move it or 'path: data' and then move it.
-          # For now, let's assume 'data' folder at root is what was used, 
-          # but Next.js usually needs it in public/ or fetched.
-          # If the user previously had 'data/' in root and the app imported it?
-          # Let's put it in 'dashboard/public/data' to be safe for a static export,
-          # OR just 'data' if the build script expects it there.
-          # User said: "remove the json from the repo".
-          # Usually Next.js imports from a file. 
-          # I will place it in dashboard/public/data/ to be accessible.
 
       - name: Download Model Data (Latest from Main)
         if: ${{ needs.modeling.result == 'skipped' }}
@@ -236,11 +209,23 @@ jobs:
         working-directory: ./dashboard
         run: bun run build
 
-      - name: Upload artifact
+      - name: Upload result for deployment
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./dashboard/out
 
+  # JOB 2: Deploy Dashboard (Only on Main)
+  dashboard-deploy:
+    needs: dashboard-build
+    if: ${{ github.ref == 'refs/heads/main' }} # ONLY DEPLOY ON MAIN
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4

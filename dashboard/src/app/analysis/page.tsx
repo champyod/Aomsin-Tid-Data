@@ -20,6 +20,8 @@ import {
 } from "recharts";
 import { Activity, Fuel, Palette, Car } from "lucide-react";
 import { getBasePath } from "@/utils/basePath";
+import { fetchToml } from "@/utils/tomlLoader";
+import { UniversalChart, ChartConfig } from "@/components/UniversalChart";
 
 interface AnalysisData {
   price_trend: { year: string; avg_price: number }[];
@@ -34,14 +36,24 @@ const COLOR_PALETTE = ["#cdd6f4", "#313244", "#f38ba8", "#89b4fa", "#6c7086", "#
 
 export default function AnalysisPage() {
   const [data, setData] = useState<AnalysisData | null>(null);
+  const [demoConfig, setDemoConfig] = useState<ChartConfig | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const basePath = getBasePath();
-    fetch(`${basePath}/data/analysis/analysis_summary.json`)
+    
+    // Fetch existing JSON data
+    const fetchData = fetch(`${basePath}/data/analysis/analysis_summary.json`)
       .then((res) => res.json())
       .then(setData)
-      .catch((err) => console.error(err))
+      .catch((err) => console.error("Failed to load generic analysis:", err));
+      
+    // Fetch new TOML demo data
+    const fetchDemo = fetchToml(`${basePath}/data/analysis/demo_chart.toml`)
+      .then((config: any) => setDemoConfig(config as ChartConfig))
+      .catch((err: any) => console.warn("Demo chart not found:", err));
+
+    Promise.all([fetchData, fetchDemo])
       .finally(() => setLoading(false));
   }, []);
 
@@ -61,6 +73,12 @@ export default function AnalysisPage() {
         <ScrollReveal direction="none">
           <h2 className="text-2xl font-bold text-white">Detailed Analysis</h2>
         </ScrollReveal>
+        
+        {demoConfig && (
+          <ScrollReveal direction="down" className="mb-8">
+            <UniversalChart config={demoConfig} />
+          </ScrollReveal>
+        )}
         
         {/* Price Trend Chart */}
         {/* Price Trend Chart */}
