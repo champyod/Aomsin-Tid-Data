@@ -1,202 +1,213 @@
-# 📊 Data Integration: Python ➡ Dashboard
+# 📊 Data Integration & Visualization Guide
 
-This guide explains strictly how data flows from your Python notebooks into the Dashboard, and how to configure it.
-
-## 🔄 The Data Flow Architecture
-
-1.  **Python Generation**: You run a notebook. It calculates stats/models.
-2.  **Saving (**Crucial**)**: You use `save_result()` to save data to a **Topic Folder** (e.g., `data/analysis/`).
-3.  **CI/CD Pipeline**:
-    - Detects changes.
-    - Runs notebooks.
-    - Zips `data/` folder.
-    - **Injects** it into `dashboard/public/data/`.
-4.  **Dashboard Consumption**:
-    - The dashboard frontend fetches `basePath + /data/{topic}/{filename}`.
-    - Example: `fetch('/data/analysis/analysis_summary.json')`.
+This guide explains how to generate, save, and visualize data in the Aomsin-Tid-Data project. The system uses a **Config-Driven Approach** where Python defines the data *and* how it should be visualized, allowing the Dashboard to render charts dynamically without frontend code changes.
 
 ---
 
-## 🛠️ Python Side: Saving Data
+## 🏗️ Architecture Overview
 
-We have a strict utility to handle this. **Do not use `open()` manually.**
-
-### `save_result` Function
-
-```python
-from src.utils.data_manager import save_result
-
-# Signature
-save_result(
-    data: Any, 
-    filename: str, 
-    topic: Literal["analysis", "modeling", "cleaning"], 
-    visual_type: Optional[str] = None
-)
-```
-
-### Parameters
-| Parameter | Description | Valid Values |
-| :--- | :--- | :--- |
-| `data` | The dictionary/list to save. | Any JSON-serializable object. |
-| `filename` | Output filename. | `analysis_summary.json`, `model_metrics.json`, etc. |
-| `topic` | **Target Dashboard Page**. Determines the subfolder. | `"analysis"` ➡ `data/analysis/`<br>`"modeling"` ➡ `data/modeling/`<br>`"cleaning"` ➡ `data/cleaning/` |
-| `visual_type` | Metadata (Internal use/Documentation). | `"chart"`, `"table"`, `"metric"`, `"scatter"` |
-
-### 📝 Examples by Page
-
-#### 1. Analysis Page (`/analysis`)
-Target folder: `data/analysis/`
-
-```python
-analysis_data = {
-    "price_trend": [{"year": "2020", "avg_price": 50000}, ...],
-    "engine_distribution": [...]
-}
-
-# 🚀 SAVING
-save_result(
-    analysis_data, 
-    "analysis_summary.json", 
-    topic="analysis", 
-    visual_type="chart"
-)
-```
-
-#### 2. Modeling Page (`/modeling`)
-Target folder: `data/modeling/`
-
-```python
-model_metrics = {
-    "accuracy": 0.95,
-    "feature_importance": [...]
-}
-
-# 🚀 SAVING
-save_result(
-    model_metrics, 
-    "model_metrics.json", 
-    topic="modeling", 
-    visual_type="metric"
-)
-```
+1.  **Python (Notebooks)**:
+    *   Compiles dataframes.
+    *   Defines `ChartConfig` (Type, Title, Axes, Series).
+    *   Saves outputs as `TOML` or `JSON` to `data/{topic}/`.
+2.  **CI/CD Pipeline**:
+    *   Executes notebooks.
+    *   Artifacts the `data/` folder.
+    *   Injects data into the Dashboard's `public/data/` directory.
+3.  **Dashboard (Next.js)**:
+    *   Fetches the config files.
+    *   Renders them using `UniversalChart`.
 
 ---
 
-## 🖥️ Dashboard Side: Fetching Data
+## 🐍 Python SDK (`src.utils.data_manager`)
 
-(For Frontend Developers)
+We provide a robust Python utility to handle paths and file saving.
 
-Each page knows where to look based on its topic.
+### 1. `save_result`
 
-```typescript
-// src/app/analysis/page.tsx
-
-useEffect(() => {
-  // 1. Get Base Path (handles GitHub Pages subdirectory)
-  const basePath = getBasePath(); 
-  
-  // 2. Fetch from strict public path match
-  // Maps to: dashboard/public/data/analysis/analysis_summary.json
-  fetch(`${basePath}/data/analysis/analysis_summary.json`)
-    .then(res => res.json())
-    .then(setData);
-}, []);
-```
-
-## 💻 Local Development
-
-1.  Run Notebooks ➡ Generates `data/analysis/...` in root.
-2.  **Sync Data**:
-    ```bash
-    # Copy generated data to dashboard public folder
-    cp -r data/* dashboard/public/data/
-    ```
-## 🗂️ Advanced: Handling Multiple Files & Sorting
-
-If your page needs to show a list of files (e.g., "Monthly Reports") or sort them (First/Last), you cannot rely on the browser's file system.
-
-**The Solution: Generate a Manifest.**
-
-When Python runs, have it save a `manifest.json` listing the available files.
-
-```python
-# Python side
-manifest = {
-    "latest": "report_2024.json",
-    "history": [
-        {"id": "2024", "file": "report_2024.json", "date": "2024-01-01"},
-        {"id": "2023", "file": "report_2023.json", "date": "2023-01-01"}
-    ]
-}
-save_result(manifest, "manifest.json", topic="analysis")
-```
-
-**Dashboard Side:**
-1. Fetch `manifest.json` first.
-2. Read the list.
-3. Sort it in JavaScript.
-4. Fetch the specific file you want (or loop through them).
-
-### ❌ What to Avoid
-- Do not assume `public/data` has any files in the repo initially. The pipeline fills it.
-- **Fallback**: If you strictly need fallback data (so the build doesn't crash locally), you can keep a minimal set in `dashboard/public/data` and check it in. The pipeline will overwrite strictly named files, but others will remain. **Best practice:** Use the pipeline artifacts.
-
----
-
-## 🚀 Advanced: Config-Driven Charts (TOML)
-
-We now support a configuration-driven approach using TOML files and the `UniversalChart` component. This allows you to define the chart type, labels, and data entirely from Python, without changing frontend code.
-
-### 1. Python Side: Using `ChartConfig`
+Save your final data/configs.
 
 ```python
 from src.utils.data_manager import save_result, ChartConfig
 
-# 1. Create Config
-chart = ChartConfig(
-    title="Sales Performance", 
-    chart_type="composed", # options: bar, line, area, pie, radar, scatter, composed
-    description="Monthly revenue and profit comparison",
-    x_axis_key="month",
-    x_axis_label="Month"
+save_result(
+    data: Any,                          # Dict, List, or ChartConfig object
+    filename: str,                      # e.g. "sales_overview"
+    topic: Literal["analysis", ...],    # Target folder: "analysis", "modeling", "general"
+    file_format: Literal["toml", "json"] = "toml" # Default is TOML
 )
-
-# 2. Add Series
-chart.add_series("revenue", "Revenue", color="#8884d8", type="bar")
-chart.add_series("profit", "Profit", color="#82ca9d", type="line")
-
-# 3. Set Data
-data = [
-    {"month": "Jan", "revenue": 4000, "profit": 2400},
-    {"month": "Feb", "revenue": 3000, "profit": 1398}
-]
-chart.set_data(data)
-
-# 4. Save as TOML
-save_result(chart, "sales_chart", topic="analysis", file_format="toml")
 ```
 
-### 2. Dashboard Side: `UniversalChart`
+### 2. `ChartConfig` Builder
 
-The dashboard can now render these TOML files automatically using the `UniversalChart` component.
+Use this helper to generate the correct dictionary structure for the Dashboard.
 
-```tsx
-// Example usage in a page
-import { fetchToml } from "@/utils/tomlLoader";
-import { UniversalChart } from "@/components/UniversalChart";
+```python
+class ChartConfig:
+    def __init__(self, 
+                 title: str,
+                 chart_type: Literal["area", "bar", "line", "pie", "radar", "scatter", "composed"],
+                 description: str = "",
+                 x_axis_key: str = "name", # Key in data for X-Axis labels
+                 x_axis_label: str = ""):
+        ...
 
-// ... inside component ...
-const [config, setConfig] = useState(null);
-
-useEffect(() => {
-    fetchToml('/data/analysis/sales_chart.toml').then(setConfig);
-}, []);
-
-return config ? <UniversalChart config={config} /> : null;
+    def add_series(self, 
+                   data_key: str,       # Key in data for values
+                   name: str,           # Legend name
+                   color: str = "...",  # Hex color or HSL
+                   type: str = None):   # Optional override for Composed charts
+        ...
+        
+    def set_data(self, data: List[Dict]): ...
 ```
 
-### Why TOML?
-- **Readability**: Easier to inspect raw data files.
-- **Performance**: Smaller file size and faster parsing for configuration-heavy structures.
-- **Flexibility**: Define chart types dynamically.
+---
+
+## 📈 Chart Types & Examples
+
+Below are the configurations for each supported chart type.
+
+### 1. Bar Chart
+Standard vertical bar chart.
+
+*   **Python Setup**:
+    ```python
+    chart = ChartConfig("Revenue by Product", "bar", x_axis_key="product")
+    chart.add_series("revenue", "Revenue", color="#8884d8")
+    chart.set_data([
+        {"product": "A", "revenue": 500},
+        {"product": "B", "revenue": 750}
+    ])
+    save_result(chart, "bar_demo", topic="analysis")
+    ```
+
+### 2. Line Chart
+smooth or monotone lines.
+
+*   **Python Setup**:
+    ```python
+    chart = ChartConfig("Stock Trend", "line", x_axis_key="time")
+    chart.add_series("value", "Price", color="#82ca9d")
+    # ... set_data
+    ```
+
+### 3. Area Chart
+Filled area under the line with gradients.
+
+*   **Python Setup**:
+    ```python
+    chart = ChartConfig("User Growth", "area", x_axis_key="month")
+    chart.add_series("users", "Active Users", color="#ffc658")
+    ```
+
+### 4. Pie Chart
+Circular chart.
+*   **Special Note**: Ensure your data has a label key (passed to `x_axis_key` or `name`) and a value key (first series).
+*   **Python Setup**:
+    ```python
+    # x_axis_key maps to the slice Label
+    chart = ChartConfig("Market Share", "pie", x_axis_key="company")
+    # The first series added is the numeric Value
+    chart.add_series("share", "Percent Share") 
+    chart.set_data([
+        {"company": "Apple", "share": 40},
+        {"company": "Google", "share": 35},
+        {"company": "Others", "share": 25}
+    ])
+    ```
+
+### 5. Radar Chart
+Spider/Web chart for comparing multiple variables.
+
+*   **Python Setup**:
+    ```python
+    chart = ChartConfig("Skill Assessment", "radar", x_axis_key="skill")
+    chart.add_series("score", "Candidate Score", color="#f5c2e7")
+    ```
+
+### 6. Composed Chart (Mixed)
+Combine Bar, Line, Area, and Scatter in one view.
+
+*   **Python Setup**:
+    ```python
+    chart = ChartConfig("Complex Metrics", "composed", x_axis_key="month")
+    # Specify 'type' for each series
+    chart.add_series("sales", "Sales", type="bar", color="#8884d8")
+    chart.add_series("trend", "Trend", type="line", color="#ff7300")
+    chart.add_series("coverage", "Coverage", type="area", color="#82ca9d")
+    ```
+
+---
+
+## ⚛️ Dashboard Integration (Frontend)
+
+For developers working on `src/app/`.
+
+### `UniversalChart` Component
+
+The `UniversalChart` component is the single entry point for rendering `ChartConfig` objects.
+
+**Props**:
+```typescript
+interface UniversalChartProps {
+  config: ChartConfig;
+  className?: string; // For Tailwind classes (width, margin, etc.)
+}
+```
+
+**Usage Pattern**:
+
+1.  **Import**:
+    ```tsx
+    import { fetchToml } from "@/utils/tomlLoader";
+    import { UniversalChart, ChartConfig } from "@/components/UniversalChart";
+    ```
+
+2.  **Fetch & Render**:
+    ```tsx
+    const [config, setConfig] = useState<ChartConfig | null>(null);
+
+    useEffect(() => {
+      // 1. Get Base Path (for GitHub Pages compatibility)
+      const basePath = getBasePath(); 
+      
+      // 2. Fetch the TOML file generated by Python
+      fetchToml(`${basePath}/data/analysis/sales_overview.toml`)
+        .then((data: any) => setConfig(data as ChartConfig))
+        .catch(console.error);
+    }, []);
+
+    if (!config) return <LoadingSpinner />;
+
+    return (
+        <UniversalChart config={config} className="h-[400px]" />
+    );
+    ```
+
+---
+
+## 📂 Data Directory Structure
+
+All data is managed via the `src.utils.data_manager` helper.
+
+| Name | Role | Path | Python Access |
+| :--- | :--- | :--- | :--- |
+| **Raw** | Source CSVs (Cars, Sales, etc.) | `data/raw/` | `get_data_path('raw')` |
+| **Cleaned** | Processed Parquet/CSVs | `data/cleaned/` | `get_data_path('cleaned')` |
+| **Analysis** | Dashboard: Analysis Page | `data/analysis/` | `save_result(..., topic='analysis')` |
+| **Modeling** | Dashboard: Modeling Page | `data/modeling/` | `save_result(..., topic='modeling')` |
+
+### Helper Functions
+
+```python
+from src.utils.data_manager import get_data_path
+
+# Get Path objects (auto-creates folder if missing)
+raw_path = get_data_path("raw") 
+cleaned_path = get_data_path("cleaned")
+
+print(raw_path / "MyFile.csv")
+# Output: /abs/path/to/repo/data/raw/MyFile.csv
+```
