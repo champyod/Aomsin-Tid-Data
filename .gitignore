@@ -48,6 +48,7 @@ venv.bak/
 # Data files
 data/*
 !data/raw/
+dashboard/public/data/*
 
 # Logs
 *.log

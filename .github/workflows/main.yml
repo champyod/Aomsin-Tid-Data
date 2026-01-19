@@ -37,6 +37,7 @@ jobs:
               - 'dashboard/**'
             lib:
               - 'src/**'
+              - '!dashboard/**'
               - 'pyproject.toml'
               - 'uv.lock'
               - '.github/workflows/main.yml'
@@ -173,7 +174,7 @@ jobs:
 
   # JOB 1: Build Dashboard (Verified on PRs)
   dashboard-build:
-    needs: [changes, modeling]
+    needs: [changes, cleaning, analysis, modeling]
     if: ${{ always() && (needs.changes.outputs.dashboard == 'true' || needs.changes.outputs.modeling == 'true' || needs.changes.outputs.lib == 'true') && (needs.modeling.result == 'success' || needs.modeling.result == 'skipped') }}
     runs-on: ubuntu-latest
     steps:
@@ -186,6 +187,24 @@ jobs:
         with:
           name: model-data
           path: dashboard/public/data 
+
+      - name: Download Clean Data (Latest from Main)
+        if: ${{ needs.cleaning.result == 'skipped' }}
+        uses: dawidd6/action-download-artifact@v3
+        with:
+          workflow: main.yml
+          name: clean-data
+          path: dashboard/public/data
+          if_no_artifact_found: warn
+
+      - name: Download Analysis Data (Latest from Main)
+        if: ${{ needs.analysis.result == 'skipped' }}
+        uses: dawidd6/action-download-artifact@v3
+        with:
+          workflow: main.yml
+          name: analysis-data
+          path: dashboard/public/data
+          if_no_artifact_found: warn
 
       - name: Download Model Data (Latest from Main)
         if: ${{ needs.modeling.result == 'skipped' }}
