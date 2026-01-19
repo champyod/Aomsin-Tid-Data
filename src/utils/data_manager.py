@@ -59,7 +59,7 @@ def save_result(data: Any, filename: str, topic: Topic = "general", visual_type:
         visual_type (str, optional): Metadata about how this should be visualized (e.g. 'bar_chart', 'table').
         file_format (str): 'json' or 'toml'. Defaults to 'toml'.
     """
-    root_path = _get_project_root()
+    root_path = get_project_root()
     
     # Map topic to folder path
     target_dir = root_path / 'data' / topic
@@ -85,7 +85,7 @@ def save_result(data: Any, filename: str, topic: Topic = "general", visual_type:
 # Backward compatibility or low-level usage
 def save_json(data: dict, filename: str, folder: str = "results"):
     """Legacy/Low-level saver. Use save_result for dashboard data."""
-    root_path = _get_project_root()
+    root_path = get_project_root()
     target_dir = root_path / 'data' / folder
     target_dir.mkdir(parents=True, exist_ok=True)
     file_path = target_dir / filename
@@ -95,9 +95,19 @@ def save_json(data: dict, filename: str, folder: str = "results"):
 
 def load_raw_data(filename: str) -> str:
     """Returns the absolute path to a raw data file."""
-    return str(_get_project_root() / 'data' / 'raw' / filename)
+    return str(get_data_path("raw") / filename)
 
-def _get_project_root() -> Path:
+def get_data_path(subdir: str = "raw") -> Path:
+    """
+    Get path to a specific data subdirectory (e.g., 'raw', 'cleaned').
+    Creates the directory if it doesn't exist.
+    """
+    root = get_project_root()
+    path = root / 'data' / subdir
+    path.mkdir(parents=True, exist_ok=True)
+    return path
+
+def get_project_root() -> Path:
     """Helper to find project root."""
     path = Path(os.getcwd())
     while not (path / '.git').exists() and path != path.parent:
