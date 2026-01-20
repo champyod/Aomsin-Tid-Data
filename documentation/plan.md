@@ -38,7 +38,7 @@
 - [x] **Null Handling**: Drop invalid rows.
 
 ### 1.4 Save Cleaned Data
-- [x] Export cleaned dataset to `data/car_sales_data_cleaned.csv`.
+- [x] Export cleaned dataset to `data/cleaned/car_sales_data_cleaned.csv`.
 
 ---
 
