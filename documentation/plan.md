@@ -10,48 +10,35 @@
 
 | File | Description | Size |
 |------|-------------|------|
-| `Cars.csv` | Car inventory data (ID, Brand, Model, Year, Color, Engine, Transmission, Price, Stock, Status) | ~500 records |
-| `Customers.csv` | Customer information | ~235KB |
-| `Sales.csv` | Sales transaction records | ~650KB |
+| `car_sales_data.csv` | Consolidated car sales records (Manufacturer, Model, Engine size, Fuel type, Year, Mileage, Price) | ~50k records |
 
 ---
 
 ## Phase 1: Data Cleaning 🧹
 
 ### 1.1 Load and Inspect Raw Data
-- [x] Load all CSV files (`Cars.csv`, `Customers.csv`, `Sales.csv`)
-- [x] Display first/last few rows of each dataset
-- [x] Check data types with `df.dtypes`
-- [x] Get basic statistics with `df.describe()` and `df.info()`
+- [x] Load `car_sales_data.csv` using Polars.
+- [x] Inspect schema and basic shapes.
 
-### 1.2 Handle Missing Values
-- [x] Identify missing values with `df.isnull().sum()`
-- [x] Visualize missing data patterns (e.g., using `missingno` library)
-- [x] Strategy decisions:
-  - **Numerical columns**: Impute with mean/median or drop
-  - **Categorical columns**: Impute with mode or create "Unknown" category
-  - **Critical IDs**: Drop rows with missing IDs
-- [x] Document missing data in `Brand` column (rows with empty Brand observed in raw data)
+### 1.2 Anomaly Detection
+- [x] **Duplicate Detection**: Identify exact row duplicates (e.g., identical car specs and price).
+- [x] **Casting Checks**: Attempt casting to numeric types to identify non-conformant data (turns to Null).
+- [x] **Null Verification**: Inspect rows with Nulls after casting to distinguish between missing data and bad data.
 
-### 1.3 Handle Duplicates
-- [x] Check for duplicate rows: `df.duplicated().sum()`
-- [x] Check for duplicate Car_IDs (e.g., C0182 appears twice)
-- [x] Remove or flag duplicates based on business logic
+### 1.3 Data Transformations
+- [x] **String Standardization**: 
+    - Title Case for `Manufacturer` and `Fuel type`.
+    - Strip whitespace from all string columns.
+- [x] **Type Casting**:
+    - `Engine size` -> Float
+    - `Year` -> Int
+    - `Mileage` -> Int
+    - `Price` -> Float
+- [x] **Deduplication**: Remove exact duplicates.
+- [x] **Null Handling**: Drop invalid rows.
 
-### 1.4 Data Type Corrections
-- [x] Ensure `Year` is integer type
-- [x] Ensure `Price` is float type
-- [x] Convert date columns to datetime format (if applicable)
-- [x] Handle extra empty columns in Cars.csv (trailing commas)
-
-### 1.5 Standardize Categorical Values
-- [x] `Transmission` column: Standardize variants (`auto`, `A`, `M`, `manaul` → `Automatic`/`Manual`)
-- [x] `Status` column: Verify only valid values (`Available`, `Reserved`, `Sold`)
-- [x] `Engine_Type`: Ensure consistent naming (`Petrol`, `Diesel`, `Electric`, `Hybrid`)
-
-### 1.6 Save Cleaned Data
-- [x] Export cleaned datasets to `data/cleaned/` directory
-- [x] Document all cleaning steps performed
+### 1.4 Save Cleaned Data
+- [x] Export cleaned dataset to `data/car_sales_data_cleaned.csv`.
 
 ---
 
