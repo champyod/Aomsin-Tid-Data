@@ -45,39 +45,40 @@
 ## Phase 2: Exploratory Data Analysis 📈
 
 ### 2.1 Univariate Analysis
-- [ ] **Numerical Distributions**: Histograms and KDE plots for `Price`, `Year`, and customer `Age`
-- [ ] **Categorical Frequencies**: Bar charts for `Brand`, `Model`, `Engine_Type`, `Transmission`, and `Region`
-- [ ] **Outlier Detection**: Box plots to identify anomalies in `Price` and `Quantity`
+- [ ] **Numerical Distributions**: Histograms and KDE plots for `Price`, `Year of manufacture`, `Mileage`, and `Engine size`.
+- [ ] **Categorical Frequencies**: Bar charts for `Manufacturer`, `Model`, `Fuel type`.
+- [ ] **Outlier Detection**: Box plots to identify anomalies in `Price`, `Mileage`, and `Engine size`.
 
 ### 2.2 Bivariate & Multivariate Analysis
-- [ ] **Correlation Analysis**: Heatmap to identify linear relationships between numerical features
-- [ ] **Sales Performance by Category**: 
-    - Average `Price` per `Brand` and `Engine_Type`
-    - Sales volume per `Region` and `Payment_Method`
-- [ ] **Scatter Plot Matrix**: Pairwise relationships to identify clusters or non-linear patterns
+- [ ] **Correlation Analysis**: Heatmap to identify linear relationships between numerical features (`Price`, `Mileage`, `Year`, `Engine size`).
+- [ ] **Price Analysis by Category**: 
+    - Average `Price` per `Manufacturer` and `Fuel type`.
+    - Price distributions by `Model`.
+- [ ] **Scatter Plots**: 
+    - `Price` vs. `Mileage` (Depreciation check).
+    - `Price` vs. `Engine size` (Performance premium check).
 
-### 2.3 Temporal Analysis (Time-Series)
-- [ ] **Sales Trends**: Line plots of sales volume and revenue over time
-- [ ] **Seasonality**: Analyze sales patterns by month/quarter or day of the week
+### 2.3 Temporal Analysis
+- [ ] **Price Trends**: Analyze average price by `Year of manufacture`.
+- [ ] **Depreciation Curve**: Plot `Price` against Age (Derived from `Year`).
 
-### 2.4 Data Integrity Check
-- [ ] **Data Shape Verify**: Confirm row/column counts across joins
-- [ ] **Cross-Table Consistency**: Ensure `Car_ID` and `Customer_ID` integrity between `Sales` and primary tables
+### 2.4 Data Quality Check
+- [ ] **Category Consistency**: Verify spelling/casing consistency across `Manufacturer` and `Model`.
+- [ ] **Logical Validity**: Check for impossible combinations (e.g., negative mileage, future years).
 
 ---
 
 ## Phase 3: Feature Engineering 🔧
 
-- [ ] Apply Principal Component Analysis (PCA) to numerical features (`Year`, `Price`, `Quantity_In_Stock` from `Cars_cleaned.csv`, `Age` from `Customers_cleaned.csv`, `Quantity`, `Sale_Price` from `Sales_cleaned.csv`) to reduce dimensionality.
-- [ ] Implement feature scaling (`StandardScaler` or `MinMaxScaler`) for continuous numerical variables (`Year`, `Price`, `Quantity_In_Stock`, `Age`, `Quantity`, `Sale_Price`).
-- [ ] Perform One-Hot Encoding for nominal categorical variables (`Brand`, `Model`, `Color`, `Engine_Type`, `Transmission`, `Status`, `Gender`, `Region`, `Payment_Method`).
-- [ ] Utilize Label Encoding for ordinal or high-cardinality categorical variables (`Brand`, `Model`, `Color`, `Engine_Type`, `Transmission`, `Status`, `Gender`, `State`, `Region`, `Payment_Method`).
-- [ ] Use Target Encoding for high-cardinality features (`Brand`, `Model`, `Salesperson`) by replacing categories with the mean outcome.
-- [ ] Conduct feature selection (`SelectKBest` or RFE) across numerical features to identify the most predictive variables.
-- [ ] Generate Polynomial Features for selected numerical variables (`Year`, `Price`, `Age`, `Quantity`) to capture non-linear relationships.
-- [ ] Apply Log Transformations to skewed numerical data (`Price`, `Sale_Price`, `Quantity_In_Stock`) to normalize distributions.
-- [ ] Perform Binning/Discretization on continuous variables (`Age`, `Price`, `Year`, `Quantity_In_Stock`) to create categorical intervals.
-- [ ] Create Interaction Features between key variables (e.g., `Year` × `Brand`, `Engine_Type` × `Transmission`, `Age` × `Region`).
+- [ ] Apply Principal Component Analysis (PCA) to numerical features (`Year of manufacture`, `Mileage`, `Engine size`) to reduce dimensionality if needed.
+- [ ] Implement feature scaling (`StandardScaler` or `MinMaxScaler`) for continuous numerical variables (`Year of manufacture`, `Mileage`, `Engine size`, `Price`).
+- [ ] Perform One-Hot Encoding for low-cardinality nominal variables (`Fuel type`).
+- [ ] Utilize Label Encoding or Target Encoding for high-cardinality categorical variables (`Manufacturer`, `Model`).
+- [ ] Conduct feature selection (`SelectKBest` or RFE) to identify the most predictive variables.
+- [ ] Generate Polynomial Features for selected numerical variables (`Year of manufacture`, `Mileage`) to capture non-linear relationships.
+- [ ] Apply Log Transformations to skewed numerical data (`Price`, `Mileage`, `Engine size`) to normalize distributions.
+- [ ] Perform Binning/Discretization on continuous variables (`Year of manufacture`, `Mileage`, `Engine size`) to create categorical intervals/groups.
+- [ ] Create Interaction Features between key variables (e.g., `Age` × `Mileage`, `Engine size` × `Fuel type`).
 
 ---
 
