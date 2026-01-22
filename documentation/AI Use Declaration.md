@@ -8,7 +8,7 @@
 
 ## ส่วนที่ 1: เครื่องมือ AI
 
-| ชื่อ AI | วัตถุประสงค์การใช้ | ตัวอย่าง Prompt / Action | สิ่งที่ได้เรียนรู้จาก AI |
+| ชื่อ AI | วัตถุประสงค์การใช้ | ตัวอย่าง Prompt | สิ่งที่ได้เรียนรู้จาก AI |
 | :--- | :--- | :--- | :--- |
 | Google DeepMind Agent | Coding & Refactoring | "Move dashboard to root... using Next.js... Tailwind v4" | การตั้งค่า Project Structure ที่ดีสำหรับ Next.js, การใช้ Tailwind v4 (@theme), การเขียน GitHub Actions CI/CD ด้วย Bun |
 | Google DeepMind Agent | Coding | "show more things in the dashboard both data analysis and modelling and raw data" | การออกแบบ dashboard ให้แสดงข้อมูลหลายมิติ (charts, tables, metrics) |

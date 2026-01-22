@@ -44,9 +44,9 @@ def check_directories():
     project_root = Path(__file__).parent
     directories = [
         "data/raw",
-        "data/processed",
+        "data/cleaned",
         "notebooks",
-        "src/dashboard",
+        "dashboard/src",
     ]
     
     all_exist = True
@@ -67,8 +67,8 @@ def check_files():
     project_root = Path(__file__).parent
     files = [
         "pyproject.toml",
-        "notebooks/data_analysis_template.ipynb",
-        "src/dashboard/app.py",
+        "notebooks/preprocessing/1_cleaning.ipynb",
+        "dashboard/package.json",
         "README.md",
     ]
     
