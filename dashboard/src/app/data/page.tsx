@@ -8,13 +8,26 @@ import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { DataTable } from "@/components/DataTable";
 import { Activity, FileSpreadsheet, Download } from "lucide-react";
 import { getBasePath } from "@/utils/basePath";
+import { fetchToml } from "@/utils/tomlLoader";
+
+interface ProjectInfo {
+  title: string;
+  description: string;
+  dataset_name: string;
+  dataset_source_link: string;
+  dataset_files: string;
+  dataset_columns: string;
+}
 
 interface AnalysisData {
-  total_records: number;
-  average_price: number;
-  total_stock: number;
-  min_price: number;
-  max_price: number;
+  metrics: {
+    total_records: number;
+    total_stock: number;
+    average_price: number;
+    min_price: number;
+    max_price: number;
+  };
+  project_info: ProjectInfo;
   brand_distribution: { name: string; value: number }[];
   price_trend: { year: string; avg_price: number }[];
   engine_distribution: { name: string; value: number }[];
@@ -29,9 +42,8 @@ export default function DataPage() {
 
   useEffect(() => {
     const basePath = getBasePath();
-    fetch(`${basePath}/data/analysis/analysis_summary.json`)
-      .then((res) => res.json())
-      .then(setData)
+    fetchToml(`${basePath}/data/analysis/analysis_summary.toml`)
+      .then((res: any) => setData(res as AnalysisData))
       .catch((err) => console.error(err))
       .finally(() => setLoading(false));
   }, []);
@@ -46,46 +58,50 @@ export default function DataPage() {
     );
   }
 
+  const { metrics, project_info } = data || {};
+
   return (
     <Layout>
       <div className="space-y-6 animate-in fade-in duration-500">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
             <h2 className="text-2xl font-bold text-white">Raw Data Explorer</h2>
-            <p className="text-gray-400 text-sm mt-1">Explore aggregated data from the Cars dataset</p>
+            <p className="text-gray-400 text-sm mt-1">Explore aggregated data from the {project_info?.dataset_name || "dataset"}</p>
           </div>
-          <a 
-            href="https://www.kaggle.com/datasets/yukeshgk/raw-car-sales-data-set?select=Sales.csv"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-2 px-4 py-2 bg-primary/20 text-primary rounded-lg text-sm border border-primary/20 hover:bg-primary/30 transition-colors"
-          >
-            <Download className="w-4 h-4" />
-            Download from Kaggle
-          </a>
+          {project_info?.dataset_source_link && (
+            <a 
+              href={project_info.dataset_source_link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 px-4 py-2 bg-primary/20 text-primary rounded-lg text-sm border border-primary/20 hover:bg-primary/30 transition-colors"
+            >
+              <Download className="w-4 h-4" />
+              Download Source
+            </a>
+          )}
         </div>
 
         {/* Summary Stats */}
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
           <ScrollGlassCard direction="up" delay={0.1} className="p-4 text-center">
             <p className="text-xs text-gray-400 uppercase tracking-wider">Total Records</p>
-            <p className="text-xl font-bold text-white mt-1">{data?.total_records?.toLocaleString()}</p>
+            <p className="text-xl font-bold text-white mt-1">{metrics?.total_records?.toLocaleString()}</p>
           </ScrollGlassCard>
           <ScrollGlassCard direction="up" delay={0.2} className="p-4 text-center">
             <p className="text-xs text-gray-400 uppercase tracking-wider">Avg Price</p>
-            <p className="text-xl font-bold text-emerald-400 mt-1">${data?.average_price?.toLocaleString()}</p>
+            <p className="text-xl font-bold text-emerald-400 mt-1">${metrics?.average_price?.toLocaleString()}</p>
           </ScrollGlassCard>
           <ScrollGlassCard direction="up" delay={0.3} className="p-4 text-center">
             <p className="text-xs text-gray-400 uppercase tracking-wider">Total Stock</p>
-            <p className="text-xl font-bold text-blue-400 mt-1">{data?.total_stock?.toLocaleString()}</p>
+            <p className="text-xl font-bold text-blue-400 mt-1">{metrics?.total_stock?.toLocaleString()}</p>
           </ScrollGlassCard>
           <ScrollGlassCard direction="up" delay={0.4} className="p-4 text-center">
             <p className="text-xs text-gray-400 uppercase tracking-wider">Min Price</p>
-            <p className="text-xl font-bold text-amber-400 mt-1">${data?.min_price?.toLocaleString()}</p>
+            <p className="text-xl font-bold text-amber-400 mt-1">${metrics?.min_price?.toLocaleString()}</p>
           </ScrollGlassCard>
           <ScrollGlassCard direction="up" delay={0.5} className="p-4 text-center">
             <p className="text-xs text-gray-400 uppercase tracking-wider">Max Price</p>
-            <p className="text-xl font-bold text-purple-400 mt-1">${data?.max_price?.toLocaleString()}</p>
+            <p className="text-xl font-bold text-purple-400 mt-1">${metrics?.max_price?.toLocaleString()}</p>
           </ScrollGlassCard>
         </div>
 
@@ -161,7 +177,6 @@ export default function DataPage() {
         </div>
 
         {/* Dataset Info */}
-        {/* Dataset Info */}
         <ScrollGlassCard direction="up" delay={0.3} className="p-6">
           <div className="flex items-center gap-3 mb-4">
             <FileSpreadsheet className="w-5 h-5 text-primary" />
@@ -170,15 +185,15 @@ export default function DataPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
             <div className="p-4 bg-white/5 rounded-lg">
               <p className="text-gray-400 text-xs uppercase tracking-wider">Source</p>
-              <p className="text-white mt-1">Kaggle - Raw Car Sales Dataset</p>
+              <p className="text-white mt-1">{project_info?.dataset_name || "Custom Data"}</p>
             </div>
             <div className="p-4 bg-white/5 rounded-lg">
               <p className="text-gray-400 text-xs uppercase tracking-wider">Files</p>
-              <p className="text-white mt-1">Cars.csv, Customers.csv, Sales.csv</p>
+              <p className="text-white mt-1">{project_info?.dataset_files || "-"}</p>
             </div>
             <div className="p-4 bg-white/5 rounded-lg">
-              <p className="text-gray-400 text-xs uppercase tracking-wider">Columns (Cars)</p>
-              <p className="text-white mt-1 font-mono text-xs">Car_ID, Brand, Model, Year, Color, Engine_Type, Transmission, Price, Quantity_In_Stock, Status</p>
+              <p className="text-gray-400 text-xs uppercase tracking-wider">Columns</p>
+              <p className="text-white mt-1 font-mono text-xs break-words">{project_info?.dataset_columns || "Dynamic"}</p>
             </div>
           </div>
         </ScrollGlassCard>

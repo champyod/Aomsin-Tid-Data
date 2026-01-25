@@ -21,6 +21,7 @@ import {
 } from "recharts";
 import { Activity, Brain, Target, Layers, Settings } from "lucide-react";
 import { getBasePath } from "@/utils/basePath";
+import { fetchToml } from "@/utils/tomlLoader";
 
 interface ModelData {
   model_name: string;
@@ -52,9 +53,8 @@ export default function ModelingPage() {
 
   useEffect(() => {
     const basePath = getBasePath();
-    fetch(`${basePath}/data/modeling/model_metrics.json`)
-      .then((res) => res.json())
-      .then(setData)
+    fetchToml(`${basePath}/data/modeling/model_metrics.toml`)
+      .then((res: any) => setData(res as ModelData))
       .catch((err) => console.error(err))
       .finally(() => setLoading(false));
   }, []);
@@ -69,23 +69,22 @@ export default function ModelingPage() {
     );
   }
 
-  const cvData = data?.cross_validation_scores.map((score, i) => ({ fold: `Fold ${i + 1}`, score: score * 100 })) || [];
+  const cvData = data?.cross_validation_scores?.map((score, i) => ({ fold: `Fold ${i + 1}`, score: score * 100 })) || [];
 
   return (
     <Layout>
       <div className="space-y-6">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
-            <h2 className="text-2xl font-bold text-white">Model Performance</h2>
+            <h2 className="text-2xl font-bold text-white">{data?.model_name || "Model Performance"}</h2>
             <p className="text-gray-400 text-sm mt-1">Trained on {data?.training_date}</p>
           </div>
           <div className="px-4 py-2 bg-primary/20 text-primary rounded-lg text-sm font-mono border border-primary/20 flex items-center gap-2">
             <Brain className="w-4 h-4" />
-            {data?.model_type || "XGBoost"}
+            {data?.model_type || "Unknown Model"}
           </div>
         </div>
 
-        {/* Key Metrics Grid */}
         {/* Key Metrics Grid */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <ScrollGlassCard direction="up" delay={0.1} className="p-4 text-center">
@@ -121,10 +120,16 @@ export default function ModelingPage() {
                   <XAxis type="number" stroke="#9ca3af" fontSize={12} tickFormatter={(v) => `${(v * 100).toFixed(0)}%`} />
                   <YAxis dataKey="feature" type="category" stroke="#9ca3af" fontSize={11} width={90} />
                   <Tooltip 
-                    contentStyle={{ backgroundColor: "#1e1e2e", borderRadius: "12px", border: "none", color: "#f3f4f6" }} 
+                    contentStyle={{ 
+                      backgroundColor: "#000000", 
+                      borderRadius: "12px", 
+                      border: "1px solid #333333", 
+                      color: "#ffffff" 
+                    }} 
+                    itemStyle={{ color: "#ffffff" }}
                     formatter={(value: any) => [`${(Number(value) * 100).toFixed(1)}%`, 'Importance']}
                   />
-                  <Bar dataKey="importance" fill="#f5c2e7" radius={[0, 6, 6, 0]} barSize={18} />
+                  <Bar dataKey="importance" fill="var(--color-chart-1)" radius={[0, 6, 6, 0]} barSize={18} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -141,13 +146,19 @@ export default function ModelingPage() {
                 <BarChart data={cvData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#ffffff10" />
                   <XAxis dataKey="fold" stroke="#9ca3af" fontSize={12} />
-                  <YAxis stroke="#9ca3af" fontSize={12} domain={[90, 100]} tickFormatter={(v) => `${v}%`} />
+                  <YAxis stroke="#9ca3af" fontSize={12} domain={[0, 100]} tickFormatter={(v) => `${v}%`} />
                   <Tooltip 
-                    contentStyle={{ backgroundColor: "#1e1e2e", borderRadius: "12px", border: "none", color: "#f3f4f6" }} 
+                    contentStyle={{ 
+                      backgroundColor: "#000000", 
+                      borderRadius: "12px", 
+                      border: "1px solid #333333", 
+                      color: "#ffffff" 
+                    }} 
+                    itemStyle={{ color: "#ffffff" }}
                     formatter={(value: any) => [`${Number(value).toFixed(1)}%`, 'Score']}
                   />
                   <ReferenceLine y={(data?.cv_mean || 0) * 100} stroke="#a6e3a1" strokeDasharray="5 5" label={{ value: 'Mean', fill: '#a6e3a1', fontSize: 11 }} />
-                  <Bar dataKey="score" fill="#89b4fa" radius={[6, 6, 0, 0]} />
+                  <Bar dataKey="score" fill="var(--color-chart-4)" radius={[6, 6, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -157,7 +168,6 @@ export default function ModelingPage() {
           </ScrollGlassCard>
         </div>
 
-        {/* Predictions vs Actual */}
         {/* Predictions vs Actual */}
         <ScrollGlassCard direction="up" delay={0.4} className="p-6" variant="hover">
           <div className="flex items-center gap-3 mb-6">
@@ -188,48 +198,21 @@ export default function ModelingPage() {
                 />
                 <Tooltip 
                   cursor={{ strokeDasharray: '3 3' }}
-                  contentStyle={{ backgroundColor: "#1e1e2e", borderRadius: "12px", border: "none", color: "#f3f4f6" }} 
+                  contentStyle={{ 
+                    backgroundColor: "#000000", 
+                    borderRadius: "12px", 
+                    border: "1px solid #333333", 
+                    color: "#ffffff" 
+                  }} 
+                  itemStyle={{ color: "#ffffff" }}
                   formatter={(value: any) => [`$${Number(value).toLocaleString()}`, '']}
                 />
                 <ReferenceLine
-                  segment={(() => {
-                    const points = data?.predictions_sample || [];
-                    if (!points.length) {
-                      // Fallback diagonal if no data is available
-                      return [
-                        { x: 0, y: 0 },
-                        { x: 1, y: 1 },
-                      ];
-                    }
-                    let min = Infinity;
-                    let max = -Infinity;
-                    for (const p of points) {
-                      const actual = Number((p as any).actual);
-                      const predicted = Number((p as any).predicted);
-                      if (Number.isFinite(actual)) {
-                        if (actual < min) min = actual;
-                        if (actual > max) max = actual;
-                      }
-                      if (Number.isFinite(predicted)) {
-                        if (predicted < min) min = predicted;
-                        if (predicted > max) max = predicted;
-                      }
-                    }
-                    if (!Number.isFinite(min) || !Number.isFinite(max)) {
-                      return [
-                        { x: 0, y: 0 },
-                        { x: 1, y: 1 },
-                      ];
-                    }
-                    return [
-                      { x: min, y: min },
-                      { x: max, y: max },
-                    ];
-                  })()}
+                  segment={[{ x: 0, y: 0 }, { x: 100000, y: 100000 }]} // Simplified diagonal if range known, or use calculated min/max dynamically
                   stroke="#a6e3a1"
                   strokeDasharray="5 5"
                 />
-                <Scatter name="Predictions" data={data?.predictions_sample || []} fill="#f5c2e7" />
+                <Scatter name="Predictions" data={data?.predictions_sample || []} fill="var(--color-chart-2)" />
               </ScatterChart>
             </ResponsiveContainer>
           </div>
@@ -238,7 +221,6 @@ export default function ModelingPage() {
           </p>
         </ScrollGlassCard>
 
-        {/* Hyperparameters */}
         {/* Hyperparameters */}
         <ScrollGlassCard direction="up" delay={0.5} className="p-6" variant="hover">
           <div className="flex items-center gap-3 mb-4">

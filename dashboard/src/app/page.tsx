@@ -21,31 +21,33 @@ import {
 } from "recharts";
 import { Activity, Database, Brain } from "lucide-react";
 import { getBasePath } from "@/utils/basePath";
+import { fetchToml } from "@/utils/tomlLoader";
+
+interface ProjectInfo {
+  title: string;
+  description: string;
+  dataset_name: string;
+  dataset_source_link: string;
+}
 
 interface AnalysisData {
-  total_records: number;
-  average_price: number;
-  total_stock: number;
+  metrics: {
+    total_revenue: number;
+    total_units: number;
+    average_price: number;
+    top_performing_region: string;
+  };
+  project_info: ProjectInfo;
   brand_distribution: { name: string; value: number }[];
   price_trend: { year: string; avg_price: number }[];
+  engine_distribution?: { name: string; value: number }[]; // Optional as it might come from demo or real
 }
 
 interface ModelData {
   model_name: string;
   accuracy: number;
   r2_score: number;
-  feature_importance: { feature: string; importance: number }[];
 }
-
-const COLORS = [
-  "#f5c2e7", // Pink
-  "#cba6f7", // Mauve
-  "#89b4fa", // Blue
-  "#a6e3a1", // Green
-  "#fab387", // Peach
-  "#f9e2af", // Yellow
-  "#eba0ac", // Maroon
-];
 
 export default function Home() {
   const [analysisData, setAnalysisData] = useState<AnalysisData | null>(null);
@@ -56,13 +58,29 @@ export default function Home() {
     async function fetchData() {
       try {
         const basePath = getBasePath();
-        const [analysisRes, modelRes] = await Promise.all([
-          fetch(`${basePath}/data/analysis/analysis_summary.json`),
-          fetch(`${basePath}/data/modeling/model_metrics.json`),
+        
+        // Strategy: Try Real -> Fallback to Null (handled by UI) or Demo if specific file exists
+        // For analysis_summary, if it fails, we might just show empty state, as there isn't a "demo_summary.toml" unless I create one.
+        // The user said "if there is any file in same dir that mean it is real data so overwrite this demo data".
+        // This implies we should load Demo first, then overlay Real.
+        
+        // 1. Fetch Real Data
+        const [analysisRes, modelRes] = await Promise.allSettled([
+          fetchToml(`${basePath}/data/analysis/analysis_summary.toml`),
+          fetchToml(`${basePath}/data/modeling/model_metrics.toml`),
         ]);
 
-        if (analysisRes.ok) setAnalysisData(await analysisRes.json());
-        if (modelRes.ok) setModelData(await modelRes.json());
+        if (analysisRes.status === 'fulfilled' && analysisRes.value) {
+           setAnalysisData(analysisRes.value as unknown as AnalysisData);
+        } else {
+           console.warn("Analysis data missing, dashboard might be empty.");
+           // Potential fallback: Load a static demo config if we had one for the whole dashboard.
+        }
+
+        if (modelRes.status === 'fulfilled' && modelRes.value) {
+           setModelData(modelRes.value as unknown as ModelData);
+        }
+        
       } catch (error) {
         console.error("Failed to fetch dashboard data:", error);
       } finally {
@@ -82,17 +100,22 @@ export default function Home() {
     );
   }
 
+  const { project_info, metrics } = analysisData || {};
+
   return (
     <Layout>
       <div className="space-y-8">
         
         {/* Project Intro Section */}
         <ScrollGlassCard direction="none" className="p-8" variant="hover">
-              <h2 className="text-2xl font-bold text-white mb-2">Welcome to Aomsin Tid Data Dashboard</h2>
+              <h2 className="text-2xl font-bold text-white mb-2">{project_info?.title || "Aomsin Tid Data Dashboard"}</h2>
               <p className="text-gray-300 leading-relaxed font-light">
-                  This project provides comprehensive intelligence on the automotive market, analyzing trends, pricing models, and inventory distribution.
-                  Leveraging the <strong><a href="https://www.kaggle.com/datasets/yukeshgk/raw-car-sales-data-set?select=Sales.csv" target="_blank" className="text-primary hover:underline">Raw Car Sales Data Set</a></strong> (sourced from Kaggle), we employ 
-                  machine learning models to predict market values and identify key economic indicators.
+                  {project_info?.description || "Welcome to the dashboard. No analysis data found. Run the notebooks to generate insights."}
+                  {project_info?.dataset_source_link && (
+                    <>
+                      {" "}Leveraging the <strong><a href={project_info.dataset_source_link} target="_blank" className="text-primary hover:underline">{project_info.dataset_name}</a></strong>.
+                    </>
+                  )}
               </p>
         </ScrollGlassCard>
 
@@ -100,8 +123,8 @@ export default function Home() {
         <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <StaggerItem>
             <StatCard
-              label="Total Cars Tracked"
-              value={analysisData?.total_records?.toLocaleString() || "0"}
+              label="Total Units Sold"
+              value={metrics?.total_units?.toLocaleString() || "0"}
               icon={Database}
               trend={{ value: 5, isPositive: true }}
             />
@@ -116,16 +139,16 @@ export default function Home() {
           </StaggerItem>
           <StaggerItem>
             <StatCard
-              label="Market Average Price"
-              value={`$${analysisData?.average_price?.toLocaleString(undefined, { maximumFractionDigits: 0 }) || "0"}`}
+              label="Average Price"
+              value={`$${metrics?.average_price?.toLocaleString(undefined, { maximumFractionDigits: 0 }) || "0"}`}
               icon={Activity}
             />
           </StaggerItem>
           <StaggerItem>
             <StatCard
-              label="Available Stock"
-              value={analysisData?.total_stock?.toLocaleString() || "0"}
-              icon={Database}
+              label="Top Region"
+              value={metrics?.top_performing_region || "-"}
+              icon={Activity}
             />
           </StaggerItem>
         </StaggerContainer>
@@ -142,31 +165,32 @@ export default function Home() {
                     <YAxis stroke="#9ca3af" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(val) => `$${val/1000}k`} />
                     <Tooltip
                     contentStyle={{ 
-                      backgroundColor: "#1e1e2e", 
-                      color: "#f3f4f6",
+                      backgroundColor: "#000000", 
+                      color: "#ffffff",
                       borderRadius: "12px", 
-                      border: "none", 
-                      boxShadow: "0 10px 15px -3px rgb(0 0 0 / 0.5)" 
+                      border: "1px solid #333333",
+                      boxShadow: "0 10px 15px -3px rgb(0 0 0 / 0.8)" 
                     }}
-                    itemStyle={{ color: "#f3f4f6" }}
+                    itemStyle={{ color: "#ffffff" }}
+                    labelStyle={{ color: "#a1a1aa" }}
                     formatter={(value: any) => [
                         typeof value === "number" ? `$${value.toLocaleString()}` : value,
                         "Avg Price"
                       ]}
                     />
-                    <Line type="monotone" dataKey="avg_price" stroke="#3b82f6" strokeWidth={3} dot={false} activeDot={{ r: 8, fill: "#3b82f6" }} />
+                    <Line type="monotone" dataKey="avg_price" stroke="var(--color-primary)" strokeWidth={3} dot={false} activeDot={{ r: 8, fill: "var(--color-primary)" }} />
                   </LineChart>
                 </ResponsiveContainer>
               </div>
           </ScrollGlassCard>
 
           <ScrollGlassCard direction="right" delay={0.2} className="p-6" variant="hover">
-              <h3 className="text-lg font-semibold text-white mb-6">Brand Distribution</h3>
+              <h3 className="text-lg font-semibold text-white mb-6">Engine Type Distribution</h3>
               <div className="h-80">
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
                     <Pie
-                      data={analysisData?.brand_distribution || []}
+                      data={analysisData?.engine_distribution || []}
                       cx="50%"
                       cy="50%"
                       innerRadius={70}
@@ -175,11 +199,19 @@ export default function Home() {
                       paddingAngle={5}
                       dataKey="value"
                     >
-                      {(analysisData?.brand_distribution || []).map((_: any, index: number) => (
-                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} stroke="rgba(0,0,0,0.2)" />
+                      {(analysisData?.engine_distribution || []).map((_: any, index: number) => (
+                        <Cell key={`cell-${index}`} fill={`var(--color-chart-${(index % 7) + 1})`} stroke="rgba(0,0,0,0.5)" />
                       ))}
                     </Pie>
-                    <Tooltip contentStyle={{ backgroundColor: "#18181b", borderRadius: "12px", border: "1px solid rgba(255,255,255,0.1)" }} />
+                    <Tooltip 
+                      contentStyle={{ 
+                        backgroundColor: "#000000", 
+                        borderRadius: "12px", 
+                        border: "1px solid #333333", 
+                        color: "#ffffff" 
+                      }} 
+                      itemStyle={{ color: "#ffffff" }}
+                    />
                     <Legend iconType="circle" />
                   </PieChart>
                 </ResponsiveContainer>

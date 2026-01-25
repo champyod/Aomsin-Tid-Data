@@ -62,7 +62,7 @@ interface UniversalChartProps {
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-black/80 backdrop-blur-md border border-white/10 p-3 rounded-lg shadow-xl">
+      <div className="bg-black border border-[#333333] p-3 rounded-lg shadow-xl">
         <p className="text-white font-medium mb-1">{label}</p>
         {payload.map((entry: any, index: number) => (
           <p key={index} style={{ color: entry.color }} className="text-sm">
