@@ -2,7 +2,7 @@
 name = "aomsin-tid-data"
 version = "0.1.0"
 description = "A data analysis project with Jupyter notebooks and interactive dashboard"
-requires-python = ">=3.12"
+requires-python = ">=3.14"
 dependencies = [
     "pandas>=2.0.0",
     "numpy>=1.24.0",
@@ -36,8 +36,8 @@ packages = ["src"]
 
 [tool.black]
 line-length = 88
-target-version = ['py312']
+target-version = ['py314']
 
 [tool.ruff]
 line-length = 88
-target-version = "py312"
+target-version = "py314"

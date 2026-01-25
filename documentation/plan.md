@@ -10,87 +10,75 @@
 
 | File | Description | Size |
 |------|-------------|------|
-| `Cars.csv` | Car inventory data (ID, Brand, Model, Year, Color, Engine, Transmission, Price, Stock, Status) | ~500 records |
-| `Customers.csv` | Customer information | ~235KB |
-| `Sales.csv` | Sales transaction records | ~650KB |
+| `car_sales_data.csv` | Consolidated car sales records (Manufacturer, Model, Engine size, Fuel type, Year, Mileage, Price) | ~50k records |
 
 ---
 
 ## Phase 1: Data Cleaning 🧹
 
 ### 1.1 Load and Inspect Raw Data
-- [x] Load all CSV files (`Cars.csv`, `Customers.csv`, `Sales.csv`)
-- [x] Display first/last few rows of each dataset
-- [x] Check data types with `df.dtypes`
-- [x] Get basic statistics with `df.describe()` and `df.info()`
+- [x] Load `car_sales_data.csv` using Polars.
+- [x] Inspect schema and basic shapes.
 
-### 1.2 Handle Missing Values
-- [x] Identify missing values with `df.isnull().sum()`
-- [x] Visualize missing data patterns (e.g., using `missingno` library)
-- [x] Strategy decisions:
-  - **Numerical columns**: Impute with mean/median or drop
-  - **Categorical columns**: Impute with mode or create "Unknown" category
-  - **Critical IDs**: Drop rows with missing IDs
-- [x] Document missing data in `Brand` column (rows with empty Brand observed in raw data)
+### 1.2 Anomaly Detection
+- [x] **Duplicate Detection**: Identify exact row duplicates (e.g., identical car specs and price).
+- [x] **Casting Checks**: Attempt casting to numeric types to identify non-conformant data (turns to Null).
+- [x] **Null Verification**: Inspect rows with Nulls after casting to distinguish between missing data and bad data.
 
-### 1.3 Handle Duplicates
-- [x] Check for duplicate rows: `df.duplicated().sum()`
-- [x] Check for duplicate Car_IDs (e.g., C0182 appears twice)
-- [x] Remove or flag duplicates based on business logic
+### 1.3 Data Transformations
+- [x] **String Standardization**: 
+    - Title Case for `Manufacturer` and `Fuel type`.
+    - Strip whitespace from all string columns.
+- [x] **Type Casting**:
+    - `Engine size` -> Float
+    - `Year` -> Int
+    - `Mileage` -> Int
+    - `Price` -> Float
+- [x] **Deduplication**: Remove exact duplicates.
+- [x] **Null Handling**: Drop invalid rows.
 
-### 1.4 Data Type Corrections
-- [x] Ensure `Year` is integer type
-- [x] Ensure `Price` is float type
-- [x] Convert date columns to datetime format (if applicable)
-- [x] Handle extra empty columns in Cars.csv (trailing commas)
-
-### 1.5 Standardize Categorical Values
-- [x] `Transmission` column: Standardize variants (`auto`, `A`, `M`, `manaul` → `Automatic`/`Manual`)
-- [x] `Status` column: Verify only valid values (`Available`, `Reserved`, `Sold`)
-- [x] `Engine_Type`: Ensure consistent naming (`Petrol`, `Diesel`, `Electric`, `Hybrid`)
-
-### 1.6 Save Cleaned Data
-- [x] Export cleaned datasets to `data/cleaned/` directory
-- [x] Document all cleaning steps performed
+### 1.4 Save Cleaned Data
+- [x] Export cleaned dataset to `data/cleaned/car_sales_data_cleaned.csv`.
 
 ---
 
 ## Phase 2: Exploratory Data Analysis 📈
 
 ### 2.1 Univariate Analysis
-- [ ] **Numerical Distributions**: Histograms and KDE plots for `Price`, `Year`, and customer `Age`
-- [ ] **Categorical Frequencies**: Bar charts for `Brand`, `Model`, `Engine_Type`, `Transmission`, and `Region`
-- [ ] **Outlier Detection**: Box plots to identify anomalies in `Price` and `Quantity`
+- [ ] **Numerical Distributions**: Histograms and KDE plots for `Price`, `Year of manufacture`, `Mileage`, and `Engine size`.
+- [ ] **Categorical Frequencies**: Bar charts for `Manufacturer`, `Model`, `Fuel type`.
+- [ ] **Outlier Detection**: Box plots to identify anomalies in `Price`, `Mileage`, and `Engine size`.
 
 ### 2.2 Bivariate & Multivariate Analysis
-- [ ] **Correlation Analysis**: Heatmap to identify linear relationships between numerical features
-- [ ] **Sales Performance by Category**: 
-    - Average `Price` per `Brand` and `Engine_Type`
-    - Sales volume per `Region` and `Payment_Method`
-- [ ] **Scatter Plot Matrix**: Pairwise relationships to identify clusters or non-linear patterns
+- [ ] **Correlation Analysis**: Heatmap to identify linear relationships between numerical features (`Price`, `Mileage`, `Year`, `Engine size`).
+- [ ] **Price Analysis by Category**: 
+    - Average `Price` per `Manufacturer` and `Fuel type`.
+    - Price distributions by `Model`.
+- [ ] **Scatter Plots**: 
+    - `Price` vs. `Mileage` (Depreciation check).
+    - `Price` vs. `Engine size` (Performance premium check).
 
-### 2.3 Temporal Analysis (Time-Series)
-- [ ] **Sales Trends**: Line plots of sales volume and revenue over time
-- [ ] **Seasonality**: Analyze sales patterns by month/quarter or day of the week
+### 2.3 Temporal Analysis
+- [ ] **Price Trends**: Analyze average price by `Year of manufacture`.
+- [ ] **Depreciation Curve**: Plot `Price` against Age (Derived from `Year`).
 
-### 2.4 Data Integrity Check
-- [ ] **Data Shape Verify**: Confirm row/column counts across joins
-- [ ] **Cross-Table Consistency**: Ensure `Car_ID` and `Customer_ID` integrity between `Sales` and primary tables
+### 2.4 Data Quality Check
+- [ ] **Category Consistency**: Verify spelling/casing consistency across `Manufacturer` and `Model`.
+- [ ] **Logical Validity**: Check for impossible combinations (e.g., negative mileage, future years).
 
 ---
 
 ## Phase 3: Feature Engineering 🔧
 
-- [ ] Apply Principal Component Analysis (PCA) to numerical features (`Year`, `Price`, `Quantity_In_Stock` from `Cars_cleaned.csv`, `Age` from `Customers_cleaned.csv`, `Quantity`, `Sale_Price` from `Sales_cleaned.csv`) to reduce dimensionality.
-- [ ] Implement feature scaling (`StandardScaler` or `MinMaxScaler`) for continuous numerical variables (`Year`, `Price`, `Quantity_In_Stock`, `Age`, `Quantity`, `Sale_Price`).
-- [ ] Perform One-Hot Encoding for nominal categorical variables (`Brand`, `Model`, `Color`, `Engine_Type`, `Transmission`, `Status`, `Gender`, `Region`, `Payment_Method`).
-- [ ] Utilize Label Encoding for ordinal or high-cardinality categorical variables (`Brand`, `Model`, `Color`, `Engine_Type`, `Transmission`, `Status`, `Gender`, `State`, `Region`, `Payment_Method`).
-- [ ] Use Target Encoding for high-cardinality features (`Brand`, `Model`, `Salesperson`) by replacing categories with the mean outcome.
-- [ ] Conduct feature selection (`SelectKBest` or RFE) across numerical features to identify the most predictive variables.
-- [ ] Generate Polynomial Features for selected numerical variables (`Year`, `Price`, `Age`, `Quantity`) to capture non-linear relationships.
-- [ ] Apply Log Transformations to skewed numerical data (`Price`, `Sale_Price`, `Quantity_In_Stock`) to normalize distributions.
-- [ ] Perform Binning/Discretization on continuous variables (`Age`, `Price`, `Year`, `Quantity_In_Stock`) to create categorical intervals.
-- [ ] Create Interaction Features between key variables (e.g., `Year` × `Brand`, `Engine_Type` × `Transmission`, `Age` × `Region`).
+- [ ] Apply Principal Component Analysis (PCA) to numerical features (`Year of manufacture`, `Mileage`, `Engine size`) to reduce dimensionality if needed.
+- [ ] Implement feature scaling (`StandardScaler` or `MinMaxScaler`) for continuous numerical variables (`Year of manufacture`, `Mileage`, `Engine size`, `Price`).
+- [ ] Perform One-Hot Encoding for low-cardinality nominal variables (`Fuel type`).
+- [ ] Utilize Label Encoding or Target Encoding for high-cardinality categorical variables (`Manufacturer`, `Model`).
+- [ ] Conduct feature selection (`SelectKBest` or RFE) to identify the most predictive variables.
+- [ ] Generate Polynomial Features for selected numerical variables (`Year of manufacture`, `Mileage`) to capture non-linear relationships.
+- [ ] Apply Log Transformations to skewed numerical data (`Price`, `Mileage`, `Engine size`) to normalize distributions.
+- [ ] Perform Binning/Discretization on continuous variables (`Year of manufacture`, `Mileage`, `Engine size`) to create categorical intervals/groups.
+- [ ] Create Interaction Features between key variables (e.g., `Age` × `Mileage`, `Engine size` × `Fuel type`).
 
 ---
 
