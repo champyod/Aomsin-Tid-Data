@@ -45,26 +45,26 @@
 ## Phase 2: Exploratory Data Analysis 📈
 
 ### 2.1 Univariate Analysis
-- [ ] **Numerical Distributions**: Histograms and KDE plots for `Price`, `Year of manufacture`, `Mileage`, and `Engine size`.
-- [ ] **Categorical Frequencies**: Bar charts for `Manufacturer`, `Model`, `Fuel type`.
-- [ ] **Outlier Detection**: Box plots to identify anomalies in `Price`, `Mileage`, and `Engine size`.
+- [x] **Numerical Distributions**: Histograms and KDE plots for `Price`, `Year of manufacture`, `Mileage`, and `Engine size`.
+- [x] **Categorical Frequencies**: Bar charts for `Manufacturer`, `Model`, `Fuel type`.
+- [x] **Outlier Detection**: Box plots to identify anomalies in `Price`, `Mileage`, and `Engine size`.
 
 ### 2.2 Bivariate & Multivariate Analysis
-- [ ] **Correlation Analysis**: Heatmap to identify linear relationships between numerical features (`Price`, `Mileage`, `Year`, `Engine size`).
-- [ ] **Price Analysis by Category**: 
+- [x] **Correlation Analysis**: Heatmap to identify linear relationships between numerical features (`Price`, `Mileage`, `Year of manufacture`, `Engine size`).
+- [x] **Price Analysis by Category**: 
     - Average `Price` per `Manufacturer` and `Fuel type`.
     - Price distributions by `Model`.
-- [ ] **Scatter Plots**: 
+- [x] **Scatter Plots**: 
     - `Price` vs. `Mileage` (Depreciation check).
     - `Price` vs. `Engine size` (Performance premium check).
 
 ### 2.3 Temporal Analysis
-- [ ] **Price Trends**: Analyze average price by `Year of manufacture`.
-- [ ] **Depreciation Curve**: Plot `Price` against Age (Derived from `Year`).
+- [x] **Price Trends**: Analyze average price by `Year of manufacture`.
+- [x] **Depreciation Curve**: Plot `Price` against Age (Derived from `Year of manufacture`).
 
 ### 2.4 Data Quality Check
-- [ ] **Category Consistency**: Verify spelling/casing consistency across `Manufacturer` and `Model`.
-- [ ] **Logical Validity**: Check for impossible combinations (e.g., negative mileage, future years).
+- [x] **Category Consistency**: Verify spelling/casing consistency across `Manufacturer` and `Model`.
+- [x] **Logical Validity**: Check for impossible combinations (e.g., negative mileage, future years).
 
 ---
 

@@ -2,7 +2,7 @@
 name = "aomsin-tid-data"
 version = "0.1.0"
 description = "A data analysis project with Jupyter notebooks and interactive dashboard"
-requires-python = ">=3.14"
+requires-python = ">=3.12"
 dependencies = [
     "pandas>=2.0.0",
     "numpy>=1.24.0",
@@ -18,6 +18,7 @@ dependencies = [
     "polars>=1.37.1",
     "scikit-learn>=1.8.0",
     "toml>=0.10.2",
+    "statsmodels>=0.14.6",
 ]
 
 [project.optional-dependencies]
