@@ -9,6 +9,7 @@ import { DataTable } from "@/components/DataTable";
 import { Activity, FileSpreadsheet, Download } from "lucide-react";
 import { getBasePath } from "@/utils/basePath";
 import { fetchToml } from "@/utils/tomlLoader";
+import { UniversalChart, ChartConfig } from "@/components/UniversalChart";
 
 interface ProjectInfo {
   title: string;
@@ -38,14 +39,38 @@ interface AnalysisData {
 
 export default function DataPage() {
   const [data, setData] = useState<AnalysisData | null>(null);
+  const [charts, setCharts] = useState<ChartConfig[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const basePath = getBasePath();
-    fetchToml(`${basePath}/data/analysis/analysis_summary.toml`)
-      .then((res: any) => setData(res as AnalysisData))
-      .catch((err) => console.error(err))
-      .finally(() => setLoading(false));
+    async function fetchData() {
+      try {
+        const basePath = getBasePath();
+        
+        // 1. Fetch Metrics (Real)
+        const metrics = await fetchToml(`${basePath}/data/analysis/analysis_summary.toml`);
+        if (metrics) {
+            setData(metrics as unknown as AnalysisData);
+        }
+
+        // 2. Fetch Charts (Real -> Fallback to Demo)
+        const realCharts = await fetchToml(`${basePath}/data/analysis/data_charts.toml`);
+        if (realCharts && (realCharts as any).charts) {
+            setCharts((realCharts as any).charts as ChartConfig[]);
+        } else {
+            console.warn("Real data charts missing. Loading Demo.");
+            const demoCharts = await fetchToml(`${basePath}/data/analysis/demo_data_charts.toml`);
+            if (demoCharts && (demoCharts as any).charts) {
+                setCharts((demoCharts as any).charts as ChartConfig[]);
+            }
+        }
+      } catch (err) {
+        console.error("Failed to load data page content", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchData();
   }, []);
 
   if (loading) {
@@ -105,54 +130,24 @@ export default function DataPage() {
           </ScrollGlassCard>
         </div>
 
-        {/* Tables */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <ScrollReveal direction="left" delay={0.1}>
-            <DataTable 
-              title="Brand Distribution"
-              columns={[
-                { header: "Brand", accessorKey: "name" },
-                { header: "Car Count", accessorKey: "value" },
-              ]}
-              data={data?.brand_distribution || []}
-            />
-          </ScrollReveal>
-          <ScrollReveal direction="right" delay={0.2}>
-            <DataTable 
-              title="Engine Type Distribution"
-              columns={[
-                { header: "Engine Type", accessorKey: "name" },
-                { header: "Count", accessorKey: "value" },
-              ]}
-              data={data?.engine_distribution || []}
-            />
-          </ScrollReveal>
-        </div>
+        {/* Dynamic Charts Grid */}
+        {charts.length > 0 && (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+             {charts.map((config, index) => (
+                <ScrollReveal 
+                  key={index} 
+                  direction={index % 2 === 0 ? "left" : "right"} 
+                  delay={0.1 * (index + 1)}
+                  className="w-full"
+                >
+                   <UniversalChart config={config} />
+                </ScrollReveal>
+             ))}
+          </div>
+        )}
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <ScrollReveal direction="left" delay={0.1}>
-            <DataTable 
-              title="Inventory Status"
-              columns={[
-                { header: "Status", accessorKey: "name" },
-                { header: "Count", accessorKey: "value" },
-                { header: "Percentage", accessorKey: "percentage", cell: (item: { percentage: number }) => `${item.percentage}%` },
-              ]}
-              data={data?.status_distribution || []}
-            />
-          </ScrollReveal>
-          <ScrollReveal direction="right" delay={0.2}>
-            <DataTable 
-              title="Transmission Distribution"
-              columns={[
-                { header: "Transmission", accessorKey: "name" },
-                { header: "Count", accessorKey: "value" },
-              ]}
-              data={data?.transmission_distribution || []}
-            />
-          </ScrollReveal>
-        </div>
-
+        {/* Detailed Tables */}
+        <h3 className="text-xl font-bold text-white mt-8 mb-4">Detailed Tables</h3>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <ScrollReveal direction="left" delay={0.1}>
             <DataTable 

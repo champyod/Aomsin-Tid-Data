@@ -3,25 +3,12 @@
 import { useState, useEffect } from "react";
 import { Layout } from "@/components/Layout";
 import { StatCard } from "@/components/StatCard";
-import { GlassCard } from "@/components/ui/GlassCard";
 import { ScrollGlassCard } from "@/components/ui/ScrollGlassCard";
 import { ScrollReveal, StaggerContainer, StaggerItem } from "@/components/ui/ScrollReveal";
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  PieChart,
-  Pie,
-  Cell,
-  Legend,
-} from "recharts";
 import { Activity, Database, Brain } from "lucide-react";
 import { getBasePath } from "@/utils/basePath";
 import { fetchToml } from "@/utils/tomlLoader";
+import { UniversalChart, ChartConfig } from "@/components/UniversalChart";
 
 interface ProjectInfo {
   title: string;
@@ -38,9 +25,6 @@ interface AnalysisData {
     top_performing_region: string;
   };
   project_info: ProjectInfo;
-  brand_distribution: { name: string; value: number }[];
-  price_trend: { year: string; avg_price: number }[];
-  engine_distribution?: { name: string; value: number }[]; // Optional as it might come from demo or real
 }
 
 interface ModelData {
@@ -52,6 +36,7 @@ interface ModelData {
 export default function Home() {
   const [analysisData, setAnalysisData] = useState<AnalysisData | null>(null);
   const [modelData, setModelData] = useState<ModelData | null>(null);
+  const [charts, setCharts] = useState<ChartConfig[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -59,12 +44,7 @@ export default function Home() {
       try {
         const basePath = getBasePath();
         
-        // Strategy: Try Real -> Fallback to Null (handled by UI) or Demo if specific file exists
-        // For analysis_summary, if it fails, we might just show empty state, as there isn't a "demo_summary.toml" unless I create one.
-        // The user said "if there is any file in same dir that mean it is real data so overwrite this demo data".
-        // This implies we should load Demo first, then overlay Real.
-        
-        // 1. Fetch Real Data
+        // 1. Fetch Metrics (Real) - Analysis Summary & Model Metrics
         const [analysisRes, modelRes] = await Promise.allSettled([
           fetchToml(`${basePath}/data/analysis/analysis_summary.toml`),
           fetchToml(`${basePath}/data/modeling/model_metrics.toml`),
@@ -72,15 +52,24 @@ export default function Home() {
 
         if (analysisRes.status === 'fulfilled' && analysisRes.value) {
            setAnalysisData(analysisRes.value as unknown as AnalysisData);
-        } else {
-           console.warn("Analysis data missing, dashboard might be empty.");
-           // Potential fallback: Load a static demo config if we had one for the whole dashboard.
         }
 
         if (modelRes.status === 'fulfilled' && modelRes.value) {
            setModelData(modelRes.value as unknown as ModelData);
         }
-        
+
+        // 2. Fetch Charts (Real -> Fallback to Demo)
+        const realCharts = await fetchToml(`${basePath}/data/analysis/overview_charts.toml`);
+        if (realCharts && (realCharts as any).charts) {
+            setCharts((realCharts as any).charts as ChartConfig[]);
+        } else {
+            console.warn("Real overview charts missing. Loading Demo.");
+            const demoCharts = await fetchToml(`${basePath}/data/analysis/demo_overview_charts.toml`);
+            if (demoCharts && (demoCharts as any).charts) {
+                setCharts((demoCharts as any).charts as ChartConfig[]);
+            }
+        }
+
       } catch (error) {
         console.error("Failed to fetch dashboard data:", error);
       } finally {
@@ -119,7 +108,7 @@ export default function Home() {
               </p>
         </ScrollGlassCard>
 
-        {/* Stats Grid with Stagger Animation */}
+        {/* Stats Grid */}
         <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <StaggerItem>
             <StatCard
@@ -153,71 +142,21 @@ export default function Home() {
           </StaggerItem>
         </StaggerContainer>
 
-        {/* Charts with alternating scroll directions */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <ScrollGlassCard direction="left" delay={0.1} className="p-6" variant="hover">
-              <h3 className="text-lg font-semibold text-white mb-6">Price Trend (Yearly)</h3>
-              <div className="h-80">
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={analysisData?.price_trend || []}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#ffffff10" />
-                    <XAxis dataKey="year" stroke="#9ca3af" fontSize={12} tickLine={false} axisLine={false} />
-                    <YAxis stroke="#9ca3af" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(val) => `$${val/1000}k`} />
-                    <Tooltip
-                    contentStyle={{ 
-                      backgroundColor: "#000000", 
-                      color: "#ffffff",
-                      borderRadius: "12px", 
-                      border: "1px solid #333333",
-                      boxShadow: "0 10px 15px -3px rgb(0 0 0 / 0.8)" 
-                    }}
-                    itemStyle={{ color: "#ffffff" }}
-                    labelStyle={{ color: "#a1a1aa" }}
-                    formatter={(value: any) => [
-                        typeof value === "number" ? `$${value.toLocaleString()}` : value,
-                        "Avg Price"
-                      ]}
-                    />
-                    <Line type="monotone" dataKey="avg_price" stroke="var(--color-primary)" strokeWidth={3} dot={false} activeDot={{ r: 8, fill: "var(--color-primary)" }} />
-                  </LineChart>
-                </ResponsiveContainer>
-              </div>
-          </ScrollGlassCard>
-
-          <ScrollGlassCard direction="right" delay={0.2} className="p-6" variant="hover">
-              <h3 className="text-lg font-semibold text-white mb-6">Engine Type Distribution</h3>
-              <div className="h-80">
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie
-                      data={analysisData?.engine_distribution || []}
-                      cx="50%"
-                      cy="50%"
-                      innerRadius={70}
-                      outerRadius={100}
-                      fill="#8884d8"
-                      paddingAngle={5}
-                      dataKey="value"
-                    >
-                      {(analysisData?.engine_distribution || []).map((_: any, index: number) => (
-                        <Cell key={`cell-${index}`} fill={`var(--color-chart-${(index % 7) + 1})`} stroke="rgba(0,0,0,0.5)" />
-                      ))}
-                    </Pie>
-                    <Tooltip 
-                      contentStyle={{ 
-                        backgroundColor: "#000000", 
-                        borderRadius: "12px", 
-                        border: "1px solid #333333", 
-                        color: "#ffffff" 
-                      }} 
-                      itemStyle={{ color: "#ffffff" }}
-                    />
-                    <Legend iconType="circle" />
-                  </PieChart>
-                </ResponsiveContainer>
-              </div>
-          </ScrollGlassCard>
-        </div>
+        {/* Dynamic Charts Grid */}
+        {charts.length > 0 && (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {charts.map((config, index) => (
+              <ScrollReveal 
+                key={index} 
+                direction={index % 2 === 0 ? "left" : "right"} 
+                delay={0.1 * (index + 1)}
+                className="col-span-1" // Assume 2-col grid, let UniversalChart handle sizing info if passed, or standard 50%
+              >
+                  <UniversalChart config={config} />
+              </ScrollReveal>
+            ))}
+          </div>
+        )}
       </div>
     </Layout>
   );

@@ -2,26 +2,12 @@
 
 import { useState, useEffect } from "react";
 import { Layout } from "@/components/Layout";
-import { GlassCard } from "@/components/ui/GlassCard";
 import { ScrollGlassCard } from "@/components/ui/ScrollGlassCard";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  ScatterChart,
-  Scatter,
-  ReferenceLine,
-  LineChart,
-  Line,
-} from "recharts";
-import { Activity, Brain, Target, Layers, Settings } from "lucide-react";
+import { Activity, Brain, Settings } from "lucide-react";
 import { getBasePath } from "@/utils/basePath";
 import { fetchToml } from "@/utils/tomlLoader";
+import { UniversalChart, ChartConfig } from "@/components/UniversalChart";
 
 interface ModelData {
   model_name: string;
@@ -34,29 +20,48 @@ interface ModelData {
   training_samples: number;
   testing_samples: number;
   training_date: string;
-  feature_importance: { feature: string; importance: number }[];
-  cross_validation_scores: number[];
-  cv_mean: number;
-  cv_std: number;
   hyperparameters: {
     n_estimators: number;
     max_depth: number;
     learning_rate: number;
     subsample: number;
   };
-  predictions_sample: { actual: number; predicted: number }[];
 }
 
 export default function ModelingPage() {
   const [data, setData] = useState<ModelData | null>(null);
+  const [charts, setCharts] = useState<ChartConfig[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const basePath = getBasePath();
-    fetchToml(`${basePath}/data/modeling/model_metrics.toml`)
-      .then((res: any) => setData(res as ModelData))
-      .catch((err) => console.error(err))
-      .finally(() => setLoading(false));
+    async function fetchData() {
+      try {
+        const basePath = getBasePath();
+        
+        // 1. Fetch Metrics
+        const metrics = await fetchToml(`${basePath}/data/modeling/model_metrics.toml`);
+        if (metrics) {
+            setData(metrics as unknown as ModelData);
+        }
+
+        // 2. Fetch Charts
+        const realCharts = await fetchToml(`${basePath}/data/modeling/modeling_charts.toml`);
+        if (realCharts && (realCharts as any).charts) {
+            setCharts((realCharts as any).charts as ChartConfig[]);
+        } else {
+            console.warn("Real modeling charts missing. Loading Demo.");
+            const demoCharts = await fetchToml(`${basePath}/data/modeling/demo_modeling_charts.toml`);
+            if (demoCharts && (demoCharts as any).charts) {
+                setCharts((demoCharts as any).charts as ChartConfig[]);
+            }
+        }
+      } catch (err) {
+        console.error("Failed to load modeling data", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchData();
   }, []);
 
   if (loading) {
@@ -68,8 +73,6 @@ export default function ModelingPage() {
       </Layout>
     );
   }
-
-  const cvData = data?.cross_validation_scores?.map((score, i) => ({ fold: `Fold ${i + 1}`, score: score * 100 })) || [];
 
   return (
     <Layout>
@@ -105,121 +108,25 @@ export default function ModelingPage() {
           </ScrollGlassCard>
         </div>
 
-        {/* Charts Row */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Feature Importance */}
-          <ScrollGlassCard direction="left" delay={0.2} className="p-6" variant="hover">
-            <div className="flex items-center gap-3 mb-6">
-              <Layers className="w-5 h-5 text-primary" />
-              <h3 className="text-lg font-semibold text-white">Feature Importance</h3>
-            </div>
-            <div className="h-72">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart layout="vertical" data={data?.feature_importance || []} margin={{ left: 10 }}>
-                  <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#ffffff10" />
-                  <XAxis type="number" stroke="#9ca3af" fontSize={12} tickFormatter={(v) => `${(v * 100).toFixed(0)}%`} />
-                  <YAxis dataKey="feature" type="category" stroke="#9ca3af" fontSize={11} width={90} />
-                  <Tooltip 
-                    contentStyle={{ 
-                      backgroundColor: "#000000", 
-                      borderRadius: "12px", 
-                      border: "1px solid #333333", 
-                      color: "#ffffff" 
-                    }} 
-                    itemStyle={{ color: "#ffffff" }}
-                    formatter={(value: any) => [`${(Number(value) * 100).toFixed(1)}%`, 'Importance']}
-                  />
-                  <Bar dataKey="importance" fill="var(--color-chart-1)" radius={[0, 6, 6, 0]} barSize={18} />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-          </ScrollGlassCard>
-
-          {/* Cross Validation */}
-          <ScrollGlassCard direction="right" delay={0.3} className="p-6" variant="hover">
-            <div className="flex items-center gap-3 mb-6">
-              <Target className="w-5 h-5 text-primary" />
-              <h3 className="text-lg font-semibold text-white">Cross-Validation Scores</h3>
-            </div>
-            <div className="h-72">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={cvData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#ffffff10" />
-                  <XAxis dataKey="fold" stroke="#9ca3af" fontSize={12} />
-                  <YAxis stroke="#9ca3af" fontSize={12} domain={[0, 100]} tickFormatter={(v) => `${v}%`} />
-                  <Tooltip 
-                    contentStyle={{ 
-                      backgroundColor: "#000000", 
-                      borderRadius: "12px", 
-                      border: "1px solid #333333", 
-                      color: "#ffffff" 
-                    }} 
-                    itemStyle={{ color: "#ffffff" }}
-                    formatter={(value: any) => [`${Number(value).toFixed(1)}%`, 'Score']}
-                  />
-                  <ReferenceLine y={(data?.cv_mean || 0) * 100} stroke="#a6e3a1" strokeDasharray="5 5" label={{ value: 'Mean', fill: '#a6e3a1', fontSize: 11 }} />
-                  <Bar dataKey="score" fill="var(--color-chart-4)" radius={[6, 6, 0, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-            <p className="text-xs text-gray-500 text-center mt-2">
-              Mean: {((data?.cv_mean || 0) * 100).toFixed(1)}% ± {((data?.cv_std || 0) * 100).toFixed(2)}%
-            </p>
-          </ScrollGlassCard>
-        </div>
-
-        {/* Predictions vs Actual */}
-        <ScrollGlassCard direction="up" delay={0.4} className="p-6" variant="hover">
-          <div className="flex items-center gap-3 mb-6">
-            <Target className="w-5 h-5 text-primary" />
-            <h3 className="text-lg font-semibold text-white">Predictions vs Actual Prices</h3>
+        {/* Dynamic Charts Grid */}
+        {charts.length > 0 ? (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+             {charts.map((config, index) => (
+                <ScrollReveal 
+                  key={index} 
+                  direction={index % 2 === 0 ? "left" : "right"} 
+                  delay={0.1 * (index + 1)}
+                  className="w-full"
+                >
+                   <UniversalChart config={config} />
+                </ScrollReveal>
+             ))}
           </div>
-          <div className="h-80">
-            <ResponsiveContainer width="100%" height="100%">
-              <ScatterChart margin={{ left: 10 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#ffffff10" />
-                <XAxis 
-                  type="number" 
-                  dataKey="actual" 
-                  name="Actual" 
-                  stroke="#9ca3af" 
-                  fontSize={12} 
-                  tickFormatter={(v) => `$${v/1000}k`}
-                  label={{ value: 'Actual Price', position: 'bottom', fill: '#9ca3af', fontSize: 11 }}
-                />
-                <YAxis 
-                  type="number" 
-                  dataKey="predicted" 
-                  name="Predicted" 
-                  stroke="#9ca3af" 
-                  fontSize={12} 
-                  tickFormatter={(v) => `$${v/1000}k`}
-                  label={{ value: 'Predicted Price', angle: -90, position: 'insideLeft', fill: '#9ca3af', fontSize: 11 }}
-                />
-                <Tooltip 
-                  cursor={{ strokeDasharray: '3 3' }}
-                  contentStyle={{ 
-                    backgroundColor: "#000000", 
-                    borderRadius: "12px", 
-                    border: "1px solid #333333", 
-                    color: "#ffffff" 
-                  }} 
-                  itemStyle={{ color: "#ffffff" }}
-                  formatter={(value: any) => [`$${Number(value).toLocaleString()}`, '']}
-                />
-                <ReferenceLine
-                  segment={[{ x: 0, y: 0 }, { x: 100000, y: 100000 }]} // Simplified diagonal if range known, or use calculated min/max dynamically
-                  stroke="#a6e3a1"
-                  strokeDasharray="5 5"
-                />
-                <Scatter name="Predictions" data={data?.predictions_sample || []} fill="var(--color-chart-2)" />
-              </ScatterChart>
-            </ResponsiveContainer>
-          </div>
-          <p className="text-xs text-gray-500 text-center mt-2">
-            Points closer to the diagonal line indicate better predictions
-          </p>
-        </ScrollGlassCard>
+        ) : (
+            <div className="text-center text-gray-400 py-10">
+                No modeling chart data available.
+            </div>
+        )}
 
         {/* Hyperparameters */}
         <ScrollGlassCard direction="up" delay={0.5} className="p-6" variant="hover">
