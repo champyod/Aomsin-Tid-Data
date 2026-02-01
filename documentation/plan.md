@@ -70,62 +70,62 @@
 
 ## Phase 3: Feature Engineering 🔧
 
-- [ ] Apply Principal Component Analysis (PCA) to numerical features (`Year of manufacture`, `Mileage`, `Engine size`) to reduce dimensionality if needed.
-- [ ] Implement feature scaling (`StandardScaler` or `MinMaxScaler`) for continuous numerical variables (`Year of manufacture`, `Mileage`, `Engine size`, `Price`).
-- [ ] Perform One-Hot Encoding for low-cardinality nominal variables (`Fuel type`).
-- [ ] Utilize Label Encoding or Target Encoding for high-cardinality categorical variables (`Manufacturer`, `Model`).
-- [ ] Conduct feature selection (`SelectKBest` or RFE) to identify the most predictive variables.
-- [ ] Generate Polynomial Features for selected numerical variables (`Year of manufacture`, `Mileage`) to capture non-linear relationships.
-- [ ] Apply Log Transformations to skewed numerical data (`Price`, `Mileage`, `Engine size`) to normalize distributions.
-- [ ] Perform Binning/Discretization on continuous variables (`Year of manufacture`, `Mileage`, `Engine size`) to create categorical intervals/groups.
-- [ ] Create Interaction Features between key variables (e.g., `Age` × `Mileage`, `Engine size` × `Fuel type`).
+- [x] Apply Principal Component Analysis (PCA) to numerical features (`Year of manufacture`, `Mileage`, `Engine size`) to reduce dimensionality if needed.
+- [x] Implement feature scaling (`StandardScaler` or `MinMaxScaler`) for continuous numerical variables (`Year of manufacture`, `Mileage`, `Engine size`, `Price`).
+- [x] Perform One-Hot Encoding for low-cardinality nominal variables (`Fuel type`).
+- [x] Utilize Target Encoding (`TargetEncoder`) for high-cardinality categorical variables (`Manufacturer`, `Model`).
+- [x] Conduct feature selection (`SelectKBest` or RFE) to identify the most predictive variables.
+- [x] Generate Polynomial Features for selected numerical variables (`Year of manufacture`, `Mileage`) to capture non-linear relationships.
+- [x] Apply Log Transformations to skewed numerical data (`Price`, `Mileage`, `Engine size`) to normalize distributions.
+- [x] Perform Binning/Discretization on continuous variables (`Year of manufacture`, `Mileage`, `Engine size`) to create categorical intervals/groups.
+- [x] Create Interaction Features between key variables (e.g., `Age` × `Mileage`, `Engine size` × `Fuel type`).
 
 ---
 
 ## Phase 4: Training the Model 🤖
 
-- [ ] CatBoost
-- [ ] XGBoost
-- [ ] LightGBM
-- [ ] Random Forest
-- [ ] AdaBoost
-- [ ] Gradient Boosting
-- [ ] Decision Tree
-- [ ] Linear Regression
-- [ ] Polynomial Regression
-- [ ] Ridge Regression
-- [ ] Lasso Regression
-- [ ] ElasticNet
-- [ ] Support Vector Regression (SVR)
-- [ ] K-Nearest Neighbors (KNN)
-- [ ] **Ultimate Model Emsemble of L.O.V.E.**
+- [x] HistGradientBoostingRegressor (sklearn)
+- [x] XGBoost
+- [x] LightGBM
+- [x] Random Forest
+- [x] AdaBoost
+- [x] Gradient Boosting
+- [x] Decision Tree
+- [x] Linear Regression
+- [x] Polynomial Regression
+- [x] Ridge Regression
+- [x] Lasso Regression
+- [x] ElasticNet
+- [x] Support Vector Regression (SVR)
+- [x] K-Nearest Neighbors (KNN)
+- [x] Ensemble
 
 ### Metrics
-- [ ] RMSE (Root Mean Squared Error)
-- [ ] MAE (Mean Absolute Error)
-- [ ] Adjusted R²
+- [x] RMSE (Root Mean Squared Error)
+- [x] MAE (Mean Absolute Error)
+- [x] Adjusted R²
 
 ---
 
 ## Phase 5: Save Model and Predict 💾
 
-- [ ] Save model
-- [ ] Predict
+- [x] Save model
+- [x] Predict
 
 ### Metrics
-- [ ] RMSE (Root Mean Squared Error)
-- [ ] MAE (Mean Absolute Error)
-- [ ] Adjusted R²
+- [x] RMSE (Root Mean Squared Error)
+- [x] MAE (Mean Absolute Error)
+- [x] Adjusted R²
 
 ---
 
 ## Phase 6: Get Result 📋
 
-- [ ] Get result
+- [x] Get result
 
 ### Metrics
-- [ ] RMSE (Root Mean Squared Error)
-- [ ] MAE (Mean Absolute Error)
-- [ ] Adjusted R²
+- [x] RMSE (Root Mean Squared Error)
+- [x] MAE (Mean Absolute Error)
+- [x] Adjusted R²
 
 ---
