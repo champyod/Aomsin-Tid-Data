@@ -1,4 +1,3 @@
-import json
 import os
 import shutil
 from pathlib import Path
@@ -16,7 +15,8 @@ class ChartConfig:
                  chart_type: Literal["area", "bar", "line", "pie", "radar", "scatter", "composed"],
                  description: str = "",
                  x_axis_key: str = "name",
-                 x_axis_label: str = ""):
+                 x_axis_label: str = "",
+                 y_axis_unit: str = ""):
         self.config = {
             "title": title,
             "type": chart_type,
@@ -26,16 +26,18 @@ class ChartConfig:
                 "label": x_axis_label
             },
             "yAxis": {
-                "label": "" # Can be updated
+                "label": "", # Can be updated if needed
+                "unit": y_axis_unit
             },
             "series": [],
             "data": []
         }
 
-    def add_series(self, data_key: str, name: str, color: str = "#8884d8", type: str = None):
+    def add_series(self, data_key: str, name: str, color: str = "#8884d8", type: str = None, stack_id: str = None):
         """Add a data series to the chart."""
         s = {"dataKey": data_key, "name": name, "color": color}
         if type: s["type"] = type # For composed charts
+        if stack_id: s["stackId"] = stack_id
         self.config["series"].append(s)
         return self
     
@@ -78,7 +80,7 @@ def save_to(destination: Literal["cleaned"], filename: str) -> Path:
     """
     return _resolve_path(destination, filename)
 
-def save_result(data: Any, filename: str, topic: Topic = "general", visual_type: Optional[str] = None, file_format: Literal["json", "toml"] = "toml"):
+def save_result(data: Any, filename: str, topic: Topic = "general", visual_type: Optional[str] = None):
     """
     Saves published data/metrics/configs to the dashboard's data store (data/{topic}).
     
@@ -86,12 +88,13 @@ def save_result(data: Any, filename: str, topic: Topic = "general", visual_type:
         data (Any): The data to save (dict, list, or ChartConfig).
         filename (str): The output filename (e.g., 'analysis_summary').
         topic (Topic): The dashboard section ('analysis', 'modeling', etc.).
-        visual_type (str, optional): Metadata about visualization type.
-        file_format (str): 'json' or 'toml'. Defaults to 'toml'.
+        visual_type (str, optional): Metadata about visualization type (unused currently but kept for compat).
+    
+    Note: Always saves as TOML.
     """
-    # Ensure extension matches format
+    # Ensure extension is .toml
     base_name = os.path.splitext(filename)[0]
-    final_filename = f"{base_name}.{file_format}"
+    final_filename = f"{base_name}.toml"
     
     file_path = _resolve_path(topic, final_filename)
     
@@ -100,9 +103,6 @@ def save_result(data: Any, filename: str, topic: Topic = "general", visual_type:
         data = data.to_dict()
     
     with open(file_path, 'w', encoding='utf-8') as f:
-        if file_format == 'json':
-            json.dump(data, f, indent=2, ensure_ascii=False)
-        elif file_format == 'toml':
-            toml.dump(data, f)
+        toml.dump(data, f)
         
     print(f"✅ [{topic.upper()}] Data saved to: {file_path}")
