@@ -33,7 +33,7 @@ export type ChartType = "area" | "bar" | "line" | "pie" | "radar" | "scatter" | 
 export interface ChartSeries {
   dataKey: string;
   name: string;
-  color?: string;
+  variant?: string; // Color variant name (e.g., 'chart-1', 'pink', 'primary')
   type?: "bar" | "line" | "area" | "scatter"; // For composed charts
   stackId?: string;
 }
@@ -52,6 +52,9 @@ export interface ChartConfig {
   };
   series: ChartSeries[];
   data: any[];
+  order?: number;
+  size?: "full" | "half"; // Layout size
+  variant?: string; // Optional overall chart variant
 }
 
 interface UniversalChartProps {
@@ -62,7 +65,7 @@ interface UniversalChartProps {
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-black border border-[#333333] p-3 rounded-lg shadow-xl">
+      <div className="bg-black/80 backdrop-blur-md border border-white/10 p-3 rounded-lg shadow-xl">
         <p className="text-white font-medium mb-1">{label}</p>
         {payload.map((entry: any, index: number) => (
           <p key={index} style={{ color: entry.color }} className="text-sm">
@@ -73,6 +76,29 @@ const CustomTooltip = ({ active, payload, label }: any) => {
     );
   }
   return null;
+};
+
+/**
+ * Resolves a variant name to a CSS variable.
+ * All colors use Catppuccin Mocha Pink theme defined in global.css.
+ *
+ * @param variant - Variant name (e.g., 'chart-1', 'pink', 'primary')
+ * @param index - Fallback index for auto-generated variant
+ * @returns CSS variable string
+ */
+const getSeriesColor = (variant: string | undefined, index: number): string => {
+  // Auto-assign chart-N variant if not provided
+  if (!variant) {
+    variant = `chart-${(index % 10) + 1}`; // Cycle through chart-1 to chart-10
+  }
+
+  // Convert variant name to CSS variable
+  // Supports both 'chart-1' and 'variant-pink' formats
+  if (variant.startsWith('chart-')) {
+    return `var(--color-${variant})`;
+  } else {
+    return `var(--color-variant-${variant})`;
+  }
 };
 
 export const UniversalChart: React.FC<UniversalChartProps> = ({ config, className }) => {
@@ -101,11 +127,11 @@ export const UniversalChart: React.FC<UniversalChartProps> = ({ config, classNam
             <Tooltip content={<CustomTooltip />} />
             <Legend />
             {series.map((s, i) => (
-              <Bar 
-                key={s.dataKey} 
-                dataKey={s.dataKey} 
-                name={s.name} 
-                fill={s.color || `hsl(${i * 45}, 70%, 50%)`} 
+              <Bar
+                key={s.dataKey}
+                dataKey={s.dataKey}
+                name={s.name}
+                fill={getSeriesColor(s.variant, i)}
                 radius={[4, 4, 0, 0]}
                 stackId={s.stackId}
               />
@@ -134,14 +160,14 @@ export const UniversalChart: React.FC<UniversalChartProps> = ({ config, classNam
             <Tooltip content={<CustomTooltip />} />
             <Legend />
             {series.map((s, i) => (
-              <Line 
-                key={s.dataKey} 
-                type="monotone" 
-                dataKey={s.dataKey} 
-                name={s.name} 
-                stroke={s.color || `hsl(${i * 45}, 70%, 50%)`} 
+              <Line
+                key={s.dataKey}
+                type="monotone"
+                dataKey={s.dataKey}
+                name={s.name}
+                stroke={getSeriesColor(s.variant, i)}
                 strokeWidth={2}
-                dot={{ r: 4, strokeWidth: 0, fill: s.color || `hsl(${i * 45}, 70%, 50%)` }}
+                dot={{ r: 4, strokeWidth: 0, fill: getSeriesColor(s.variant, i) }}
                 activeDot={{ r: 6, strokeWidth: 0 }}
               />
             ))}
@@ -154,8 +180,8 @@ export const UniversalChart: React.FC<UniversalChartProps> = ({ config, classNam
             <defs>
               {series.map((s, i) => (
                 <linearGradient key={s.dataKey} id={`color${s.dataKey}`} x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor={s.color || `hsl(${i * 45}, 70%, 50%)`} stopOpacity={0.8}/>
-                  <stop offset="95%" stopColor={s.color || `hsl(${i * 45}, 70%, 50%)`} stopOpacity={0}/>
+                  <stop offset="5%" stopColor={getSeriesColor(s.variant, i)} stopOpacity={0.8}/>
+                  <stop offset="95%" stopColor={getSeriesColor(s.variant, i)} stopOpacity={0}/>
                 </linearGradient>
               ))}
             </defs>
@@ -177,14 +203,14 @@ export const UniversalChart: React.FC<UniversalChartProps> = ({ config, classNam
             <Tooltip content={<CustomTooltip />} />
             <Legend />
             {series.map((s, i) => (
-              <Area 
-                key={s.dataKey} 
-                type="monotone" 
-                dataKey={s.dataKey} 
-                name={s.name} 
-                stroke={s.color || `hsl(${i * 45}, 70%, 50%)`} 
-                fillOpacity={1} 
-                fill={`url(#color${s.dataKey})`} 
+              <Area
+                key={s.dataKey}
+                type="monotone"
+                dataKey={s.dataKey}
+                name={s.name}
+                stroke={getSeriesColor(s.variant, i)}
+                fillOpacity={1}
+                fill={`url(#color${s.dataKey})`}
                 stackId={s.stackId}
               />
             ))}
@@ -204,8 +230,8 @@ export const UniversalChart: React.FC<UniversalChartProps> = ({ config, classNam
                 key={s.dataKey}
                 name={s.name}
                 dataKey={s.dataKey}
-                stroke={s.color || `hsl(${i * 45}, 70%, 50%)`}
-                fill={s.color || `hsl(${i * 45}, 70%, 50%)`}
+                stroke={getSeriesColor(s.variant, i)}
+                fill={getSeriesColor(s.variant, i)}
                 fillOpacity={0.6}
               />
             ))}
@@ -232,7 +258,7 @@ export const UniversalChart: React.FC<UniversalChartProps> = ({ config, classNam
               nameKey={pieNameKey}
             >
                {data.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={series[0]?.color || `hsl(${index * 45 % 360}, 70%, 50%)`} />
+                <Cell key={`cell-${index}`} fill={getSeriesColor(series[0]?.variant, index)} />
               ))}
             </Pie>
             <Tooltip />
@@ -265,8 +291,8 @@ export const UniversalChart: React.FC<UniversalChartProps> = ({ config, classNam
                 key: s.dataKey,
                 dataKey: s.dataKey,
                 name: s.name,
-                fill: s.color || `hsl(${i * 45}, 70%, 50%)`,
-                stroke: s.color || `hsl(${i * 45}, 70%, 50%)`,
+                fill: getSeriesColor(s.variant, i),
+                stroke: getSeriesColor(s.variant, i),
               };
               
               if (s.type === 'bar') return <Bar {...commonProps} />;

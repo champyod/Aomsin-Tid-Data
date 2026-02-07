@@ -1,0 +1,15 @@
+# Jupyter Notebooks - strip outputs, execution counts, and metadata automatically
+*.ipynb filter=nbstripout
+*.ipynb diff=ipynb
+
+# Ensure consistent line endings
+* text=auto
+*.py text eol=lf
+*.sh text eol=lf
+*.toml text eol=lf
+*.md text eol=lf
+*.tsx text eol=lf
+*.ts text eol=lf
+*.json text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf

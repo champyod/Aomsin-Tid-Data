@@ -41,34 +41,62 @@ export default function Home() {
 
   useEffect(() => {
     async function fetchData() {
+      const basePath = getBasePath();
       try {
-        const basePath = getBasePath();
-        
-        // 1. Fetch Metrics (Real) - Analysis Summary & Model Metrics
+        setLoading(true);
+
+        // 1. Fetch metrics from analysis and modeling
         const [analysisRes, modelRes] = await Promise.allSettled([
           fetchToml(`${basePath}/data/analysis/analysis_summary.toml`),
           fetchToml(`${basePath}/data/modeling/model_metrics.toml`),
         ]);
 
         if (analysisRes.status === 'fulfilled' && analysisRes.value) {
-           setAnalysisData(analysisRes.value as unknown as AnalysisData);
+          setAnalysisData(analysisRes.value as unknown as AnalysisData);
         }
 
         if (modelRes.status === 'fulfilled' && modelRes.value) {
-           setModelData(modelRes.value as unknown as ModelData);
+          setModelData(modelRes.value as unknown as ModelData);
         }
 
-        // 2. Fetch Charts (Real -> Fallback to Demo)
-        const realCharts = await fetchToml(`${basePath}/data/analysis/overview_charts.toml`);
-        if (realCharts && (realCharts as any).charts) {
-            setCharts((realCharts as any).charts as ChartConfig[]);
-        } else {
-            console.warn("Real overview charts missing. Loading Demo.");
-            const demoCharts = await fetchToml(`${basePath}/data/analysis/demo_overview_charts.toml`);
-            if (demoCharts && (demoCharts as any).charts) {
-                setCharts((demoCharts as any).charts as ChartConfig[]);
-            }
+        // 2. Fetch all TOML files from general directory dynamically
+        const res = await fetch(`${basePath}/api/files?dir=general`);
+        if (!res.ok) throw new Error("Failed to fetch file list");
+
+        const { files } = await res.json();
+
+        if (!files || files.length === 0) {
+          console.warn("No general/overview files found.");
+          setCharts([]);
+          return;
         }
+
+        // 3. Load each TOML file
+        const loadedCharts: ChartConfig[] = [];
+
+        for (const file of files) {
+          try {
+            const config = await fetchToml(`${basePath}${file.path}`);
+
+            if (config) {
+              // Check if it's a wrapper { charts: [...] }
+              if ((config as any).charts) {
+                loadedCharts.push(...(config as any).charts);
+              }
+              // Single chart config (has type field)
+              else if ((config as any).type) {
+                loadedCharts.push(config as unknown as ChartConfig);
+              }
+              // Otherwise skip (e.g., metrics files)
+            }
+          } catch (e) {
+            console.error(`Failed to load ${file.name}:`, e);
+          }
+        }
+
+        // Sort by order field (ascending)
+        loadedCharts.sort((a, b) => ((a as any).order || 0) - ((b as any).order || 0));
+        setCharts(loadedCharts);
 
       } catch (error) {
         console.error("Failed to fetch dashboard data:", error);
@@ -146,11 +174,11 @@ export default function Home() {
         {charts.length > 0 && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {charts.map((config, index) => (
-              <ScrollReveal 
-                key={index} 
-                direction={index % 2 === 0 ? "left" : "right"} 
+              <ScrollReveal
+                key={index}
+                direction={index % 2 === 0 ? "left" : "right"}
                 delay={0.1 * (index + 1)}
-                className="col-span-1" // Assume 2-col grid, let UniversalChart handle sizing info if passed, or standard 50%
+                className={config.size === 'full' ? "lg:col-span-2" : ""}
               >
                   <UniversalChart config={config} />
               </ScrollReveal>

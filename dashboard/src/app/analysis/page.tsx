@@ -20,23 +20,46 @@ export default function AnalysisPage() {
     async function fetchData() {
       const basePath = getBasePath();
       try {
-        // Fetch Real Charts Config
-        // The notebook exports a wrapper: {"charts": [c1, c2, ...]}
-        const realData = await fetchToml(`${basePath}/data/analysis/analysis_charts.toml`);
+        setLoading(true);
         
-        if (realData && (realData as any).charts) {
-            setCharts((realData as any).charts as ChartConfig[]);
-        } else {
-            console.warn("Real analysis charts missing. Attempting fallback.");
-            
-            // Fallback: Check for demo_chart.toml
-            // Note: demo_chart.toml currently contains a SINGLE chart config, not a wrapper "charts".
-            const demo = await fetchToml(`${basePath}/data/analysis/demo_chart.toml`);
-            if (demo) {
-                // Wrap it in a list to satisfy the UI loop
-                setCharts([demo as unknown as ChartConfig]);
+        // 1. Fetch list of available TOML files from API
+        const res = await fetch(`${basePath}/api/files?dir=analysis`);
+        if (!res.ok) throw new Error("Failed to fetch file list");
+        
+        const { files } = await res.json();
+        
+        if (!files || files.length === 0) {
+            console.warn("No analysis files found.");
+            setCharts([]);
+            return;
+        }
+
+        // 2. Fetch content for each TOML file
+        const loadedCharts: ChartConfig[] = [];
+        
+        for (const file of files) {
+            try {
+                // Using fetchToml to parse the file content
+                // Note: file.path from API is relative to public (e.g. /data/analysis/foo.toml)
+                const config = await fetchToml(`${basePath}${file.path}`);
+                
+                if (config) {
+                    // Check if it's a wrapper { charts: [...] } or single config
+                    if ((config as any).charts) {
+                        loadedCharts.push(...(config as any).charts);
+                    } else {
+                        loadedCharts.push(config as unknown as ChartConfig);
+                    }
+                }
+            } catch (e) {
+                console.error(`Failed to load ${file.name}:`, e);
             }
         }
+        
+        // Sort by order field (ascending)
+        loadedCharts.sort((a, b) => ((a as any).order || 0) - ((b as any).order || 0));
+        
+        setCharts(loadedCharts);
 
       } catch (err) {
         console.error("Error loading analysis data:", err);

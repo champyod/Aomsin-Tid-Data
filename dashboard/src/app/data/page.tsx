@@ -44,26 +44,55 @@ export default function DataPage() {
 
   useEffect(() => {
     async function fetchData() {
+      const basePath = getBasePath();
       try {
-        const basePath = getBasePath();
-        
-        // 1. Fetch Metrics (Real)
+        setLoading(true);
+
+        // 1. Fetch metrics from analysis summary
         const metrics = await fetchToml(`${basePath}/data/analysis/analysis_summary.toml`);
         if (metrics) {
-            setData(metrics as unknown as AnalysisData);
+          setData(metrics as unknown as AnalysisData);
         }
 
-        // 2. Fetch Charts (Real -> Fallback to Demo)
-        const realCharts = await fetchToml(`${basePath}/data/analysis/data_charts.toml`);
-        if (realCharts && (realCharts as any).charts) {
-            setCharts((realCharts as any).charts as ChartConfig[]);
-        } else {
-            console.warn("Real data charts missing. Loading Demo.");
-            const demoCharts = await fetchToml(`${basePath}/data/analysis/demo_data_charts.toml`);
-            if (demoCharts && (demoCharts as any).charts) {
-                setCharts((demoCharts as any).charts as ChartConfig[]);
-            }
+        // 2. Fetch all TOML files from data directory dynamically
+        const res = await fetch(`${basePath}/api/files?dir=data`);
+        if (!res.ok) throw new Error("Failed to fetch file list");
+
+        const { files } = await res.json();
+
+        if (!files || files.length === 0) {
+          console.warn("No data files found.");
+          setCharts([]);
+          return;
         }
+
+        // 3. Load each TOML file
+        const loadedCharts: ChartConfig[] = [];
+
+        for (const file of files) {
+          try {
+            const config = await fetchToml(`${basePath}${file.path}`);
+
+            if (config) {
+              // Check if it's a wrapper { charts: [...] }
+              if ((config as any).charts) {
+                loadedCharts.push(...(config as any).charts);
+              }
+              // Single chart config (has type field)
+              else if ((config as any).type) {
+                loadedCharts.push(config as unknown as ChartConfig);
+              }
+              // Otherwise skip (e.g., metrics files)
+            }
+          } catch (e) {
+            console.error(`Failed to load ${file.name}:`, e);
+          }
+        }
+
+        // Sort by order field (ascending)
+        loadedCharts.sort((a, b) => ((a as any).order || 0) - ((b as any).order || 0));
+        setCharts(loadedCharts);
+
       } catch (err) {
         console.error("Failed to load data page content", err);
       } finally {
@@ -134,11 +163,11 @@ export default function DataPage() {
         {charts.length > 0 && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
              {charts.map((config, index) => (
-                <ScrollReveal 
-                  key={index} 
-                  direction={index % 2 === 0 ? "left" : "right"} 
+                <ScrollReveal
+                  key={index}
+                  direction={index % 2 === 0 ? "left" : "right"}
                   delay={0.1 * (index + 1)}
-                  className="w-full"
+                  className={config.size === 'full' ? "lg:col-span-2" : ""}
                 >
                    <UniversalChart config={config} />
                 </ScrollReveal>

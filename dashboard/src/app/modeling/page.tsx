@@ -35,28 +35,60 @@ export default function ModelingPage() {
 
   useEffect(() => {
     async function fetchData() {
+      const basePath = getBasePath();
       try {
-        const basePath = getBasePath();
-        
-        // 1. Fetch Metrics
-        const metrics = await fetchToml(`${basePath}/data/modeling/model_metrics.toml`);
-        if (metrics) {
-            setData(metrics as unknown as ModelData);
+        setLoading(true);
+
+        // 1. Fetch list of available TOML files from API
+        const res = await fetch(`${basePath}/api/files?dir=modeling`);
+        if (!res.ok) throw new Error("Failed to fetch file list");
+
+        const { files } = await res.json();
+
+        if (!files || files.length === 0) {
+          console.warn("No modeling files found.");
+          setCharts([]);
+          return;
         }
 
-        // 2. Fetch Charts
-        const realCharts = await fetchToml(`${basePath}/data/modeling/modeling_charts.toml`);
-        if (realCharts && (realCharts as any).charts) {
-            setCharts((realCharts as any).charts as ChartConfig[]);
-        } else {
-            console.warn("Real modeling charts missing. Loading Demo.");
-            const demoCharts = await fetchToml(`${basePath}/data/modeling/demo_modeling_charts.toml`);
-            if (demoCharts && (demoCharts as any).charts) {
-                setCharts((demoCharts as any).charts as ChartConfig[]);
+        // 2. Fetch content for each TOML file
+        const loadedCharts: ChartConfig[] = [];
+        let metricsData: ModelData | null = null;
+
+        for (const file of files) {
+          try {
+            const config = await fetchToml(`${basePath}${file.path}`);
+
+            if (config) {
+              // Check if it's model_metrics (has model_name field)
+              if ((config as any).model_name) {
+                metricsData = config as unknown as ModelData;
+              }
+              // Check if it's a wrapper { charts: [...] } or single chart config
+              else if ((config as any).charts) {
+                loadedCharts.push(...(config as any).charts);
+              }
+              // Single chart config
+              else if ((config as any).type) {
+                loadedCharts.push(config as unknown as ChartConfig);
+              }
             }
+          } catch (e) {
+            console.error(`Failed to load ${file.name}:`, e);
+          }
         }
+
+        // Set metrics data
+        if (metricsData) {
+          setData(metricsData);
+        }
+
+        // Sort charts by order field (ascending)
+        loadedCharts.sort((a, b) => ((a as any).order || 0) - ((b as any).order || 0));
+        setCharts(loadedCharts);
+
       } catch (err) {
-        console.error("Failed to load modeling data", err);
+        console.error("Error loading modeling data:", err);
       } finally {
         setLoading(false);
       }
@@ -112,11 +144,11 @@ export default function ModelingPage() {
         {charts.length > 0 ? (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
              {charts.map((config, index) => (
-                <ScrollReveal 
-                  key={index} 
-                  direction={index % 2 === 0 ? "left" : "right"} 
+                <ScrollReveal
+                  key={index}
+                  direction={index % 2 === 0 ? "left" : "right"}
                   delay={0.1 * (index + 1)}
-                  className="w-full"
+                  className={config.size === 'full' ? "lg:col-span-2" : ""}
                 >
                    <UniversalChart config={config} />
                 </ScrollReveal>
@@ -124,7 +156,7 @@ export default function ModelingPage() {
           </div>
         ) : (
             <div className="text-center text-gray-400 py-10">
-                No modeling chart data available.
+                No modeling chart data available. Run the modeling notebook to generate insights.
             </div>
         )}
 

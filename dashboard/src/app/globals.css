@@ -1,28 +1,108 @@
 @import "tailwindcss";
 
 @theme {
-  /* Chart Colors */
-  --color-chart-1: #f5c2e7; /* Pink */
-  --color-chart-2: #cba6f7; /* Mauve */
-  --color-chart-3: #89b4fa; /* Blue */
-  --color-chart-4: #a6e3a1; /* Green */
-  --color-chart-5: #fab387; /* Peach */
-  --color-chart-6: #f9e2af; /* Yellow */
-  --color-chart-7: #eba0ac; /* Maroon */
-  
-  /* Semantic Colors - referencing chart colors */
-  --color-primary: var(--color-chart-1); /* Mocha Pink */
-  --color-secondary: var(--color-chart-2); /* Mocha Mauve */
-  --color-accent: var(--color-chart-1); /* Mocha Pink */
-  --color-surface: #1e1e2e; /* Mocha Base */
-  --font-display: "Outfit", sans-serif;
-  --font-sans: "Inter", sans-serif;
+  /* ============================================
+     Catppuccin Mocha Pink - Base Colors
+     ============================================ */
+
+  /* Surface Colors */
+  --color-base: #1e1e2e;        /* Main background */
+  --color-mantle: #181825;      /* Slightly darker background */
+  --color-crust: #11111b;       /* Darkest background */
+  --color-surface-0: #313244;   /* Elevated surface */
+  --color-surface-1: #45475a;   /* More elevated surface */
+  --color-surface-2: #585b70;   /* Highest elevated surface */
+
+  /* Text Colors */
+  --color-text: #cdd6f4;        /* Main text */
+  --color-subtext-1: #bac2de;   /* Dimmer text */
+  --color-subtext-0: #a6adc8;   /* Dimmest text */
+
+  /* Overlay Colors */
+  --color-overlay-0: #6c7086;   /* Overlay base */
+  --color-overlay-1: #7f849c;   /* Lighter overlay */
+  --color-overlay-2: #9399b2;   /* Lightest overlay */
+
+  /* ============================================
+     Chart Color Palette (Primary variants)
+     ============================================ */
+
+  --color-chart-1: #f5c2e7;     /* Pink (Primary) */
+  --color-chart-2: #cba6f7;     /* Mauve */
+  --color-chart-3: #89b4fa;     /* Blue */
+  --color-chart-4: #a6e3a1;     /* Green */
+  --color-chart-5: #fab387;     /* Peach */
+
+  /* Extended Chart Colors */
+  --color-chart-6: #f9e2af;     /* Yellow */
+  --color-chart-7: #eba0ac;     /* Maroon */
+  --color-chart-8: #94e2d5;     /* Teal */
+  --color-chart-9: #89dceb;     /* Sky */
+  --color-chart-10: #f38ba8;    /* Red */
+
+  /* ============================================
+     Semantic Color Variants
+     ============================================ */
+
+  /* Primary - Pink Theme */
+  --color-primary: #f5c2e7;           /* Mocha Pink */
+  --color-primary-dark: #f2b3de;      /* Darker pink */
+  --color-primary-light: #f8d1ec;     /* Lighter pink */
+
+  /* Secondary - Mauve */
+  --color-secondary: #cba6f7;         /* Mocha Mauve */
+  --color-secondary-dark: #b794f4;    /* Darker mauve */
+  --color-secondary-light: #dfc2f9;   /* Lighter mauve */
+
+  /* Accent - Pink (same as primary for consistency) */
+  --color-accent: #f5c2e7;
+
+  /* Status Colors */
+  --color-success: #a6e3a1;           /* Green */
+  --color-warning: #fab387;           /* Peach */
+  --color-error: #f38ba8;             /* Red */
+  --color-info: #89b4fa;              /* Blue */
+
+  /* ============================================
+     Named Chart Variants (for TOML configs)
+     ============================================ */
+
+  --color-variant-pink: #f5c2e7;
+  --color-variant-mauve: #cba6f7;
+  --color-variant-blue: #89b4fa;
+  --color-variant-green: #a6e3a1;
+  --color-variant-peach: #fab387;
+  --color-variant-yellow: #f9e2af;
+  --color-variant-maroon: #eba0ac;
+  --color-variant-teal: #94e2d5;
+  --color-variant-sky: #89dceb;
+  --color-variant-red: #f38ba8;
+
+  /* Variant aliases for easier use */
+  --color-variant-primary: var(--color-variant-pink);
+  --color-variant-secondary: var(--color-variant-mauve);
+  --color-variant-success: var(--color-variant-green);
+  --color-variant-warning: var(--color-variant-peach);
+  --color-variant-error: var(--color-variant-red);
+  --color-variant-info: var(--color-variant-blue);
+
+  /* ============================================
+     Typography
+     ============================================ */
+
+  --font-display: "Outfit", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
 }
 
+/* ============================================
+   Global Styles
+   ============================================ */
+
 body {
-  background-color: #1e1e2e; /* Mocha Base */
-  color: #cdd6f4; /* Mocha Text */
-  background-image: 
-    radial-gradient(circle at 10% 20%, rgba(245, 194, 231, 0.15) 0%, transparent 20%),
-    radial-gradient(circle at 90% 80%, rgba(203, 166, 247, 0.15) 0%, transparent 20%);
+  background-color: theme(colors.base);
+  color: theme(colors.text);
+  background-image:
+    radial-gradient(circle at 10% 20%, rgb(from theme(colors.primary) r g b / 0.15) 0%, transparent 20%),
+    radial-gradient(circle at 90% 80%, rgb(from theme(colors.secondary) r g b / 0.15) 0%, transparent 20%);
 }
