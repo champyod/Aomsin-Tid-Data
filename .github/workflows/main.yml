@@ -186,7 +186,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: model-data
-          path: dashboard/public/data 
+          path: data
 
       - name: Download Clean Data (Latest from Main)
         if: ${{ needs.cleaning.result == 'skipped' }}
@@ -194,7 +194,7 @@ jobs:
         with:
           workflow: main.yml
           name: clean-data
-          path: dashboard/public/data
+          path: data
           if_no_artifact_found: warn
 
       - name: Download Analysis Data (Latest from Main)
@@ -203,7 +203,7 @@ jobs:
         with:
           workflow: main.yml
           name: analysis-data
-          path: dashboard/public/data
+          path: data
           if_no_artifact_found: warn
 
       - name: Download Model Data (Latest from Main)
@@ -212,8 +212,11 @@ jobs:
         with:
           workflow: main.yml
           name: model-data
-          path: dashboard/public/data
+          path: data
           if_no_artifact_found: warn
+
+      - name: Sync Data to Dashboard
+        run: python sync_dashboard_data.py
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v1

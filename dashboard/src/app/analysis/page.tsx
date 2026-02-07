@@ -21,11 +21,16 @@ export default function AnalysisPage() {
       const basePath = getBasePath();
       try {
         setLoading(true);
-        
-        // 1. Fetch list of available TOML files from API
-        const res = await fetch(`${basePath}/api/files?dir=analysis`);
-        if (!res.ok) throw new Error("Failed to fetch file list");
-        
+
+        // Fetch manifest.json to get list of TOML files
+        const res = await fetch(`${basePath}/data/analysis/manifest.json`);
+        if (!res.ok) {
+          console.warn("No manifest.json found for analysis data");
+          setCharts([]);
+          setLoading(false);
+          return;
+        }
+
         const { files } = await res.json();
         
         if (!files || files.length === 0) {
@@ -94,11 +99,11 @@ export default function AnalysisPage() {
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
              {charts.map((config, index) => (
-                <ScrollReveal 
-                  key={index} 
-                  direction={index % 2 === 0 ? "left" : "right"} 
+                <ScrollReveal
+                  key={index}
+                  direction={index % 2 === 0 ? "left" : "right"}
                   delay={index * 0.1}
-                  className={config.type === 'area' || config.type === 'line' || config.type === 'bar' ? "lg:col-span-2" : ""}
+                  className={config.size === 'full' ? "lg:col-span-2" : ""}
                 >
                    <UniversalChart config={config} />
                 </ScrollReveal>

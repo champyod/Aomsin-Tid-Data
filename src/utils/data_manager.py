@@ -183,13 +183,3 @@ def save_result(
         toml.dump(data, f)
 
     print(f"✅ [{topic.upper()}] Data saved to: {file_path}")
-    
-    # Automatically copy to dashboard public data for live updates
-    root = get_project_root()
-    dashboard_data_dir = root / "dashboard" / "public" / "data" / topic
-    
-    if dashboard_data_dir.parent.parent.exists(): # Check if dashboard/public/data exists
-        dashboard_data_dir.mkdir(parents=True, exist_ok=True)
-        dashboard_path = dashboard_data_dir / final_filename
-        shutil.copy2(file_path, dashboard_path)
-        print(f"✅ [DASHBOARD] Synced to: {dashboard_path}")

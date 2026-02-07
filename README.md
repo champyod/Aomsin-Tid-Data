@@ -287,6 +287,23 @@ Evaluates model performance and generates predictions.
 uv run jupyter lab
 ```
 
+### Syncing Data to Dashboard
+
+After running notebooks, sync the generated data files to the dashboard:
+
+```bash
+# Sync all topics
+python sync_dashboard_data.py
+
+# Sync specific topic only
+python sync_dashboard_data.py --topic analysis
+
+# Clean destination before syncing
+python sync_dashboard_data.py --clean
+```
+
+This copies TOML files from `data/` to `dashboard/public/data/` for the dashboard to consume.
+
 ### Running the Dashboard
 
 #### Development Mode
@@ -325,41 +342,47 @@ bun run build
    └─> Place raw data in data/raw/
 
 2. Run Notebooks Sequentially
-   ├─> 1_cleaning.ipynb      (data/cleaned/)
-   ├─> 2_analysis.ipynb      (data/analysis/, data/general/)
-   ├─> 3_model_training.ipynb (data/modeling/)
-   └─> 4_model_testing.ipynb (data/modeling/)
+   ├─> 1_cleaning.ipynb      (outputs: data/cleaned/)
+   ├─> 2_analysis.ipynb      (outputs: data/analysis/, data/general/)
+   ├─> 3_model_training.ipynb (outputs: data/modeling/)
+   └─> 4_model_testing.ipynb (outputs: data/modeling/)
 
-3. Data Auto-Sync
-   └─> TOML files copied to dashboard/public/data/
+3. Sync Data to Dashboard
+   └─> python sync_dashboard_data.py
+       (copies data/* to dashboard/public/data/*)
 
 4. Run Dashboard
-   └─> bun run dev
+   └─> cd dashboard && bun run dev
 
 5. Commit Changes
    └─> Pre-commit hooks strip notebook outputs
 ```
+
+**Important:** Python notebooks save to `data/` directory. Use the sync script to copy files to `dashboard/public/data/` before running the dashboard.
 
 ### CI/CD Workflow
 
 GitHub Actions automatically:
 
 1. **On Push/PR**: Runs full pipeline
-   - Data cleaning
-   - Analysis
-   - Model training
-   - Model testing
+   - Data cleaning → saves to `data/cleaned/`
+   - Analysis → saves to `data/analysis/`, `data/general/`
+   - Model training → saves to `data/modeling/`
+   - Model testing → saves to `data/modeling/`
 
 2. **Artifact Generation**:
-   - Uploads processed data
-   - Stores model outputs
+   - Uploads `data/` directory as artifacts
+   - Stores for 5 days
 
 3. **Dashboard Build**:
-   - Downloads artifacts
+   - Downloads artifacts to `data/`
+   - Syncs data using `python sync_dashboard_data.py`
    - Builds Next.js application
    - Deploys to GitHub Pages (main branch only)
 
 **Workflow File**: `.github/workflows/main.yml`
+
+**Data Flow**: `notebooks → data/ → [sync] → dashboard/public/data/ → dashboard build`
 
 ---
 

@@ -45,23 +45,14 @@ export default function Home() {
       try {
         setLoading(true);
 
-        // 1. Fetch metrics from analysis and modeling
-        const [analysisRes, modelRes] = await Promise.allSettled([
-          fetchToml(`${basePath}/data/analysis/analysis_summary.toml`),
-          fetchToml(`${basePath}/data/modeling/model_metrics.toml`),
-        ]);
-
-        if (analysisRes.status === 'fulfilled' && analysisRes.value) {
-          setAnalysisData(analysisRes.value as unknown as AnalysisData);
+        // Fetch manifest.json to get list of TOML files
+        const res = await fetch(`${basePath}/data/general/manifest.json`);
+        if (!res.ok) {
+          console.warn("No manifest.json found for general data");
+          setCharts([]);
+          setLoading(false);
+          return;
         }
-
-        if (modelRes.status === 'fulfilled' && modelRes.value) {
-          setModelData(modelRes.value as unknown as ModelData);
-        }
-
-        // 2. Fetch all TOML files from general directory dynamically
-        const res = await fetch(`${basePath}/api/files?dir=general`);
-        if (!res.ok) throw new Error("Failed to fetch file list");
 
         const { files } = await res.json();
 
@@ -71,7 +62,7 @@ export default function Home() {
           return;
         }
 
-        // 3. Load each TOML file
+        // Load each TOML file
         const loadedCharts: ChartConfig[] = [];
 
         for (const file of files) {
@@ -79,15 +70,24 @@ export default function Home() {
             const config = await fetchToml(`${basePath}${file.path}`);
 
             if (config) {
+              // Check if it contains metrics (for stat cards)
+              if ((config as any).metrics) {
+                setAnalysisData(config as unknown as AnalysisData);
+              }
+
+              // Check if it's model data
+              if ((config as any).model_name) {
+                setModelData(config as unknown as ModelData);
+              }
+
               // Check if it's a wrapper { charts: [...] }
               if ((config as any).charts) {
                 loadedCharts.push(...(config as any).charts);
               }
               // Single chart config (has type field)
-              else if ((config as any).type) {
+              else if ((config as any).type && (config as any).data) {
                 loadedCharts.push(config as unknown as ChartConfig);
               }
-              // Otherwise skip (e.g., metrics files)
             }
           } catch (e) {
             console.error(`Failed to load ${file.name}:`, e);
@@ -136,39 +136,41 @@ export default function Home() {
               </p>
         </ScrollGlassCard>
 
-        {/* Stats Grid */}
-        <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <StaggerItem>
-            <StatCard
-              label="Total Units Sold"
-              value={metrics?.total_units?.toLocaleString() || "0"}
-              icon={Database}
-              trend={{ value: 5, isPositive: true }}
-            />
-          </StaggerItem>
-          <StaggerItem>
-            <StatCard
-              label="Prediction Accuracy"
-              value={`${((modelData?.accuracy || 0) * 100).toFixed(1)}%`}
-              icon={Brain}
-              trend={{ value: 1.2, isPositive: true }}
-            />
-          </StaggerItem>
-          <StaggerItem>
-            <StatCard
-              label="Average Price"
-              value={`$${metrics?.average_price?.toLocaleString(undefined, { maximumFractionDigits: 0 }) || "0"}`}
-              icon={Activity}
-            />
-          </StaggerItem>
-          <StaggerItem>
-            <StatCard
-              label="Top Region"
-              value={metrics?.top_performing_region || "-"}
-              icon={Activity}
-            />
-          </StaggerItem>
-        </StaggerContainer>
+        {/* Stats Grid - Only show if data is available */}
+        {metrics && (
+          <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <StaggerItem>
+              <StatCard
+                label="Total Units Sold"
+                value={metrics.total_units?.toLocaleString() || "N/A"}
+                icon={Database}
+                trend={{ value: 5, isPositive: true }}
+              />
+            </StaggerItem>
+            <StaggerItem>
+              <StatCard
+                label="Prediction Accuracy"
+                value={modelData ? `${(modelData.accuracy * 100).toFixed(1)}%` : "N/A"}
+                icon={Brain}
+                trend={{ value: 1.2, isPositive: true }}
+              />
+            </StaggerItem>
+            <StaggerItem>
+              <StatCard
+                label="Average Price"
+                value={`$${metrics.average_price?.toLocaleString(undefined, { maximumFractionDigits: 0 })}`}
+                icon={Activity}
+              />
+            </StaggerItem>
+            <StaggerItem>
+              <StatCard
+                label="Top Region"
+                value={metrics.top_performing_region}
+                icon={Activity}
+              />
+            </StaggerItem>
+          </StaggerContainer>
+        )}
 
         {/* Dynamic Charts Grid */}
         {charts.length > 0 && (

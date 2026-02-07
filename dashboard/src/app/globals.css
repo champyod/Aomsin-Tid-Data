@@ -18,10 +18,10 @@
   --color-subtext-1: #bac2de;   /* Dimmer text */
   --color-subtext-0: #a6adc8;   /* Dimmest text */
 
-  /* Overlay Colors */
-  --color-overlay-0: #6c7086;   /* Overlay base */
-  --color-overlay-1: #7f849c;   /* Lighter overlay */
-  --color-overlay-2: #9399b2;   /* Lightest overlay */
+  /* Overlay Colors - Made more colorful with pink/purple tint */
+  --color-overlay-0: #7f7c9f;   /* Overlay base (purple-gray) */
+  --color-overlay-1: #9893b8;   /* Lighter overlay (purple-gray) */
+  --color-overlay-2: #b0abcf;   /* Lightest overlay (purple-gray) */
 
   /* ============================================
      Chart Color Palette (Primary variants)
