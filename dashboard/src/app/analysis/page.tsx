@@ -7,13 +7,10 @@ import { Activity } from "lucide-react";
 import { getBasePath } from "@/utils/basePath";
 import { fetchToml } from "@/utils/tomlLoader";
 import { UniversalChart, ChartConfig } from "@/components/UniversalChart";
-
-interface ChartsPayload {
-  charts: ChartConfig[];
-}
+import { DataTable } from "@/components/DataTable";
 
 export default function AnalysisPage() {
-  const [charts, setCharts] = useState<ChartConfig[]>([]);
+  const [items, setItems] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -26,7 +23,7 @@ export default function AnalysisPage() {
         const res = await fetch(`${basePath}/data/analysis/manifest.json`);
         if (!res.ok) {
           console.warn("No manifest.json found for analysis data");
-          setCharts([]);
+          setItems([]);
           setLoading(false);
           return;
         }
@@ -35,25 +32,24 @@ export default function AnalysisPage() {
         
         if (!files || files.length === 0) {
             console.warn("No analysis files found.");
-            setCharts([]);
+            setItems([]);
             return;
         }
 
         // 2. Fetch content for each TOML file
-        const loadedCharts: ChartConfig[] = [];
+        const loadedItems: any[] = [];
         
         for (const file of files) {
             try {
                 // Using fetchToml to parse the file content
-                // Note: file.path from API is relative to public (e.g. /data/analysis/foo.toml)
                 const config = await fetchToml(`${basePath}${file.path}`);
                 
                 if (config) {
-                    // Check if it's a wrapper { charts: [...] } or single config
+                    // Check if it's a wrapper { charts: [...] }
                     if ((config as any).charts) {
-                        loadedCharts.push(...(config as any).charts);
+                        loadedItems.push(...(config as any).charts);
                     } else {
-                        loadedCharts.push(config as unknown as ChartConfig);
+                        loadedItems.push(config);
                     }
                 }
             } catch (e) {
@@ -62,9 +58,9 @@ export default function AnalysisPage() {
         }
         
         // Sort by order field (ascending)
-        loadedCharts.sort((a, b) => ((a as any).order || 0) - ((b as any).order || 0));
+        loadedItems.sort((a, b) => ((a as any).order || 0) - ((b as any).order || 0));
         
-        setCharts(loadedCharts);
+        setItems(loadedItems);
 
       } catch (err) {
         console.error("Error loading analysis data:", err);
@@ -92,20 +88,28 @@ export default function AnalysisPage() {
           <h2 className="text-2xl font-bold text-white mb-6">Detailed Analysis</h2>
         </ScrollReveal>
         
-        {charts.length === 0 ? (
+        {items.length === 0 ? (
            <div className="text-center text-gray-400 py-10">
              No chart data available. Run the analysis notebook to generate insights.
            </div>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-             {charts.map((config, index) => (
+             {items.map((item, index) => (
                 <ScrollReveal
                   key={index}
                   direction={index % 2 === 0 ? "left" : "right"}
                   delay={index * 0.1}
-                  className={config.size === 'full' ? "lg:col-span-2" : ""}
+                  className={item.size === 'full' ? "lg:col-span-2" : ""}
                 >
-                   <UniversalChart config={config} />
+                   {item.type === 'table' ? (
+                     <DataTable 
+                        title={item.title}
+                        data={item.data}
+                        columns={item.columns}
+                     />
+                   ) : (
+                     <UniversalChart config={item} />
+                   )}
                 </ScrollReveal>
              ))}
           </div>

@@ -9,6 +9,7 @@ import { Activity, Database } from "lucide-react";
 import { getBasePath } from "@/utils/basePath";
 import { fetchToml } from "@/utils/tomlLoader";
 import ReactMarkdown from "react-markdown";
+import { DataTable } from "@/components/DataTable";
 
 interface MetricData {
   label: string;
@@ -21,12 +22,14 @@ interface MetricData {
 
 interface ContentBlock {
   order: number;
-  type: "text" | "stats" | "chart";
+  type: "text" | "stats" | "chart" | "table";
   size?: "full" | "half";
   variant?: string;
   title: string;
   description: string;
   metrics?: MetricData[];
+  columns?: { header: string; accessorKey: string }[];
+  data?: any[];
 }
 
 export default function DataPage() {
@@ -147,6 +150,14 @@ export default function DataPage() {
                          ))}
                        </StaggerContainer>
                      </GlassCard>
+                   )}
+
+                   {block.type === 'table' && block.data && block.columns && (
+                     <DataTable 
+                        title={block.title}
+                        data={block.data}
+                        columns={block.columns as any}
+                     />
                    )}
                 </ScrollReveal>
              ))}
