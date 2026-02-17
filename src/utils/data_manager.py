@@ -142,6 +142,17 @@ def save_to(destination: Literal["cleaned"], filename: str) -> Path:
     return _resolve_path(destination, filename)
 
 
+def allow_data_write() -> bool:
+    """Return True when writing to `data/cleaned/` is allowed.
+
+    Use this central helper in notebooks/scripts instead of calling environment
+    variables (e.g. `os.getenv`) directly. Accepted enabling values: '1',
+    'true', 'True'.
+    """
+    val = os.getenv("ALLOW_DATA_WRITE", "")
+    return val == "1" or val.lower() == "true"
+
+
 def save_result(
     data: Any,
     filename: str,
