@@ -265,3 +265,24 @@ def save_table(
     }
 
     save_result(table_config, filename, topic=topic, order=order)
+
+
+def schema_to_markdown(df: Any, title: str, total_records: int) -> str:
+    """
+    Generates a Markdown formatted table describing the schema of a DataFrame.
+    """
+    markdown = f"### {title}\n"
+    markdown += f"**Total Records:** {total_records:,}\n\n"
+    markdown += "| Column Name | Data Type | Description |\n"
+    markdown += "|---|---|---|\n"
+
+    # Handle Polars
+    if hasattr(df, "schema"):
+        for name, dtype in df.schema.items():
+            markdown += f"| `{name}` | `{dtype}` | - |\n"
+    # Handle Pandas
+    elif hasattr(df, "dtypes"):
+        for name, dtype in df.dtypes.items():
+            markdown += f"| `{name}` | `{dtype}` | - |\n"
+            
+    return markdown
