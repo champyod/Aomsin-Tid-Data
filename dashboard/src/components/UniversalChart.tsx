@@ -33,7 +33,7 @@ export type ChartType = "area" | "bar" | "line" | "pie" | "radar" | "scatter" | 
 export interface ChartSeries {
   dataKey: string;
   name: string;
-  color?: string;
+  variant?: string; // Color variant name (e.g., 'chart-1', 'pink', 'primary')
   type?: "bar" | "line" | "area" | "scatter"; // For composed charts
   stackId?: string;
 }
@@ -52,6 +52,9 @@ export interface ChartConfig {
   };
   series: ChartSeries[];
   data: any[];
+  order?: number;
+  size?: "full" | "half"; // Layout size
+  variant?: string; // Optional overall chart variant
 }
 
 interface UniversalChartProps {
@@ -62,8 +65,8 @@ interface UniversalChartProps {
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-black/80 backdrop-blur-md border border-white/10 p-3 rounded-lg shadow-xl">
-        <p className="text-white font-medium mb-1">{label}</p>
+      <div className="bg-crust/90 backdrop-blur-md border border-primary/20 p-3 rounded-lg shadow-xl">
+        <p className="text-text font-medium mb-1">{label}</p>
         {payload.map((entry: any, index: number) => (
           <p key={index} style={{ color: entry.color }} className="text-sm">
             {entry.name}: {entry.value}
@@ -75,6 +78,72 @@ const CustomTooltip = ({ active, payload, label }: any) => {
   return null;
 };
 
+/**
+ * Catppuccin Mocha color palette - hardcoded fallbacks in case CSS vars fail
+ */
+const CHART_COLORS = [
+  '#f5c2e7', // chart-1: Pink
+  '#cba6f7', // chart-2: Mauve
+  '#89b4fa', // chart-3: Blue
+  '#a6e3a1', // chart-4: Green
+  '#fab387', // chart-5: Peach
+  '#f9e2af', // chart-6: Yellow
+  '#eba0ac', // chart-7: Maroon
+  '#94e2d5', // chart-8: Teal
+  '#89dceb', // chart-9: Sky
+  '#f38ba8', // chart-10: Red
+];
+
+const NAMED_COLORS: Record<string, string> = {
+  pink: '#f5c2e7',
+  mauve: '#cba6f7',
+  blue: '#89b4fa',
+  green: '#a6e3a1',
+  peach: '#fab387',
+  yellow: '#f9e2af',
+  maroon: '#eba0ac',
+  teal: '#94e2d5',
+  sky: '#89dceb',
+  red: '#f38ba8',
+  primary: '#f5c2e7',
+  secondary: '#cba6f7',
+  success: '#a6e3a1',
+  warning: '#fab387',
+  error: '#f38ba8',
+  info: '#89b4fa',
+};
+
+/**
+ * Resolves a variant name to a color with CSS variable + fallback.
+ * All colors use Catppuccin Mocha Pink theme defined in global.css.
+ *
+ * @param variant - Variant name (e.g., 'chart-1', 'pink', 'primary')
+ * @param index - Fallback index for auto-generated variant
+ * @returns CSS variable string with fallback color
+ */
+const getSeriesColor = (variant: string | undefined, index: number): string => {
+  // Auto-assign chart-N variant if not provided
+  if (!variant) {
+    variant = `chart-${(index % 10) + 1}`; // Cycle through chart-1 to chart-10
+  }
+
+  // Get fallback color
+  let fallback: string;
+  if (variant.startsWith('chart-')) {
+    const num = parseInt(variant.replace('chart-', ''));
+    fallback = CHART_COLORS[(num - 1) % CHART_COLORS.length];
+  } else {
+    fallback = NAMED_COLORS[variant] || CHART_COLORS[index % CHART_COLORS.length];
+  }
+
+  // Return CSS variable with fallback
+  if (variant.startsWith('chart-')) {
+    return `var(--color-${variant}, ${fallback})`;
+  } else {
+    return `var(--color-variant-${variant}, ${fallback})`;
+  }
+};
+
 export const UniversalChart: React.FC<UniversalChartProps> = ({ config, className }) => {
   const { type, data, xAxis, yAxis, series, title, description } = config;
 
@@ -83,68 +152,77 @@ export const UniversalChart: React.FC<UniversalChartProps> = ({ config, classNam
       case 'bar':
         return (
           <BarChart data={data}>
-            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
-            <XAxis 
-              dataKey={xAxis?.dataKey} 
-              stroke="#888888" 
-              fontSize={12} 
-              tickLine={false} 
-              axisLine={false} 
+            <CartesianGrid strokeDasharray="3 3" stroke="rgba(245,194,231,0.15)" />
+            <XAxis
+              dataKey={xAxis?.dataKey}
+              stroke="var(--color-overlay-1)"
+              fontSize={12}
+              tickLine={false}
+              axisLine={false}
             />
-            <YAxis 
-              stroke="#888888" 
-              fontSize={12} 
-              tickLine={false} 
+            <YAxis
+              stroke="var(--color-overlay-1)"
+              fontSize={12}
+              tickLine={false}
               axisLine={false}
               unit={yAxis?.unit}
             />
             <Tooltip content={<CustomTooltip />} />
-            <Legend />
-            {series.map((s, i) => (
-              <Bar 
-                key={s.dataKey} 
-                dataKey={s.dataKey} 
-                name={s.name} 
-                fill={s.color || `hsl(${i * 45}, 70%, 50%)`} 
-                radius={[4, 4, 0, 0]}
-                stackId={s.stackId}
-              />
-            ))}
+            <Legend wrapperStyle={{ color: 'var(--color-text)' }} iconType="circle" />
+            {series.map((s, i) => {
+              const color = getSeriesColor(s.variant, i);
+              return (
+                <Bar
+                  key={s.dataKey}
+                  dataKey={s.dataKey}
+                  name={s.name}
+                  fill={color}
+                  fillOpacity={0.8}
+                  radius={[4, 4, 0, 0]}
+                  stackId={s.stackId}
+                  activeBar={{ fill: color, fillOpacity: 0.8, stroke: color, strokeWidth: 2 }}
+                />
+              );
+            })}
           </BarChart>
         );
 
       case 'line':
         return (
           <LineChart data={data}>
-            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
-            <XAxis 
-              dataKey={xAxis?.dataKey} 
-              stroke="#888888" 
-              fontSize={12} 
-              tickLine={false} 
-              axisLine={false} 
+            <CartesianGrid strokeDasharray="3 3" stroke="rgba(245,194,231,0.15)" />
+            <XAxis
+              dataKey={xAxis?.dataKey}
+              stroke="var(--color-overlay-1)"
+              fontSize={12}
+              tickLine={false}
+              axisLine={false}
             />
-            <YAxis 
-              stroke="#888888" 
-              fontSize={12} 
-              tickLine={false} 
+            <YAxis
+              stroke="var(--color-overlay-1)"
+              fontSize={12}
+              tickLine={false}
               axisLine={false}
               unit={yAxis?.unit}
             />
             <Tooltip content={<CustomTooltip />} />
-            <Legend />
-            {series.map((s, i) => (
-              <Line 
-                key={s.dataKey} 
-                type="monotone" 
-                dataKey={s.dataKey} 
-                name={s.name} 
-                stroke={s.color || `hsl(${i * 45}, 70%, 50%)`} 
-                strokeWidth={2}
-                dot={{ r: 4, strokeWidth: 0, fill: s.color || `hsl(${i * 45}, 70%, 50%)` }}
-                activeDot={{ r: 6, strokeWidth: 0 }}
-              />
-            ))}
+            <Legend wrapperStyle={{ color: 'var(--color-text)' }} iconType="circle" />
+            {series.map((s, i) => {
+              const color = getSeriesColor(s.variant, i);
+              return (
+                <Line
+                  key={s.dataKey}
+                  type="monotone"
+                  dataKey={s.dataKey}
+                  name={s.name}
+                  stroke={color}
+                  strokeWidth={2}
+                  strokeOpacity={0.8}
+                  dot={{ r: 4, strokeWidth: 0, fill: color, fillOpacity: 0.8 }}
+                  activeDot={{ r: 6, strokeWidth: 0, fill: color, fillOpacity: 0.8 }}
+                />
+              );
+            })}
           </LineChart>
         );
 
@@ -154,61 +232,70 @@ export const UniversalChart: React.FC<UniversalChartProps> = ({ config, classNam
             <defs>
               {series.map((s, i) => (
                 <linearGradient key={s.dataKey} id={`color${s.dataKey}`} x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor={s.color || `hsl(${i * 45}, 70%, 50%)`} stopOpacity={0.8}/>
-                  <stop offset="95%" stopColor={s.color || `hsl(${i * 45}, 70%, 50%)`} stopOpacity={0}/>
+                  <stop offset="5%" stopColor={getSeriesColor(s.variant, i)} stopOpacity={0.8}/>
+                  <stop offset="95%" stopColor={getSeriesColor(s.variant, i)} stopOpacity={0}/>
                 </linearGradient>
               ))}
             </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
-            <XAxis 
-              dataKey={xAxis?.dataKey} 
-              stroke="#888888" 
-              fontSize={12} 
-              tickLine={false} 
-              axisLine={false} 
+            <CartesianGrid strokeDasharray="3 3" stroke="rgba(245,194,231,0.15)" />
+            <XAxis
+              dataKey={xAxis?.dataKey}
+              stroke="var(--color-overlay-1)"
+              fontSize={12}
+              tickLine={false}
+              axisLine={false}
             />
-            <YAxis 
-              stroke="#888888" 
-              fontSize={12} 
-              tickLine={false} 
+            <YAxis
+              stroke="var(--color-overlay-1)"
+              fontSize={12}
+              tickLine={false}
               axisLine={false}
               unit={yAxis?.unit}
             />
             <Tooltip content={<CustomTooltip />} />
-            <Legend />
-            {series.map((s, i) => (
-              <Area 
-                key={s.dataKey} 
-                type="monotone" 
-                dataKey={s.dataKey} 
-                name={s.name} 
-                stroke={s.color || `hsl(${i * 45}, 70%, 50%)`} 
-                fillOpacity={1} 
-                fill={`url(#color${s.dataKey})`} 
-                stackId={s.stackId}
-              />
-            ))}
+            <Legend wrapperStyle={{ color: 'var(--color-text)' }} iconType="circle" />
+            {series.map((s, i) => {
+              const color = getSeriesColor(s.variant, i);
+              return (
+                <Area
+                  key={s.dataKey}
+                  type="monotone"
+                  dataKey={s.dataKey}
+                  name={s.name}
+                  stroke={color}
+                  strokeOpacity={0.8}
+                  fillOpacity={1}
+                  fill={`url(#color${s.dataKey})`}
+                  stackId={s.stackId}
+                  activeDot={{ r: 6, strokeWidth: 0, fill: color, fillOpacity: 0.8 }}
+                />
+              );
+            })}
           </AreaChart>
         );
       
       case 'radar':
         return (
           <RadarChart cx="50%" cy="50%" outerRadius="80%" data={data}>
-            <PolarGrid stroke="rgba(255,255,255,0.1)" />
-            <PolarAngleAxis dataKey={xAxis?.dataKey} tick={{ fill: '#888888', fontSize: 12 }} />
+            <PolarGrid stroke="rgba(245,194,231,0.15)" />
+            <PolarAngleAxis dataKey={xAxis?.dataKey} tick={{ fill: 'var(--color-overlay-1)', fontSize: 12 }} />
             <PolarRadiusAxis angle={30} domain={[0, 'auto']} tick={false} axisLine={false} />
-            <Tooltip />
-            <Legend />
-            {series.map((s, i) => (
-              <Radar
-                key={s.dataKey}
-                name={s.name}
-                dataKey={s.dataKey}
-                stroke={s.color || `hsl(${i * 45}, 70%, 50%)`}
-                fill={s.color || `hsl(${i * 45}, 70%, 50%)`}
-                fillOpacity={0.6}
-              />
-            ))}
+            <Tooltip content={<CustomTooltip />} />
+            <Legend wrapperStyle={{ color: 'var(--color-text)' }} iconType="circle" />
+            {series.map((s, i) => {
+              const color = getSeriesColor(s.variant, i);
+              return (
+                <Radar
+                  key={s.dataKey}
+                  name={s.name}
+                  dataKey={s.dataKey}
+                  stroke={color}
+                  strokeOpacity={0.8}
+                  fill={color}
+                  fillOpacity={0.5}
+                />
+              );
+            })}
           </RadarChart>
         );
 
@@ -218,63 +305,110 @@ export const UniversalChart: React.FC<UniversalChartProps> = ({ config, classNam
         const pieValueKey = series[0]?.dataKey;
         const pieNameKey = xAxis?.dataKey || "name";
 
+        // Custom label with theme colors
+        const renderPieLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, name }: any) => {
+          const RADIAN = Math.PI / 180;
+          const radius = outerRadius + 25;
+          const x = cx + radius * Math.cos(-midAngle * RADIAN);
+          const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+          return (
+            <text
+              x={x}
+              y={y}
+              fill="var(--color-text)"
+              textAnchor={x > cx ? 'start' : 'end'}
+              dominantBaseline="central"
+              style={{ fontSize: '12px', fontWeight: '500' }}
+            >
+              {`${name} ${(percent * 100).toFixed(0)}%`}
+            </text>
+          );
+        };
+
         return (
           <PieChart>
             <Pie
               data={data}
               cx="50%"
               cy="50%"
-              labelLine={false}
-              label={({ name, percent }: any) => `${name} ${((percent || 0) * 100).toFixed(0)}%`}
+              labelLine={{ stroke: 'var(--color-overlay-1)', strokeWidth: 1 }}
+              label={renderPieLabel}
               outerRadius={80}
-              fill="#8884d8"
               dataKey={pieValueKey}
               nameKey={pieNameKey}
+              fillOpacity={0.8}
+              activeIndex={undefined}
+              activeShape={false}
             >
                {data.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={series[0]?.color || `hsl(${index * 45 % 360}, 70%, 50%)`} />
+                <Cell
+                  key={`cell-${index}`}
+                  fill={getSeriesColor(series[0]?.variant, index)}
+                />
               ))}
             </Pie>
-            <Tooltip />
-            <Legend />
+            <Tooltip content={<CustomTooltip />} />
+            <Legend
+              wrapperStyle={{ color: 'var(--color-text)' }}
+              iconType="circle"
+            />
           </PieChart>
         );
 
       case 'composed':
         return (
           <ComposedChart data={data}>
-            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
-            <XAxis 
-              dataKey={xAxis?.dataKey} 
-              stroke="#888888" 
-              fontSize={12} 
-              tickLine={false} 
-              axisLine={false} 
+            <CartesianGrid strokeDasharray="3 3" stroke="rgba(245,194,231,0.15)" />
+            <XAxis
+              dataKey={xAxis?.dataKey}
+              stroke="var(--color-overlay-1)"
+              fontSize={12}
+              tickLine={false}
+              axisLine={false}
             />
-            <YAxis 
-              stroke="#888888" 
-              fontSize={12} 
-              tickLine={false} 
+            <YAxis
+              stroke="var(--color-overlay-1)"
+              fontSize={12}
+              tickLine={false}
               axisLine={false}
               unit={yAxis?.unit}
             />
             <Tooltip content={<CustomTooltip />} />
-            <Legend />
+            <Legend wrapperStyle={{ color: 'var(--color-text)' }} iconType="circle" />
             {series.map((s, i) => {
+              const color = getSeriesColor(s.variant, i);
               const commonProps = {
-                key: s.dataKey,
                 dataKey: s.dataKey,
                 name: s.name,
-                fill: s.color || `hsl(${i * 45}, 70%, 50%)`,
-                stroke: s.color || `hsl(${i * 45}, 70%, 50%)`,
+                fill: color,
+                stroke: color,
               };
-              
-              if (s.type === 'bar') return <Bar {...commonProps} />;
-              if (s.type === 'line') return <Line type="monotone" strokeWidth={2} dot={{r:4}} {...commonProps} />;
-              if (s.type === 'area') return <Area type="monotone" fillOpacity={0.3} {...commonProps} />;
-              if (s.type === 'scatter') return <Scatter {...commonProps} />;
-              
-              return <Line type="monotone" {...commonProps} />; // Fallback
+
+              if (s.type === 'bar') {
+                return <Bar key={s.dataKey} {...commonProps} fillOpacity={0.8} activeBar={{ fill: color, fillOpacity: 0.8, stroke: color, strokeWidth: 2 }} radius={[4, 4, 0, 0]} />;
+              }
+              if (s.type === 'line') {
+                return (
+                  <Line
+                    key={s.dataKey}
+                    {...commonProps}
+                    type="monotone"
+                    strokeWidth={2}
+                    strokeOpacity={0.8}
+                    dot={{ r: 4, fill: color, fillOpacity: 0.8 }}
+                    activeDot={{ r: 6, fill: color, fillOpacity: 0.8 }}
+                  />
+                );
+              }
+              if (s.type === 'area') {
+                return <Area key={s.dataKey} {...commonProps} type="monotone" fillOpacity={0.3} strokeOpacity={0.8} />;
+              }
+              if (s.type === 'scatter') {
+                return <Scatter key={s.dataKey} {...commonProps} fillOpacity={0.8} />;
+              }
+
+              return <Line key={s.dataKey} {...commonProps} type="monotone" strokeOpacity={0.8} />; // Fallback
             })}
           </ComposedChart>
         );

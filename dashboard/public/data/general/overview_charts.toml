@@ -1,0 +1,333 @@
+order = 1
+[[charts]]
+title = "Average Price per Year"
+type = "line"
+description = "Historical pricing trends showing market evolution"
+order = 0
+size = "full"
+variant = "primary"
+[[charts.series]]
+dataKey = "avg_price"
+name = "Average Price"
+variant = "chart-1"
+
+[[charts.data]]
+Year = 1984
+avg_price = 998.3767123287671
+
+[[charts.data]]
+Year = 1985
+avg_price = 1104.3251533742332
+
+[[charts.data]]
+Year = 1986
+avg_price = 1206.796766743649
+
+[[charts.data]]
+Year = 1987
+avg_price = 1310.2596314907873
+
+[[charts.data]]
+Year = 1988
+avg_price = 1430.2158774373258
+
+[[charts.data]]
+Year = 1989
+avg_price = 1723.43
+
+[[charts.data]]
+Year = 1990
+avg_price = 1889.1606978879706
+
+[[charts.data]]
+Year = 1991
+avg_price = 2066.963463065925
+
+[[charts.data]]
+Year = 1992
+avg_price = 2300.1368178324365
+
+[[charts.data]]
+Year = 1993
+avg_price = 2568.0162601626016
+
+[[charts.data]]
+Year = 1994
+avg_price = 2877.5604921394397
+
+[[charts.data]]
+Year = 1995
+avg_price = 3185.819322459222
+
+[[charts.data]]
+Year = 1996
+avg_price = 3460.0977747808497
+
+[[charts.data]]
+Year = 1997
+avg_price = 4107.365359477124
+
+[[charts.data]]
+Year = 1998
+avg_price = 4479.154460719042
+
+[[charts.data]]
+Year = 1999
+avg_price = 4944.066363044893
+
+[[charts.data]]
+Year = 2000
+avg_price = 5731.202106649112
+
+[[charts.data]]
+Year = 2001
+avg_price = 6127.55868544601
+
+[[charts.data]]
+Year = 2002
+avg_price = 6880.983628028815
+
+[[charts.data]]
+Year = 2003
+avg_price = 7641.088215024121
+
+[[charts.data]]
+Year = 2004
+avg_price = 8536.058710912572
+
+[[charts.data]]
+Year = 2005
+avg_price = 9520.165035877364
+
+[[charts.data]]
+Year = 2006
+avg_price = 10470.41935483871
+
+[[charts.data]]
+Year = 2007
+avg_price = 11340.12823834197
+
+[[charts.data]]
+Year = 2008
+avg_price = 12807.435590969455
+
+[[charts.data]]
+Year = 2009
+avg_price = 14526.04606141522
+
+[[charts.data]]
+Year = 2010
+avg_price = 16353.0531496063
+
+[[charts.data]]
+Year = 2011
+avg_price = 18282.168797953964
+
+[[charts.data]]
+Year = 2012
+avg_price = 20129.7743165925
+
+[[charts.data]]
+Year = 2013
+avg_price = 22148.476677316296
+
+[[charts.data]]
+Year = 2014
+avg_price = 24289.13458950202
+
+[[charts.data]]
+Year = 2015
+avg_price = 27548.50203804348
+
+[[charts.data]]
+Year = 2016
+avg_price = 30372.334390862943
+
+[[charts.data]]
+Year = 2017
+avg_price = 33307.465551839465
+
+[[charts.data]]
+Year = 2018
+avg_price = 36115.45082467929
+
+[[charts.data]]
+Year = 2019
+avg_price = 41080.18683996751
+
+[[charts.data]]
+Year = 2020
+avg_price = 46270.82217343579
+
+[[charts.data]]
+Year = 2021
+avg_price = 49759.29966887417
+
+[[charts.data]]
+Year = 2022
+avg_price = 59220.961414790996
+
+
+[charts.xAxis]
+dataKey = "Year"
+label = "Year"
+[charts.yAxis]
+label = ""
+unit = "$"
+[[charts]]
+title = "Engine Type Distribution"
+type = "pie"
+description = "Market share by engine technology"
+order = 0
+size = "half"
+[[charts.series]]
+dataKey = "value"
+name = "Count"
+variant = "blue"
+
+[[charts.data]]
+Engine_Type = "Petrol"
+value = 49489
+
+
+[charts.xAxis]
+dataKey = "Engine_Type"
+label = ""
+[charts.yAxis]
+label = ""
+unit = ""
+[[charts]]
+title = "Top 5 Models Financials (Stacked)"
+type = "bar"
+description = "Revenue breakdown into Cost and Profit"
+order = 0
+size = "half"
+variant = "success"
+[[charts.series]]
+dataKey = "Cost"
+name = "Estimated Cost"
+variant = "yellow"
+stackId = "a"
+
+[[charts.series]]
+dataKey = "Profit"
+name = "Net Profit"
+variant = "green"
+stackId = "a"
+
+[[charts.data]]
+Model = "RAV4"
+Revenue = 83407168.0
+Cost = 58385017.599999994
+Profit = 25022150.4
+
+[[charts.data]]
+Model = "M5"
+Revenue = 65653777.0
+Cost = 45957643.9
+Profit = 19696133.099999998
+
+[[charts.data]]
+Model = "Mondeo"
+Revenue = 65530612.0
+Cost = 45871428.4
+Profit = 19659183.599999998
+
+[[charts.data]]
+Model = "Passat"
+Revenue = 62776936.0
+Cost = 43943855.199999996
+Profit = 18833080.8
+
+[[charts.data]]
+Model = "Focus"
+Revenue = 58628811.0
+Cost = 41040167.699999996
+Profit = 17588643.3
+
+
+[charts.xAxis]
+dataKey = "Model"
+label = ""
+[charts.yAxis]
+label = ""
+unit = "$"
+[[charts]]
+title = "Top 3 Brands Comparison (Normalized)"
+type = "radar"
+description = "Relative scoring of Price, Buyer Age, and Volume"
+order = 0
+size = "half"
+[[charts.series]]
+dataKey = "Ford"
+name = "Ford"
+variant = "pink"
+
+[[charts.series]]
+dataKey = "Vw"
+name = "Vw"
+variant = "mauve"
+
+[[charts.series]]
+dataKey = "Toyota"
+name = "Toyota"
+variant = "blue"
+
+[[charts.data]]
+metric = "Price"
+Ford = 7.782538722152594
+Vw = 0.0
+Toyota = 100.0
+
+[[charts.data]]
+metric = "Buyer Age"
+Ford = 95.09030653680959
+Vw = 0.0
+Toyota = 100.0
+
+[[charts.data]]
+metric = "Volume"
+Ford = 100.0
+Vw = 97.91926758218894
+Toyota = 0.0
+
+
+[charts.xAxis]
+dataKey = "metric"
+label = ""
+[charts.yAxis]
+label = ""
+unit = ""
+[[charts]]
+title = "Revenue vs Transaction Volume (Monthly)"
+type = "composed"
+description = "Tracking revenue alongside number of deals closed"
+order = 0
+size = "full"
+variant = "info"
+[[charts.series]]
+dataKey = "Total_Revenue"
+name = "Revenue"
+variant = "peach"
+type = "bar"
+
+[[charts.series]]
+dataKey = "Transaction_Count"
+name = "Deals Count"
+variant = "sky"
+type = "line"
+
+[[charts.data]]
+Sale_Year = 2024
+Month = 1
+Total_Revenue = 691289670.0
+Transaction_Count = 49988
+Year_Month = "2024-01"
+
+
+[charts.xAxis]
+dataKey = "Year_Month"
+label = ""
+[charts.yAxis]
+label = ""
+unit = "$"

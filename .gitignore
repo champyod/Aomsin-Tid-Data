@@ -50,6 +50,10 @@ data/*
 !data/raw/
 dashboard/public/data/*
 
+# Exception: Track manual welcome card
+!dashboard/public/data/general/
+!dashboard/public/data/general/welcome.toml
+
 # Logs
 *.log
 
@@ -68,3 +72,6 @@ htmlcov/
 # Note: Uncomment these if you want to exclude them from git
 # .python-version
 # uv.lock
+
+# Jupyter Execution artifacts
+*.nbconvert.ipynb

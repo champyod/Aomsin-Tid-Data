@@ -1,0 +1,16 @@
+{
+  "extra_keys": [
+    "metadata.kernelspec",
+    "metadata.language_info",
+    "metadata.vscode",
+    "metadata.orig_nbformat",
+    "cell.metadata.ExecuteTime",
+    "cell.metadata.scrolled",
+    "cell.metadata.collapsed",
+    "cell.metadata.execution",
+    "cell.metadata.jupyter",
+    "cell.metadata.tags"
+  ],
+  "drop_empty_cells": true,
+  "strip_init_cells": false
+}
