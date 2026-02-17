@@ -8,6 +8,8 @@ import { getBasePath } from "@/utils/basePath";
 import { fetchToml } from "@/utils/tomlLoader";
 import { UniversalChart, ChartConfig } from "@/components/UniversalChart";
 import { DataTable } from "@/components/DataTable";
+import ReactMarkdown from "react-markdown";
+import { GlassCard } from "@/components/ui/GlassCard";
 
 export default function AnalysisPage() {
   const [items, setItems] = useState<any[]>([]);
@@ -107,6 +109,13 @@ export default function AnalysisPage() {
                         data={item.data}
                         columns={item.columns}
                      />
+                   ) : item.type === 'text' ? (
+                     <GlassCard className="p-6">
+                        <h3 className="text-xl font-semibold text-white mb-2">{item.title}</h3>
+                        <div className="prose prose-invert prose-sm max-w-none prose-headings:text-white prose-p:text-white/80 prose-a:text-primary prose-strong:text-white prose-li:text-white/80">
+                          <ReactMarkdown>{item.description}</ReactMarkdown>
+                        </div>
+                     </GlassCard>
                    ) : (
                      <UniversalChart config={item} />
                    )}

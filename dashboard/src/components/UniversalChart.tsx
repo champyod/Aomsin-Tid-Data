@@ -152,7 +152,7 @@ export const UniversalChart: React.FC<UniversalChartProps> = ({ config, classNam
       case 'bar':
         return (
           <BarChart data={data}>
-            <CartesianGrid strokeDasharray="3 3" stroke="rgba(245,194,231,0.15)" />
+            <CartesianGrid strokeDasharray="3 3" stroke="rgba(245,194,231,0.1)" />
             <XAxis
               dataKey={xAxis?.dataKey}
               stroke="var(--color-overlay-1)"
@@ -167,7 +167,10 @@ export const UniversalChart: React.FC<UniversalChartProps> = ({ config, classNam
               axisLine={false}
               unit={yAxis?.unit}
             />
-            <Tooltip content={<CustomTooltip />} />
+            <Tooltip 
+              content={<CustomTooltip />} 
+              cursor={{ fill: 'rgba(255, 255, 255, 0.05)' }}
+            />
             <Legend wrapperStyle={{ color: 'var(--color-text)' }} iconType="circle" />
             {series.map((s, i) => {
               const color = getSeriesColor(s.variant, i);
@@ -180,7 +183,12 @@ export const UniversalChart: React.FC<UniversalChartProps> = ({ config, classNam
                   fillOpacity={0.8}
                   radius={[4, 4, 0, 0]}
                   stackId={s.stackId}
-                  activeBar={{ fill: color, fillOpacity: 0.8, stroke: color, strokeWidth: 2 }}
+                  activeBar={{ 
+                    fillOpacity: 1, 
+                    stroke: color, 
+                    strokeWidth: 1,
+                    filter: 'brightness(1.1)'
+                  }}
                 />
               );
             })}
@@ -205,7 +213,10 @@ export const UniversalChart: React.FC<UniversalChartProps> = ({ config, classNam
               axisLine={false}
               unit={yAxis?.unit}
             />
-            <Tooltip content={<CustomTooltip />} />
+            <Tooltip 
+              content={<CustomTooltip />} 
+              cursor={{ fill: 'rgba(255, 255, 255, 0.05)' }}
+            />
             <Legend wrapperStyle={{ color: 'var(--color-text)' }} iconType="circle" />
             {series.map((s, i) => {
               const color = getSeriesColor(s.variant, i);
@@ -252,7 +263,10 @@ export const UniversalChart: React.FC<UniversalChartProps> = ({ config, classNam
               axisLine={false}
               unit={yAxis?.unit}
             />
-            <Tooltip content={<CustomTooltip />} />
+            <Tooltip 
+              content={<CustomTooltip />} 
+              cursor={{ fill: 'rgba(255, 255, 255, 0.05)' }}
+            />
             <Legend wrapperStyle={{ color: 'var(--color-text)' }} iconType="circle" />
             {series.map((s, i) => {
               const color = getSeriesColor(s.variant, i);
@@ -280,7 +294,10 @@ export const UniversalChart: React.FC<UniversalChartProps> = ({ config, classNam
             <PolarGrid stroke="rgba(245,194,231,0.15)" />
             <PolarAngleAxis dataKey={xAxis?.dataKey} tick={{ fill: 'var(--color-overlay-1)', fontSize: 12 }} />
             <PolarRadiusAxis angle={30} domain={[0, 'auto']} tick={false} axisLine={false} />
-            <Tooltip content={<CustomTooltip />} />
+            <Tooltip 
+              content={<CustomTooltip />} 
+              cursor={{ fill: 'rgba(255, 255, 255, 0.05)' }}
+            />
             <Legend wrapperStyle={{ color: 'var(--color-text)' }} iconType="circle" />
             {series.map((s, i) => {
               const color = getSeriesColor(s.variant, i);
@@ -348,7 +365,10 @@ export const UniversalChart: React.FC<UniversalChartProps> = ({ config, classNam
                 />
               ))}
             </Pie>
-            <Tooltip content={<CustomTooltip />} />
+            <Tooltip 
+              content={<CustomTooltip />} 
+              cursor={{ fill: 'rgba(255, 255, 255, 0.05)' }}
+            />
             <Legend
               wrapperStyle={{ color: 'var(--color-text)' }}
               iconType="circle"
@@ -374,7 +394,10 @@ export const UniversalChart: React.FC<UniversalChartProps> = ({ config, classNam
               axisLine={false}
               unit={yAxis?.unit}
             />
-            <Tooltip content={<CustomTooltip />} />
+            <Tooltip 
+              content={<CustomTooltip />} 
+              cursor={{ fill: 'rgba(255, 255, 255, 0.05)' }}
+            />
             <Legend wrapperStyle={{ color: 'var(--color-text)' }} iconType="circle" />
             {series.map((s, i) => {
               const color = getSeriesColor(s.variant, i);

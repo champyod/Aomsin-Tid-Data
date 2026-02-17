@@ -11,17 +11,17 @@ export function GlassCard({ children, className, variant = "default", ...props }
   return (
     <motion.div
       className={cn(
-        "relative bg-white/5 backdrop-blur-lg border border-white/10 shadow-lg rounded-2xl transition-all duration-300 ease-in-out overflow-hidden group",
-        variant === "hover" && "hover:bg-white/10 hover:border-white/20 hover:shadow-2xl hover:shadow-primary/10",
+        "relative bg-surface-0/40 backdrop-blur-lg border border-white/5 shadow-lg rounded-2xl transition-all duration-300 ease-in-out overflow-hidden group",
+        variant === "hover" && "hover:bg-surface-0/60 hover:border-primary/20 hover:shadow-2xl hover:shadow-primary/5",
         className
       )}
       {...props}
     >
       {/* Liquid Flow Background */}
       <motion.div
-        className="absolute -inset-[100%] z-0 opacity-20 pointer-events-none"
+        className="absolute -inset-[100%] z-0 opacity-15 pointer-events-none"
         style={{
-          background: "radial-gradient(circle, rgba(245,194,231,0.4) 0%, rgba(203,166,247,0.1) 50%, transparent 80%)",
+          background: "radial-gradient(circle, var(--color-primary) 0%, var(--color-secondary) 50%, transparent 80%)",
         }}
         animate={{
           transform: [
