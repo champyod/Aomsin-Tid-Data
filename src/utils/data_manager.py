@@ -139,18 +139,9 @@ def save_to(destination: Literal["cleaned"], filename: str) -> Path:
     Get the target absolute path for saving a file to the specified destination.
     Example: save_to("cleaned", "Cars_cleaned.csv")
     """
+    if destination == "raw":
+        raise ValueError("Modifying raw data is prohibited. You can only view it.")
     return _resolve_path(destination, filename)
-
-
-def allow_data_write() -> bool:
-    """Return True when writing to `data/cleaned/` is allowed.
-
-    Use this central helper in notebooks/scripts instead of calling environment
-    variables (e.g. `os.getenv`) directly. Accepted enabling values: '1',
-    'true', 'True'.
-    """
-    val = os.getenv("ALLOW_DATA_WRITE", "")
-    return val == "1" or val.lower() == "true"
 
 
 def save_result(
@@ -171,6 +162,9 @@ def save_result(
 
     Note: Always saves as TOML.
     """
+    if topic == "raw":
+        raise ValueError("Modifying raw data is prohibited. You can only view it.")
+
     # Ensure extension is .toml
     base_name = os.path.splitext(filename)[0]
     final_filename = f"{base_name}.toml"
