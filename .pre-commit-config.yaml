@@ -1,0 +1,20 @@
+repos:
+  - repo: https://github.com/kynan/nbstripout
+    rev: 0.7.1
+    hooks:
+      - id: nbstripout
+        args:
+          - '--extra-keys'
+          - 'metadata.kernelspec metadata.language_info metadata.vscode metadata.orig_nbformat cell.metadata.ExecuteTime cell.metadata.scrolled cell.metadata.collapsed cell.metadata.execution cell.metadata.jupyter cell.metadata.tags cell.execution_count outputs'
+          - '--drop-empty-cells'
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: check-added-large-files
+        args: ['--maxkb=500']
+      - id: check-json
+      - id: check-yaml
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+        exclude: '^(.*\.ipynb|.*\.svg)$'

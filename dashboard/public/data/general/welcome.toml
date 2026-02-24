@@ -1,0 +1,26 @@
+# ============================================
+# Welcome Card - Manual Configuration
+# This file is tracked by git (exception to gitignore)
+# ============================================
+
+order = -1  # Always display first
+type = "text"
+size = "full"
+variant = "primary"
+
+title = "Welcome to Aomsin Tid Data Dashboard"
+description = """
+This dashboard provides comprehensive intelligence on the automotive market, \
+analyzing trends, pricing models, and inventory distribution. Leveraging the \
+Raw Car Sales Data Set from Kaggle, we employ machine learning models to \
+predict market values and identify key economic indicators.
+
+Explore the Analysis, Data, and Modeling sections to dive deeper into the insights.
+"""
+
+[metadata]
+manual = true
+tracked_by_git = true
+version = "1.0.0"
+last_updated = "2026-02-07"
+author = "Aomsin Tid Data Team"

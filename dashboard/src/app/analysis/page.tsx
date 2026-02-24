@@ -2,59 +2,76 @@
 
 import { useState, useEffect } from "react";
 import { Layout } from "@/components/Layout";
-import { GlassCard } from "@/components/ui/GlassCard";
-import { ScrollGlassCard } from "@/components/ui/ScrollGlassCard";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  PieChart,
-  Pie,
-  Cell,
-  Legend,
-} from "recharts";
-import { Activity, Fuel, Palette, Car } from "lucide-react";
+import { Activity } from "lucide-react";
 import { getBasePath } from "@/utils/basePath";
 import { fetchToml } from "@/utils/tomlLoader";
 import { UniversalChart, ChartConfig } from "@/components/UniversalChart";
-
-interface AnalysisData {
-  price_trend: { year: string; avg_price: number }[];
-  engine_distribution: { name: string; value: number; color: string }[];
-  status_distribution: { name: string; value: number; percentage: number }[];
-  color_distribution: { name: string; value: number }[];
-  price_by_engine: { engine: string; avg_price: number }[];
-}
-
-const STATUS_COLORS = ["#a6e3a1", "#f9e2af", "#f5c2e7"];
-const COLOR_PALETTE = ["#cdd6f4", "#313244", "#f38ba8", "#89b4fa", "#6c7086", "#bac2de", "#a6e3a1"];
+import { DataTable } from "@/components/DataTable";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import { GlassCard } from "@/components/ui/GlassCard";
 
 export default function AnalysisPage() {
-  const [data, setData] = useState<AnalysisData | null>(null);
-  const [demoConfig, setDemoConfig] = useState<ChartConfig | null>(null);
+  const [items, setItems] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const basePath = getBasePath();
-    
-    // Fetch existing JSON data
-    const fetchData = fetch(`${basePath}/data/analysis/analysis_summary.json`)
-      .then((res) => res.json())
-      .then(setData)
-      .catch((err) => console.error("Failed to load generic analysis:", err));
-      
-    // Fetch new TOML demo data
-    const fetchDemo = fetchToml(`${basePath}/data/analysis/demo_chart.toml`)
-      .then((config: any) => setDemoConfig(config as ChartConfig))
-      .catch((err: any) => console.warn("Demo chart not found:", err));
+    async function fetchData() {
+      const basePath = getBasePath();
+      try {
+        setLoading(true);
 
-    Promise.all([fetchData, fetchDemo])
-      .finally(() => setLoading(false));
+        // Fetch manifest.json to get list of TOML files
+        const res = await fetch(`${basePath}/data/analysis/manifest.json`);
+        if (!res.ok) {
+          console.warn("No manifest.json found for analysis data");
+          setItems([]);
+          setLoading(false);
+          return;
+        }
+
+        const { files } = await res.json();
+
+        if (!files || files.length === 0) {
+            console.warn("No analysis files found.");
+            setItems([]);
+            return;
+        }
+
+        // 2. Fetch content for each TOML file
+        const loadedItems: any[] = [];
+
+        for (const file of files) {
+            try {
+                // Using data from manifest if available
+                const config = file.data || await fetchToml(`${basePath}${file.path}`);
+
+                if (config) {
+                    // Check if it's a wrapper { charts: [...] }
+                    if ((config as any).charts) {
+                        loadedItems.push(...(config as any).charts);
+                    } else {
+                        loadedItems.push(config);
+                    }
+                }
+            } catch (e) {
+                console.error(`Failed to load ${file.name}:`, e);
+            }
+        }
+
+        // Sort by order field (ascending)
+        loadedItems.sort((a, b) => ((a as any).order || 0) - ((b as any).order || 0));
+
+        setItems(loadedItems);
+
+      } catch (err) {
+        console.error("Error loading analysis data:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchData();
   }, []);
 
   if (loading) {
@@ -71,156 +88,42 @@ export default function AnalysisPage() {
     <Layout>
       <div className="space-y-6">
         <ScrollReveal direction="none">
-          <h2 className="text-2xl font-bold text-white">Detailed Analysis</h2>
+          <h2 className="text-2xl font-bold text-white mb-6">Detailed Analysis</h2>
         </ScrollReveal>
-        
-        {demoConfig && (
-          <ScrollReveal direction="down" className="mb-8">
-            <UniversalChart config={demoConfig} />
-          </ScrollReveal>
+
+        {items.length === 0 ? (
+           <div className="text-center text-gray-400 py-10">
+             No chart data available. Run the analysis notebook to generate insights.
+           </div>
+        ) : (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+             {items.map((item, index) => (
+                <ScrollReveal
+                  key={index}
+                  direction={index % 2 === 0 ? "left" : "right"}
+                  delay={index * 0.1}
+                  className={item.size === 'full' ? "lg:col-span-2" : ""}
+                >
+                   {item.type === 'table' ? (
+                     <DataTable
+                        title={item.title}
+                        data={item.data}
+                        columns={item.columns}
+                     />
+                   ) : item.type === 'text' ? (
+                     <GlassCard className="p-6">
+                        <h3 className="text-xl font-semibold text-white mb-2">{item.title}</h3>
+                        <div className="prose prose-invert prose-sm max-w-none prose-headings:text-white prose-p:text-white/80 prose-a:text-primary prose-strong:text-white prose-li:text-white/80">
+                          <ReactMarkdown remarkPlugins={[remarkGfm]}>{item.description}</ReactMarkdown>
+                        </div>
+                     </GlassCard>
+                   ) : (
+                     <UniversalChart config={item} />
+                   )}
+                </ScrollReveal>
+             ))}
+          </div>
         )}
-        
-        {/* Price Trend Chart */}
-        {/* Price Trend Chart */}
-        <ScrollGlassCard direction="left" delay={0.1} className="p-6" variant="hover">
-          <h3 className="text-lg font-semibold text-white mb-6">Average Price per Year</h3>
-          <div className="h-[350px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={data?.price_trend || []}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#ffffff10" />
-                <XAxis dataKey="year" stroke="#9ca3af" fontSize={12} />
-                <YAxis stroke="#9ca3af" fontSize={12} tickFormatter={(v) => `$${v/1000}k`} />
-                <Tooltip 
-                  cursor={{fill: '#ffffff10'}} 
-                  contentStyle={{ backgroundColor: "#1e1e2e", borderRadius: "12px", border: "none" }} 
-                  formatter={(value: any) => [`$${value.toLocaleString()}`, "Avg Price"]}
-                />
-                <Bar dataKey="avg_price" fill="#f5c2e7" radius={[6, 6, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </ScrollGlassCard>
-
-        {/* Two Column Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Engine Distribution */}
-          {/* Engine Distribution */}
-          <ScrollGlassCard direction="left" delay={0.2} className="p-6" variant="hover">
-            <div className="flex items-center gap-3 mb-6">
-              <Fuel className="w-5 h-5 text-primary" />
-              <h3 className="text-lg font-semibold text-white">Engine Type Distribution</h3>
-            </div>
-            <div className="h-[280px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={data?.engine_distribution || []}
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={60}
-                    outerRadius={90}
-                    paddingAngle={4}
-                    dataKey="value"
-                    label={({ name, percent }) => `${name ?? 'Unknown'} (${((percent ?? 0) * 100).toFixed(0)}%)`}
-                    labelLine={false}
-                  >
-                    {(data?.engine_distribution || []).map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} />
-                    ))}
-                  </Pie>
-                  <Tooltip 
-                    contentStyle={{ backgroundColor: "#1e1e2e", borderRadius: "12px", border: "none", color: "#f3f4f6" }}
-                    formatter={(value: any) => [`${value} cars`, 'Count']}
-                  />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-          </ScrollGlassCard>
-
-          {/* Status Distribution */}
-          <ScrollGlassCard direction="right" delay={0.3} className="p-6" variant="hover">
-            <div className="flex items-center gap-3 mb-6">
-              <Car className="w-5 h-5 text-primary" />
-              <h3 className="text-lg font-semibold text-white">Inventory Status</h3>
-            </div>
-            <div className="h-[280px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={data?.status_distribution || []}
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={60}
-                    outerRadius={90}
-                    paddingAngle={4}
-                    dataKey="value"
-                  >
-                    {(data?.status_distribution || []).map((_, index) => (
-                      <Cell key={`cell-${index}`} fill={STATUS_COLORS[index % STATUS_COLORS.length]} />
-                    ))}
-                  </Pie>
-                  <Tooltip 
-                    contentStyle={{ backgroundColor: "#1e1e2e", borderRadius: "12px", border: "none", color: "#f3f4f6" }}
-                    formatter={(value: any, name: any) => [`${value} cars`, name]}
-                  />
-                  <Legend iconType="circle" />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-          </ScrollGlassCard>
-        </div>
-
-        {/* Price by Engine Type */}
-        {/* Price by Engine Type */}
-        <ScrollGlassCard direction="left" delay={0.4} className="p-6" variant="hover">
-          <div className="flex items-center gap-3 mb-6">
-            <Palette className="w-5 h-5 text-primary" />
-            <h3 className="text-lg font-semibold text-white">Average Price by Engine Type</h3>
-          </div>
-          <div className="h-[300px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={data?.price_by_engine || []} layout="vertical">
-                <CartesianGrid strokeDasharray="3 3" stroke="#ffffff10" />
-                <XAxis type="number" stroke="#9ca3af" fontSize={12} tickFormatter={(v) => `$${v/1000}k`} />
-                <YAxis type="category" dataKey="engine" stroke="#9ca3af" fontSize={12} width={80} />
-                <Tooltip 
-                  cursor={{fill: '#ffffff10'}} 
-                  contentStyle={{ backgroundColor: "#1e1e2e", borderRadius: "12px", border: "none", color: "#f3f4f6" }} 
-                  formatter={(value: any) => [`$${value.toLocaleString()}`, "Avg Price"]}
-                />
-                <Bar dataKey="avg_price" fill="#89b4fa" radius={[0, 6, 6, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </ScrollGlassCard>
-
-        {/* Color Distribution */}
-        {/* Color Distribution */}
-        <ScrollGlassCard direction="right" delay={0.5} className="p-6" variant="hover">
-          <div className="flex items-center gap-3 mb-6">
-            <Palette className="w-5 h-5 text-primary" />
-            <h3 className="text-lg font-semibold text-white">Color Distribution</h3>
-          </div>
-          <div className="h-[300px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={data?.color_distribution || []}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#ffffff10" />
-                <XAxis dataKey="name" stroke="#9ca3af" fontSize={12} />
-                <YAxis stroke="#9ca3af" fontSize={12} />
-                <Tooltip 
-                  cursor={{fill: '#ffffff10'}} 
-                  contentStyle={{ backgroundColor: "#1e1e2e", borderRadius: "12px", border: "none", color: "#f3f4f6" }} 
-                  formatter={(value: any) => [`${value} cars`, 'Count']}
-                />
-                <Bar dataKey="value" radius={[6, 6, 0, 0]}>
-                  {(data?.color_distribution || []).map((_, index) => (
-                    <Cell key={`cell-${index}`} fill={COLOR_PALETTE[index % COLOR_PALETTE.length]} />
-                  ))}
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </ScrollGlassCard>
       </div>
     </Layout>
   );

@@ -2,7 +2,7 @@
 
 **ชื่อหัวข้อ:** Aomsin Tid Data - Car Market Intelligence Dashboard
 
-**ชื่อสมาชิก:** Champyod
+**ชื่อสมาชิก:** ก้องภพ รักษาธรรม,คุณานนต์ ไขเหลาคำ,ยศกร นวเลิศปัญญา
 
 ---
 

@@ -49,6 +49,10 @@ venv.bak/
 data/*
 !data/raw/
 dashboard/public/data/*
+!dashboard/public/data/general/welcome.toml
+
+# Always ignore manifest files as they are build-time artifacts
+**/manifest.json
 
 # Logs
 *.log
@@ -68,3 +72,9 @@ htmlcov/
 # Note: Uncomment these if you want to exclude them from git
 # .python-version
 # uv.lock
+
+# Jupyter Execution artifacts
+*.nbconvert.ipynb
+
+# Temporary files
+.tmp
