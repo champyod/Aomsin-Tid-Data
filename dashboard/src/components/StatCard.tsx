@@ -27,8 +27,12 @@ export function StatCard({ label, value, trend, icon: Icon, className }: StatCar
           <h3 className="text-3xl font-bold mt-2 font-display bg-clip-text text-transparent bg-gradient-to-b from-text to-text/70">{value}</h3>
         </div>
         {Icon && (
-          <div className="p-3 bg-surface-0/50 rounded-xl text-primary group-hover:text-text group-hover:bg-primary/20 transition-colors duration-300">
-            <Icon className="w-5 h-5" />
+          <div className="p-3 bg-surface-0/50 rounded-xl text-primary group-hover:text-text group-hover:bg-primary/20 transition-colors duration-300 flex items-center justify-center">
+            {typeof Icon === 'string' ? (
+              <span className="text-xl leading-none">{Icon}</span>
+            ) : (
+              <Icon className="w-5 h-5" />
+            )}
           </div>
         )}
       </div>
