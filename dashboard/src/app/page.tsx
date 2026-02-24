@@ -19,10 +19,12 @@ interface ProjectInfo {
 
 interface AnalysisData {
   metrics: {
-    total_revenue: number;
+    total_revenue?: number;
+    total_inventory_value?: number;
     total_units: number;
     average_price: number;
-    top_performing_region: string;
+    top_performing_region?: string;
+    top_manufacturer?: string;
   };
   project_info: ProjectInfo;
 }
@@ -118,6 +120,7 @@ export default function Home() {
   }
 
   const { project_info, metrics } = analysisData || {};
+  const topCategory = metrics?.top_performing_region || metrics?.top_manufacturer || "N/A";
 
   return (
     <Layout>
@@ -165,7 +168,7 @@ export default function Home() {
             <StaggerItem>
               <StatCard
                 label="Top Region"
-                value={metrics.top_performing_region}
+                value={topCategory}
                 icon={Activity}
               />
             </StaggerItem>
