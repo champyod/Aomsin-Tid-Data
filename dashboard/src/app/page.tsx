@@ -120,7 +120,8 @@ export default function Home() {
   }
 
   const { project_info, metrics } = analysisData || {};
-  const topCategory = metrics?.top_performing_region || metrics?.top_manufacturer || "N/A";
+  const topCategoryLabel = metrics?.top_performing_region ? "Top Region" : "Top Manufacturer";
+  const topCategoryValue = metrics?.top_performing_region || metrics?.top_manufacturer || "N/A";
 
   return (
     <Layout>
@@ -167,8 +168,8 @@ export default function Home() {
             </StaggerItem>
             <StaggerItem>
               <StatCard
-                label="Top Region"
-                value={topCategory}
+                label={topCategoryLabel}
+                value={topCategoryValue}
                 icon={Activity}
               />
             </StaggerItem>

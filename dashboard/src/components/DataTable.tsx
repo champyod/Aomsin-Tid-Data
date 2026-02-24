@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { Search, ChevronLeft, ChevronRight } from "lucide-react";
 import { GlassCard } from "@/components/ui/GlassCard";
+import ReactMarkdown from "react-markdown";
 
 interface Column<T> {
   header: string;
@@ -14,9 +15,10 @@ interface DataTableProps<T> {
   data: T[];
   columns: Column<T>[];
   title?: string;
+  description?: string;
 }
 
-export function DataTable<T extends Record<string, any>>({ data, columns, title }: DataTableProps<T>) {
+export function DataTable<T extends Record<string, any>>({ data, columns, title, description }: DataTableProps<T>) {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
@@ -37,18 +39,25 @@ export function DataTable<T extends Record<string, any>>({ data, columns, title 
 
   return (
     <GlassCard className="rounded-2xl p-6">
-      <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
-        {title && <h2 className="text-xl font-bold text-white">{title}</h2>}
-        <div className="relative w-full sm:w-64">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-          <input
-            type="text"
-            placeholder="Search data..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-2 text-sm text-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/50"
-          />
+      <div className="mb-6">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
+          {title && <h2 className="text-xl font-bold text-white">{title}</h2>}
+          <div className="relative w-full sm:w-64">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <input
+              type="text"
+              placeholder="Search data..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-2 text-sm text-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/50"
+            />
+          </div>
         </div>
+        {description && (
+          <div className="prose prose-invert prose-sm max-w-none prose-p:text-white/60">
+            <ReactMarkdown>{description}</ReactMarkdown>
+          </div>
+        )}
       </div>
 
       <div className="overflow-x-auto rounded-xl border border-white/5">

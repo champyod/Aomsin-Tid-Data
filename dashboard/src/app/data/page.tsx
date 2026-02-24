@@ -134,9 +134,11 @@ export default function DataPage() {
                      <GlassCard className="p-6">
                        <h3 className="text-xl font-semibold text-white mb-4">{block.title}</h3>
                        {block.description && (
-                         <p className="text-white/60 text-sm mb-6">{block.description}</p>
+                         <div className="prose prose-invert prose-sm max-w-none prose-p:text-white/60 mb-6">
+                           <ReactMarkdown>{block.description}</ReactMarkdown>
+                         </div>
                        )}
-                       <StaggerContainer className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-5 gap-4">
+                       <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6">
                          {block.metrics.map((metric, idx) => (
                            <StaggerItem key={idx} index={idx}>
                              <StatCard
@@ -144,7 +146,8 @@ export default function DataPage() {
                                value={metric.value}
                                unit={metric.unit}
                                description={metric.description}
-                               icon={metric.icon}
+                               icon={metric.icon as any}
+                               className="h-full bg-surface-0/10 border-white/5"
                              />
                            </StaggerItem>
                          ))}
@@ -155,6 +158,7 @@ export default function DataPage() {
                    {block.type === 'table' && block.data && block.columns && (
                      <DataTable
                         title={block.title}
+                        description={block.description}
                         data={block.data}
                         columns={block.columns as any}
                      />
