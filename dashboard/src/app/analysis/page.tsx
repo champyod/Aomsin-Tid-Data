@@ -9,6 +9,7 @@ import { fetchToml } from "@/utils/tomlLoader";
 import { UniversalChart, ChartConfig } from "@/components/UniversalChart";
 import { DataTable } from "@/components/DataTable";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { GlassCard } from "@/components/ui/GlassCard";
 
 export default function AnalysisPage() {
@@ -113,7 +114,7 @@ export default function AnalysisPage() {
                      <GlassCard className="p-6">
                         <h3 className="text-xl font-semibold text-white mb-2">{item.title}</h3>
                         <div className="prose prose-invert prose-sm max-w-none prose-headings:text-white prose-p:text-white/80 prose-a:text-primary prose-strong:text-white prose-li:text-white/80">
-                          <ReactMarkdown>{item.description}</ReactMarkdown>
+                          <ReactMarkdown remarkPlugins={[remarkGfm]}>{item.description}</ReactMarkdown>
                         </div>
                      </GlassCard>
                    ) : (

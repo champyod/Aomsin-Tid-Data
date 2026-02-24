@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { Search, ChevronLeft, ChevronRight } from "lucide-react";
 import { GlassCard } from "@/components/ui/GlassCard";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 interface Column<T> {
   header: string;
@@ -55,7 +56,7 @@ export function DataTable<T extends Record<string, any>>({ data, columns, title,
         </div>
         {description && (
           <div className="prose prose-invert prose-sm max-w-none prose-p:text-white/60">
-            <ReactMarkdown>{description}</ReactMarkdown>
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>{description}</ReactMarkdown>
           </div>
         )}
       </div>

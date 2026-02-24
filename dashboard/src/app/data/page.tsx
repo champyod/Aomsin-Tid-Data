@@ -9,6 +9,7 @@ import { Activity, Database } from "lucide-react";
 import { getBasePath } from "@/utils/basePath";
 import { fetchToml } from "@/utils/tomlLoader";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { DataTable } from "@/components/DataTable";
 
 interface MetricData {
@@ -125,7 +126,7 @@ export default function DataPage() {
                      <GlassCard className="p-6">
                        <h3 className="text-xl font-semibold text-white mb-2">{block.title}</h3>
                        <div className="prose prose-invert prose-sm max-w-none prose-headings:text-white prose-p:text-white/80 prose-a:text-primary prose-strong:text-white prose-li:text-white/80">
-                         <ReactMarkdown>{block.description}</ReactMarkdown>
+                         <ReactMarkdown remarkPlugins={[remarkGfm]}>{block.description}</ReactMarkdown>
                        </div>
                      </GlassCard>
                    )}
@@ -135,7 +136,7 @@ export default function DataPage() {
                        <h3 className="text-xl font-semibold text-white mb-4">{block.title}</h3>
                        {block.description && (
                          <div className="prose prose-invert prose-sm max-w-none prose-p:text-white/60 mb-6">
-                           <ReactMarkdown>{block.description}</ReactMarkdown>
+                           <ReactMarkdown remarkPlugins={[remarkGfm]}>{block.description}</ReactMarkdown>
                          </div>
                        )}
                        <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6">

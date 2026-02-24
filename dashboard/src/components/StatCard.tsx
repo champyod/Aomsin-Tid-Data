@@ -2,6 +2,7 @@ import { ArrowDownRight, ArrowUpRight } from "lucide-react";
 import { cn } from "../utils/cn";
 import { GlassCard } from "./ui/GlassCard";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 interface StatCardProps {
   label: string;
@@ -45,7 +46,7 @@ export function StatCard({ label, value, unit, description, trend, icon: Icon, c
 
       {description && (
         <div className="text-xs text-subtext-0/80 mb-4 flex-1 prose prose-invert prose-xs max-w-none prose-p:leading-relaxed prose-strong:text-text">
-          <ReactMarkdown>{description}</ReactMarkdown>
+          <ReactMarkdown remarkPlugins={[remarkGfm]}>{description}</ReactMarkdown>
         </div>
       )}
 
