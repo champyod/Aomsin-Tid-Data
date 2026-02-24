@@ -192,6 +192,8 @@ export const UniversalChart: React.FC<UniversalChartProps> = ({ config, classNam
               fontSize={12}
               tickLine={false}
               axisLine={false}
+              interval="preserveStartEnd"
+              minTickGap={24}
             />
             <YAxis
               stroke="var(--color-overlay-1)"
@@ -238,6 +240,8 @@ export const UniversalChart: React.FC<UniversalChartProps> = ({ config, classNam
               fontSize={12}
               tickLine={false}
               axisLine={false}
+              interval="preserveStartEnd"
+              minTickGap={24}
             />
             <YAxis
               stroke="var(--color-overlay-1)"
@@ -288,6 +292,8 @@ export const UniversalChart: React.FC<UniversalChartProps> = ({ config, classNam
               fontSize={12}
               tickLine={false}
               axisLine={false}
+              interval="preserveStartEnd"
+              minTickGap={24}
             />
             <YAxis
               stroke="var(--color-overlay-1)"
@@ -419,6 +425,8 @@ export const UniversalChart: React.FC<UniversalChartProps> = ({ config, classNam
               fontSize={12}
               tickLine={false}
               axisLine={false}
+              interval="preserveStartEnd"
+              minTickGap={24}
             />
             <YAxis
               stroke="var(--color-overlay-1)"
@@ -467,6 +475,46 @@ export const UniversalChart: React.FC<UniversalChartProps> = ({ config, classNam
               return <Line key={s.dataKey} {...commonProps} type="monotone" strokeOpacity={0.8} />; // Fallback
             })}
           </ComposedChart>
+        );
+
+      case 'scatter':
+        return (
+          <ScatterChart data={data}>
+            <CartesianGrid strokeDasharray="3 3" stroke="rgba(245,194,231,0.15)" />
+            <XAxis
+              type="number"
+              dataKey={xAxis?.dataKey}
+              stroke="var(--color-overlay-1)"
+              fontSize={12}
+              tickLine={false}
+              axisLine={false}
+            />
+            <YAxis
+              type="number"
+              stroke="var(--color-overlay-1)"
+              fontSize={12}
+              tickLine={false}
+              axisLine={false}
+              unit={yAxis?.unit}
+            />
+            <Tooltip
+              content={<CustomTooltip />}
+              cursor={{ fill: 'rgba(255, 255, 255, 0.05)' }}
+            />
+            <Legend wrapperStyle={{ color: 'var(--color-text)' }} iconType="circle" />
+            {series.map((s, i) => {
+              const color = s.variant ? getSeriesColor(s.variant, i) : chartPalette[i % chartPalette.length];
+              return (
+                <Scatter
+                  key={s.dataKey}
+                  dataKey={s.dataKey}
+                  name={s.name}
+                  fill={color}
+                  fillOpacity={0.8}
+                />
+              );
+            })}
+          </ScatterChart>
         );
 
       default:
