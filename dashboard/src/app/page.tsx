@@ -67,7 +67,7 @@ export default function Home() {
 
         for (const file of files) {
           try {
-            const config = await fetchToml(`${basePath}${file.path}`);
+            const config = file.data || await fetchToml(`${basePath}${file.path}`);
 
             if (config) {
               // Check if it contains metrics (for stat cards)
@@ -122,7 +122,7 @@ export default function Home() {
   return (
     <Layout>
       <div className="space-y-8">
-        
+
         {/* Project Intro Section */}
         <ScrollGlassCard direction="none" className="p-8" variant="hover">
               <h2 className="text-2xl font-bold text-white mb-2">{project_info?.title || "Aomsin Tid Data Dashboard"}</h2>

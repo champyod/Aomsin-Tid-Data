@@ -39,9 +39,14 @@ export default function ModelingPage() {
       try {
         setLoading(true);
 
-        // 1. Fetch list of available TOML files from API
-        const res = await fetch(`${basePath}/api/files?dir=modeling`);
-        if (!res.ok) throw new Error("Failed to fetch file list");
+        // 1. Fetch manifest.json to get list of TOML files
+        const res = await fetch(`${basePath}/data/modeling/manifest.json`);
+        if (!res.ok) {
+          console.warn("No manifest.json found for modeling data");
+          setCharts([]);
+          setLoading(false);
+          return;
+        }
 
         const { files } = await res.json();
 
@@ -57,7 +62,8 @@ export default function ModelingPage() {
 
         for (const file of files) {
           try {
-            const config = await fetchToml(`${basePath}${file.path}`);
+            // Use data from manifest if it was compiled in, otherwise fetch
+            const config = file.data || await fetchToml(`${basePath}${file.path}`);
 
             if (config) {
               // Check if it's model_metrics (has model_name field)

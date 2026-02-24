@@ -31,7 +31,7 @@ export default function AnalysisPage() {
         }
 
         const { files } = await res.json();
-        
+
         if (!files || files.length === 0) {
             console.warn("No analysis files found.");
             setItems([]);
@@ -40,12 +40,12 @@ export default function AnalysisPage() {
 
         // 2. Fetch content for each TOML file
         const loadedItems: any[] = [];
-        
+
         for (const file of files) {
             try {
-                // Using fetchToml to parse the file content
-                const config = await fetchToml(`${basePath}${file.path}`);
-                
+                // Using data from manifest if available
+                const config = file.data || await fetchToml(`${basePath}${file.path}`);
+
                 if (config) {
                     // Check if it's a wrapper { charts: [...] }
                     if ((config as any).charts) {
@@ -58,10 +58,10 @@ export default function AnalysisPage() {
                 console.error(`Failed to load ${file.name}:`, e);
             }
         }
-        
+
         // Sort by order field (ascending)
         loadedItems.sort((a, b) => ((a as any).order || 0) - ((b as any).order || 0));
-        
+
         setItems(loadedItems);
 
       } catch (err) {
@@ -89,7 +89,7 @@ export default function AnalysisPage() {
         <ScrollReveal direction="none">
           <h2 className="text-2xl font-bold text-white mb-6">Detailed Analysis</h2>
         </ScrollReveal>
-        
+
         {items.length === 0 ? (
            <div className="text-center text-gray-400 py-10">
              No chart data available. Run the analysis notebook to generate insights.
@@ -104,7 +104,7 @@ export default function AnalysisPage() {
                   className={item.size === 'full' ? "lg:col-span-2" : ""}
                 >
                    {item.type === 'table' ? (
-                     <DataTable 
+                     <DataTable
                         title={item.title}
                         data={item.data}
                         columns={item.columns}

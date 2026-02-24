@@ -64,7 +64,7 @@ export default function DataPage() {
 
         for (const file of files) {
             try {
-                const config = await fetchToml(`${basePath}${file.path}`);
+                const config = file.data || await fetchToml(`${basePath}${file.path}`);
 
                 if (config) {
                     blocks.push(config as unknown as ContentBlock);
@@ -153,7 +153,7 @@ export default function DataPage() {
                    )}
 
                    {block.type === 'table' && block.data && block.columns && (
-                     <DataTable 
+                     <DataTable
                         title={block.title}
                         data={block.data}
                         columns={block.columns as any}
