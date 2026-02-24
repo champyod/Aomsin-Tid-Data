@@ -15,7 +15,7 @@ interface StatCardProps {
 
 export function StatCard({ label, value, trend, icon: Icon, className }: StatCardProps) {
   return (
-    <GlassCard 
+    <GlassCard
       className={cn("p-6 relative overflow-hidden group", className)}
       whileHover={{ y: -5 }}
       variant="hover"
@@ -53,7 +53,7 @@ export function StatCard({ label, value, trend, icon: Icon, className }: StatCar
           <span className="text-xs text-subtext-1 ml-2">vs last month</span>
         </div>
       )}
-      
+
       {/* Decorative gradient blob */}
       <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-gradient-to-br from-primary/10 to-secondary/10 blur-2xl rounded-full group-hover:opacity-100 opacity-40 transition-opacity" />
     </GlassCard>

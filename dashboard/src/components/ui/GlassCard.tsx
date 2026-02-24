@@ -38,7 +38,7 @@ export function GlassCard({ children, className, variant = "default", ...props }
           ease: "easeInOut",
         }}
       />
-      
+
       {/* Content wrapper to ensure z-index above background */}
       <div className="relative z-10">
         {children}

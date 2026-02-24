@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-      
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -36,16 +36,16 @@ jobs:
           # Configure git for committing changes
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          
+
           has_changes=false
           IFS=',' read -r -a files <<< "${{ steps.changed-files.outputs.all_changed_files }}"
-          
+
           for file in "${files[@]}"; do
             # Check if the file still exists (it might have been deleted)
             if [ -f "$file" ]; then
               echo "Processing: $file"
               output_file="${file%.md}.odt"
-              
+
               # Run pandoc and capture exit status
               if pandoc "$file" -o "$output_file"; then
                 echo "Converted successfully: $output_file"
@@ -58,7 +58,7 @@ jobs:
               echo "File $file was deleted, skipping conversion."
             fi
           done
-          
+
           if [ "$has_changes" = true ]; then
             # Check if there are actually changes staged
             if ! git diff --staged --quiet; then

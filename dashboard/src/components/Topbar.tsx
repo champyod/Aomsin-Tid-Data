@@ -8,12 +8,12 @@ const REPO_URL = "https://github.com/champyod/Aomsin-Tid-Data";
 
 export function Topbar() {
   const pathname = usePathname();
-  
+
   const getBreadcrumbs = () => {
-    // 1. Always start with Home/Overview if you want the root to be clickable too? 
+    // 1. Always start with Home/Overview if you want the root to be clickable too?
     // The current design has "Aomsin Tid Data" separate. Let's keep that non-clickable or separate for now unless requested.
     // The user asked for "navigate link".
-    
+
     // 2. Split path into segments
     const segments = pathname.split("/").filter(Boolean);
     let currentPath = "";
@@ -22,10 +22,10 @@ export function Topbar() {
     return segments.map(segment => {
       currentPath += `/${segment}`;
       const href = currentPath;
-      
+
       // Decode URI components
       const decoded = decodeURIComponent(segment);
-      
+
       // Handle special cases
       const customTitles: Record<string, string> = {
         "api": "API",
@@ -43,7 +43,7 @@ export function Topbar() {
           .map(word => word.charAt(0).toUpperCase() + word.slice(1))
           .join(" ");
       }
-      
+
       return { title, href };
     });
   };
@@ -68,7 +68,7 @@ export function Topbar() {
             </span>
           </Link>
           <span className="text-overlay-0">/</span>
-          
+
           {/* Dynamic Breadcrumbs */}
           <div className="flex items-center gap-2">
             {pathname === "/" ? (
@@ -77,7 +77,7 @@ export function Topbar() {
                 breadcrumbs.map((crumb, index) => (
                   <div key={crumb.href} className="flex items-center gap-2">
                     {index > 0 && <span className="text-overlay-0">/</span>}
-                    <Link 
+                    <Link
                       href={crumb.href}
                       className={`text-sm font-semibold transition-colors hover:text-primary ${
                         index === breadcrumbs.length - 1 ? "text-text cursor-default" : "text-subtext-0"

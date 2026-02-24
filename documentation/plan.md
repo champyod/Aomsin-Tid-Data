@@ -1,7 +1,7 @@
 # 📊 Data Science Project Plan: Car Sales Analysis
 
-> **Project**: Aomsin-Tid-Data  
-> **Dataset**: Raw Car Sales Data Set (Kaggle - Yukesh GK)  
+> **Project**: Aomsin-Tid-Data
+> **Dataset**: Raw Car Sales Data Set (Kaggle - Yukesh GK)
 > **Goal**: Build a predictive model for car sales analysis
 
 ---
@@ -26,7 +26,7 @@
 - [x] **Null Verification**: Inspect rows with Nulls after casting to distinguish between missing data and bad data.
 
 ### 1.3 Data Transformations
-- [x] **String Standardization**: 
+- [x] **String Standardization**:
     - Title Case for `Manufacturer` and `Fuel type`.
     - Strip whitespace from all string columns.
 - [x] **Type Casting**:
@@ -51,10 +51,10 @@
 
 ### 2.2 Bivariate & Multivariate Analysis
 - [ ] **Correlation Analysis**: Heatmap to identify linear relationships between numerical features (`Price`, `Mileage`, `Year`, `Engine size`).
-- [ ] **Price Analysis by Category**: 
+- [ ] **Price Analysis by Category**:
     - Average `Price` per `Manufacturer` and `Fuel type`.
     - Price distributions by `Model`.
-- [ ] **Scatter Plots**: 
+- [ ] **Scatter Plots**:
     - `Price` vs. `Mileage` (Depreciation check).
     - `Price` vs. `Engine size` (Performance premium check).
 

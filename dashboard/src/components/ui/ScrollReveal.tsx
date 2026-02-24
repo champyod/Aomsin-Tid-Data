@@ -18,12 +18,12 @@ const directionVariants = {
   none: { opacity: 0, scale: 0.95 },
 };
 
-export function ScrollReveal({ 
-  children, 
-  delay = 0, 
-  direction = "up", 
+export function ScrollReveal({
+  children,
+  delay = 0,
+  direction = "up",
   className = "",
-  ...props 
+  ...props
 }: ScrollRevealProps) {
   return (
     <motion.div
@@ -50,10 +50,10 @@ interface StaggerContainerProps {
   staggerDelay?: number;
 }
 
-export function StaggerContainer({ 
-  children, 
+export function StaggerContainer({
+  children,
   className = "",
-  staggerDelay = 0.1 
+  staggerDelay = 0.1
 }: StaggerContainerProps) {
   return (
     <motion.div
@@ -75,9 +75,9 @@ export function StaggerContainer({
 }
 
 // Child item for stagger container
-export function StaggerItem({ 
-  children, 
-  className = "" 
+export function StaggerItem({
+  children,
+  className = ""
 }: { children: ReactNode; className?: string }) {
   return (
     <motion.div

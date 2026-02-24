@@ -4,10 +4,10 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/utils/cn";
 import { motion } from "framer-motion";
-import { 
-  LayoutDashboard, 
-  BarChart2, 
-  Database, 
+import {
+  LayoutDashboard,
+  BarChart2,
+  Database,
   Brain,
   Users
 } from "lucide-react";
@@ -53,9 +53,9 @@ export function Sidebar() {
                     layoutId="sidebar-active-indicator"
                     className="absolute inset-0 bg-primary/10 border border-primary/20 rounded-2xl"
                     style={{ originX: 0.5, originY: 0.5 }}
-                    transition={{ 
-                      type: "spring", 
-                      stiffness: 350, 
+                    transition={{
+                      type: "spring",
+                      stiffness: 350,
                       damping: 30,
                     }}
                   />
@@ -71,7 +71,7 @@ export function Sidebar() {
             );
           })}
         </nav>
-        
+
         <div className="p-6 text-xs text-gray-500 text-center font-light">
            &copy; {new Date().getFullYear()} Aomsin Tid Data
         </div>

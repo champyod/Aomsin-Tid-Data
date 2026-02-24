@@ -170,11 +170,11 @@ def save_result(
     final_filename = f"{base_name}.toml"
 
     file_path = _resolve_path(topic, final_filename)
-    
+
     # Determine next order index by counting existing files in topic
     topic_dir = get_project_root() / "data" / topic
     existing_files = list(topic_dir.glob("*.toml")) if topic_dir.exists() else []
-    
+
     # If file already exists, we might want to keep its order if not specified
     current_order = None
     if file_path.exists() and order is None:
@@ -188,7 +188,7 @@ def save_result(
     # If data is a ChartConfig object, convert to dict
     if hasattr(data, "to_dict"):
         data = data.to_dict()
-    
+
     # Add order
     if isinstance(data, dict):
         if order is not None:
@@ -278,5 +278,5 @@ def schema_to_markdown(df: Any, title: str, total_records: int) -> str:
     elif hasattr(df, "dtypes"):
         for name, dtype in df.dtypes.items():
             markdown += f"| `{name}` | `{dtype}` | - |\n"
-            
+
     return markdown

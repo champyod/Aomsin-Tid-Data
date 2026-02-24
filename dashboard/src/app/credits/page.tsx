@@ -5,10 +5,10 @@ import { GlassCard } from "@/components/ui/GlassCard";
 import { ScrollGlassCard } from "@/components/ui/ScrollGlassCard";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { TechTicker } from "@/components/ui/TechTicker";
-import { 
-    Database, 
-    Server, 
-    Cpu, 
+import {
+    Database,
+    Server,
+    Cpu,
     BarChart2,
     Bot,
     ArrowUpRight
@@ -63,9 +63,9 @@ export default function CreditsPage() {
                      <p className="text-gray-300 leading-relaxed font-light mb-4">
                         We utilized the <strong>Raw Car Sales Data Set</strong> from Kaggle. This comprehensive dataset serves as the foundation for our analysis and modeling.
                      </p>
-                     <a 
-                        href="https://www.kaggle.com/datasets/yukeshgk/raw-car-sales-data-set?select=Sales.csv" 
-                        target="_blank" 
+                     <a
+                        href="https://www.kaggle.com/datasets/yukeshgk/raw-car-sales-data-set?select=Sales.csv"
+                        target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex items-center px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg transition-colors text-sm font-medium"
                      >
@@ -79,11 +79,11 @@ export default function CreditsPage() {
         {/* Contributors Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {contributors.map((member, index) => (
-                <ScrollGlassCard 
-                    key={member.id} 
-                    direction="up" 
-                    delay={0.2 + (index * 0.1)} 
-                    className="p-6 flex flex-col h-full" 
+                <ScrollGlassCard
+                    key={member.id}
+                    direction="up"
+                    delay={0.2 + (index * 0.1)}
+                    className="p-6 flex flex-col h-full"
                     variant="hover"
                 >
                     <div className="flex justify-between items-start mb-4">
@@ -94,10 +94,10 @@ export default function CreditsPage() {
                             ID: {member.id}
                         </span>
                     </div>
-                    
+
                     <h3 className="text-xl font-bold text-white mb-1 font-display">{member.name}</h3>
                     <p className="text-primary text-sm font-medium mb-4">{member.role}</p>
-                    
+
                     <div className="mt-auto pt-4 border-t border-white/5">
                         <p className="text-sm text-gray-400 font-light leading-relaxed">
                             {member.description}
@@ -115,7 +115,7 @@ export default function CreditsPage() {
                     <img className="w-4 h-4" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" alt="" />
                     Python & Data Science Stack
                 </h3>
-                <TechTicker 
+                <TechTicker
                     speed={30}
                     direction="left"
                     fallbackIcon="python"
@@ -135,13 +135,13 @@ export default function CreditsPage() {
                     ]}
                 />
             </div>
-            
+
             <div>
                 <h3 className="text-sm font-semibold text-blue-400 uppercase tracking-wider mb-4 pl-4 flex items-center gap-2">
                      <img className="w-4 h-4" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg" alt="" />
                      Web & Dashboard Stack
                 </h3>
-                <TechTicker 
+                <TechTicker
                     speed={35}
                     direction="right"
                     fallbackIcon="web"
@@ -173,4 +173,3 @@ export default function CreditsPage() {
     </Layout>
   );
 }
-

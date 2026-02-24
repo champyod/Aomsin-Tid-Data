@@ -200,8 +200,8 @@ export const UniversalChart: React.FC<UniversalChartProps> = ({ config, classNam
               axisLine={false}
               unit={yAxis?.unit}
             />
-            <Tooltip 
-              content={<CustomTooltip />} 
+            <Tooltip
+              content={<CustomTooltip />}
               cursor={{ fill: 'rgba(255, 255, 255, 0.05)' }}
             />
             <Legend wrapperStyle={{ color: 'var(--color-text)' }} iconType="circle" />
@@ -216,9 +216,9 @@ export const UniversalChart: React.FC<UniversalChartProps> = ({ config, classNam
                   fillOpacity={0.8}
                   radius={[4, 4, 0, 0]}
                   stackId={s.stackId}
-                  activeBar={{ 
-                    fillOpacity: 1, 
-                    stroke: color, 
+                  activeBar={{
+                    fillOpacity: 1,
+                    stroke: color,
                     strokeWidth: 1,
                     filter: 'brightness(1.1)'
                   }}
@@ -246,8 +246,8 @@ export const UniversalChart: React.FC<UniversalChartProps> = ({ config, classNam
               axisLine={false}
               unit={yAxis?.unit}
             />
-            <Tooltip 
-              content={<CustomTooltip />} 
+            <Tooltip
+              content={<CustomTooltip />}
               cursor={{ fill: 'rgba(255, 255, 255, 0.05)' }}
             />
             <Legend wrapperStyle={{ color: 'var(--color-text)' }} iconType="circle" />
@@ -296,8 +296,8 @@ export const UniversalChart: React.FC<UniversalChartProps> = ({ config, classNam
               axisLine={false}
               unit={yAxis?.unit}
             />
-            <Tooltip 
-              content={<CustomTooltip />} 
+            <Tooltip
+              content={<CustomTooltip />}
               cursor={{ fill: 'rgba(255, 255, 255, 0.05)' }}
             />
             <Legend wrapperStyle={{ color: 'var(--color-text)' }} iconType="circle" />
@@ -320,15 +320,15 @@ export const UniversalChart: React.FC<UniversalChartProps> = ({ config, classNam
             })}
           </AreaChart>
         );
-      
+
       case 'radar':
         return (
           <RadarChart cx="50%" cy="50%" outerRadius="80%" data={data}>
             <PolarGrid stroke="rgba(245,194,231,0.15)" />
             <PolarAngleAxis dataKey={xAxis?.dataKey} tick={{ fill: 'var(--color-overlay-1)', fontSize: 12 }} />
             <PolarRadiusAxis angle={30} domain={[0, 'auto']} tick={false} axisLine={false} />
-            <Tooltip 
-              content={<CustomTooltip />} 
+            <Tooltip
+              content={<CustomTooltip />}
               cursor={{ fill: 'rgba(255, 255, 255, 0.05)' }}
             />
             <Legend wrapperStyle={{ color: 'var(--color-text)' }} iconType="circle" />
@@ -398,8 +398,8 @@ export const UniversalChart: React.FC<UniversalChartProps> = ({ config, classNam
                 />
               ))}
             </Pie>
-            <Tooltip 
-              content={<CustomTooltip />} 
+            <Tooltip
+              content={<CustomTooltip />}
               cursor={{ fill: 'rgba(255, 255, 255, 0.05)' }}
             />
             <Legend
@@ -427,8 +427,8 @@ export const UniversalChart: React.FC<UniversalChartProps> = ({ config, classNam
               axisLine={false}
               unit={yAxis?.unit}
             />
-            <Tooltip 
-              content={<CustomTooltip />} 
+            <Tooltip
+              content={<CustomTooltip />}
               cursor={{ fill: 'rgba(255, 255, 255, 0.05)' }}
             />
             <Legend wrapperStyle={{ color: 'var(--color-text)' }} iconType="circle" />
