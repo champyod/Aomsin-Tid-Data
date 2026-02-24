@@ -8,12 +8,12 @@ interface ScrollGlassCardProps extends GlassCardProps {
   delay?: number;
 }
 
-export function ScrollGlassCard({ 
-  direction = "up", 
-  delay = 0, 
+export function ScrollGlassCard({
+  direction = "up",
+  delay = 0,
   className,
   children,
-  ...props 
+  ...props
 }: ScrollGlassCardProps) {
   return (
     <ScrollReveal direction={direction} delay={delay} className="h-full">

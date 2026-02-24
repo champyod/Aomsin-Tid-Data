@@ -12,172 +12,172 @@ name = "Average Price"
 variant = "chart-1"
 
 [[charts.data]]
-Year = 1984
+"Year of manufacture" = 1984
 avg_price = 998.3767123287671
 
 [[charts.data]]
-Year = 1985
-avg_price = 1104.3251533742332
+"Year of manufacture" = 1985
+avg_price = 1102.658536585366
 
 [[charts.data]]
-Year = 1986
-avg_price = 1206.796766743649
+"Year of manufacture" = 1986
+avg_price = 1201.6155606407322
 
 [[charts.data]]
-Year = 1987
-avg_price = 1310.2596314907873
+"Year of manufacture" = 1987
+avg_price = 1303.5645695364237
 
 [[charts.data]]
-Year = 1988
-avg_price = 1430.2158774373258
+"Year of manufacture" = 1988
+avg_price = 1420.25956284153
 
 [[charts.data]]
-Year = 1989
-avg_price = 1723.43
+"Year of manufacture" = 1989
+avg_price = 1707.6239130434783
 
 [[charts.data]]
-Year = 1990
-avg_price = 1889.1606978879706
+"Year of manufacture" = 1990
+avg_price = 1875.9738503155997
 
 [[charts.data]]
-Year = 1991
-avg_price = 2066.963463065925
+"Year of manufacture" = 1991
+avg_price = 2057.70431372549
 
 [[charts.data]]
-Year = 1992
-avg_price = 2300.1368178324365
+"Year of manufacture" = 1992
+avg_price = 2284.163650075415
 
 [[charts.data]]
-Year = 1993
-avg_price = 2568.0162601626016
+"Year of manufacture" = 1993
+avg_price = 2555.6220891550233
 
 [[charts.data]]
-Year = 1994
-avg_price = 2877.5604921394397
+"Year of manufacture" = 1994
+avg_price = 2860.8150638870206
 
 [[charts.data]]
-Year = 1995
-avg_price = 3185.819322459222
+"Year of manufacture" = 1995
+avg_price = 3170.759900990099
 
 [[charts.data]]
-Year = 1996
-avg_price = 3460.0977747808497
+"Year of manufacture" = 1996
+avg_price = 3444.7007978723404
 
 [[charts.data]]
-Year = 1997
-avg_price = 4107.365359477124
+"Year of manufacture" = 1997
+avg_price = 4096.70233463035
 
 [[charts.data]]
-Year = 1998
-avg_price = 4479.154460719042
+"Year of manufacture" = 1998
+avg_price = 4468.827631578947
 
 [[charts.data]]
-Year = 1999
-avg_price = 4944.066363044893
+"Year of manufacture" = 1999
+avg_price = 4934.287644787645
 
 [[charts.data]]
-Year = 2000
-avg_price = 5731.202106649112
+"Year of manufacture" = 2000
+avg_price = 5715.216938110749
 
 [[charts.data]]
-Year = 2001
-avg_price = 6127.55868544601
+"Year of manufacture" = 2001
+avg_price = 6108.144281914893
 
 [[charts.data]]
-Year = 2002
-avg_price = 6880.983628028815
+"Year of manufacture" = 2002
+avg_price = 6860.129785853342
 
 [[charts.data]]
-Year = 2003
-avg_price = 7641.088215024121
+"Year of manufacture" = 2003
+avg_price = 7613.912185159973
 
 [[charts.data]]
-Year = 2004
-avg_price = 8536.058710912572
+"Year of manufacture" = 2004
+avg_price = 8530.937262357415
 
 [[charts.data]]
-Year = 2005
-avg_price = 9520.165035877364
+"Year of manufacture" = 2005
+avg_price = 9511.260981912144
 
 [[charts.data]]
-Year = 2006
-avg_price = 10470.41935483871
+"Year of manufacture" = 2006
+avg_price = 10439.761813537676
 
 [[charts.data]]
-Year = 2007
-avg_price = 11340.12823834197
+"Year of manufacture" = 2007
+avg_price = 11301.663036515054
 
 [[charts.data]]
-Year = 2008
-avg_price = 12807.435590969455
+"Year of manufacture" = 2008
+avg_price = 12790.147854785479
 
 [[charts.data]]
-Year = 2009
-avg_price = 14526.04606141522
+"Year of manufacture" = 2009
+avg_price = 14521.33952254642
 
 [[charts.data]]
-Year = 2010
-avg_price = 16353.0531496063
+"Year of manufacture" = 2010
+avg_price = 16328.573011734028
 
 [[charts.data]]
-Year = 2011
-avg_price = 18282.168797953964
+"Year of manufacture" = 2011
+avg_price = 18245.05534351145
 
 [[charts.data]]
-Year = 2012
-avg_price = 20129.7743165925
+"Year of manufacture" = 2012
+avg_price = 20102.423878711306
 
 [[charts.data]]
-Year = 2013
-avg_price = 22148.476677316296
+"Year of manufacture" = 2013
+avg_price = 22101.422588832487
 
 [[charts.data]]
-Year = 2014
-avg_price = 24289.13458950202
+"Year of manufacture" = 2014
+avg_price = 24237.323549032688
 
 [[charts.data]]
-Year = 2015
-avg_price = 27548.50203804348
+"Year of manufacture" = 2015
+avg_price = 27454.145258910557
 
 [[charts.data]]
-Year = 2016
-avg_price = 30372.334390862943
+"Year of manufacture" = 2016
+avg_price = 30309.81663516068
 
 [[charts.data]]
-Year = 2017
-avg_price = 33307.465551839465
+"Year of manufacture" = 2017
+avg_price = 33287.2038640906
 
 [[charts.data]]
-Year = 2018
-avg_price = 36115.45082467929
+"Year of manufacture" = 2018
+avg_price = 36073.45018226002
 
 [[charts.data]]
-Year = 2019
-avg_price = 41080.18683996751
+"Year of manufacture" = 2019
+avg_price = 41034.13929146538
 
 [[charts.data]]
-Year = 2020
-avg_price = 46270.82217343579
+"Year of manufacture" = 2020
+avg_price = 46210.822950819675
 
 [[charts.data]]
-Year = 2021
-avg_price = 49759.29966887417
+"Year of manufacture" = 2021
+avg_price = 49716.669421487604
 
 [[charts.data]]
-Year = 2022
-avg_price = 59220.961414790996
+"Year of manufacture" = 2022
+avg_price = 59022.511182108625
 
 
 [charts.xAxis]
-dataKey = "Year"
+dataKey = "Year of manufacture"
 label = "Year"
 [charts.yAxis]
 label = ""
 unit = "$"
 [[charts]]
-title = "Engine Type Distribution"
+title = "Fuel Type Distribution"
 type = "pie"
-description = "Market share by engine technology"
+description = "Market share by fuel technology"
 order = 0
 size = "half"
 [[charts.series]]
@@ -186,76 +186,79 @@ name = "Count"
 variant = "blue"
 
 [[charts.data]]
-Engine_Type = "Petrol"
-value = 49489
+"Fuel type" = "Petrol"
+value = 25480
+
+[[charts.data]]
+"Fuel type" = "Diesel"
+value = 13264
+
+[[charts.data]]
+"Fuel type" = "Hybrid"
+value = 11244
 
 
 [charts.xAxis]
-dataKey = "Engine_Type"
+dataKey = "Fuel type"
 label = ""
 [charts.yAxis]
 label = ""
 unit = ""
 [[charts]]
-title = "Top 5 Models Financials (Stacked)"
+title = "Manufacturer Price vs Mileage"
 type = "bar"
-description = "Revenue breakdown into Cost and Profit"
+description = "Average Price and Mileage comparison"
 order = 0
 size = "half"
 variant = "success"
 [[charts.series]]
-dataKey = "Cost"
-name = "Estimated Cost"
+dataKey = "Avg_Price"
+name = "Avg Price ($)"
 variant = "yellow"
 stackId = "a"
 
 [[charts.series]]
-dataKey = "Profit"
-name = "Net Profit"
+dataKey = "Avg_Mileage"
+name = "Avg Mileage (miles)"
 variant = "green"
 stackId = "a"
 
 [[charts.data]]
-Model = "RAV4"
-Revenue = 83407168.0
-Cost = 58385017.599999994
-Profit = 25022150.4
+Manufacturer = "Porsche"
+Avg_Price = 29103.764660789573
+Avg_Mileage = 111638.253737064
 
 [[charts.data]]
-Model = "M5"
-Revenue = 65653777.0
-Cost = 45957643.9
-Profit = 19696133.099999998
+Manufacturer = "Bmw"
+Avg_Price = 24431.679089444
+Avg_Mileage = 112858.0471394037
 
 [[charts.data]]
-Model = "Mondeo"
-Revenue = 65530612.0
-Cost = 45871428.4
-Profit = 19659183.599999998
+Manufacturer = "Toyota"
+Avg_Price = 14341.099418465705
+Avg_Mileage = 111368.92232932367
 
 [[charts.data]]
-Model = "Passat"
-Revenue = 62776936.0
-Cost = 43943855.199999996
-Profit = 18833080.8
+Manufacturer = "Ford"
+Avg_Price = 10671.473455469377
+Avg_Mileage = 112525.01002941963
 
 [[charts.data]]
-Model = "Focus"
-Revenue = 58628811.0
-Cost = 41040167.699999996
-Profit = 17588643.3
+Manufacturer = "Vw"
+Avg_Price = 10361.781497383605
+Avg_Mileage = 113511.21642291694
 
 
 [charts.xAxis]
-dataKey = "Model"
+dataKey = "Manufacturer"
 label = ""
 [charts.yAxis]
 label = ""
-unit = "$"
+unit = ""
 [[charts]]
-title = "Top 3 Brands Comparison (Normalized)"
+title = "Top 3 Manufacturers Comparison (Normalized)"
 type = "radar"
-description = "Relative scoring of Price, Buyer Age, and Volume"
+description = "Relative scoring of Price, Mileage, and Inventory"
 order = 0
 size = "half"
 [[charts.series]]
@@ -280,13 +283,13 @@ Vw = 0.0
 Toyota = 100.0
 
 [[charts.data]]
-metric = "Buyer Age"
-Ford = 95.09030653680959
-Vw = 0.0
-Toyota = 100.0
+metric = "Mileage"
+Ford = 53.964938966752804
+Vw = 100.0
+Toyota = 0.0
 
 [[charts.data]]
-metric = "Volume"
+metric = "Inventory"
 Ford = 100.0
 Vw = 97.91926758218894
 Toyota = 0.0
@@ -299,35 +302,53 @@ label = ""
 label = ""
 unit = ""
 [[charts]]
-title = "Revenue vs Transaction Volume (Monthly)"
+title = "Average Price vs Mileage by Manufacturer"
 type = "composed"
-description = "Tracking revenue alongside number of deals closed"
+description = "Market position: Price level vs average vehicle wear"
 order = 0
 size = "full"
 variant = "info"
 [[charts.series]]
-dataKey = "Total_Revenue"
-name = "Revenue"
+dataKey = "Avg_Price"
+name = "Price ($)"
 variant = "peach"
 type = "bar"
 
 [[charts.series]]
-dataKey = "Transaction_Count"
-name = "Deals Count"
+dataKey = "Avg_Mileage"
+name = "Mileage (miles)"
 variant = "sky"
 type = "line"
 
 [[charts.data]]
-Sale_Year = 2024
-Month = 1
-Total_Revenue = 691289670.0
-Transaction_Count = 49988
-Year_Month = "2024-01"
+Manufacturer = "Porsche"
+Avg_Price = 29103.764660789573
+Avg_Mileage = 111638.253737064
+
+[[charts.data]]
+Manufacturer = "Bmw"
+Avg_Price = 24431.679089444
+Avg_Mileage = 112858.0471394037
+
+[[charts.data]]
+Manufacturer = "Toyota"
+Avg_Price = 14341.099418465705
+Avg_Mileage = 111368.92232932367
+
+[[charts.data]]
+Manufacturer = "Ford"
+Avg_Price = 10671.473455469377
+Avg_Mileage = 112525.01002941963
+
+[[charts.data]]
+Manufacturer = "Vw"
+Avg_Price = 10361.781497383605
+Avg_Mileage = 113511.21642291694
 
 
 [charts.xAxis]
-dataKey = "Year_Month"
+dataKey = "Manufacturer"
 label = ""
 [charts.yAxis]
 label = ""
-unit = "$"
+unit = ""

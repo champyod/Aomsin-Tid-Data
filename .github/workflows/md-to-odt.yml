@@ -1,0 +1,73 @@
+name: Convert Markdown to ODT
+
+on:
+  push:
+    paths:
+      - '**.md'
+
+jobs:
+  convert_to_odt:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Required to detect changes
+
+      - name: Install Pandoc
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y pandoc
+
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v44
+        with:
+          files: |
+            **.md
+          separator: ","
+
+      - name: Convert MD to ODT
+        if: steps.changed-files.outputs.any_changed == 'true'
+        run: |
+          # Configure git for committing changes
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+          has_changes=false
+          IFS=',' read -r -a files <<< "${{ steps.changed-files.outputs.all_changed_files }}"
+
+          for file in "${files[@]}"; do
+            # Check if the file still exists (it might have been deleted)
+            if [ -f "$file" ]; then
+              echo "Processing: $file"
+              output_file="${file%.md}.odt"
+
+              # Run pandoc and capture exit status
+              if pandoc "$file" -o "$output_file"; then
+                echo "Converted successfully: $output_file"
+                git add "$output_file"
+                has_changes=true
+              else
+                echo "Error converting $file"
+              fi
+            else
+              echo "File $file was deleted, skipping conversion."
+            fi
+          done
+
+          if [ "$has_changes" = true ]; then
+            # Check if there are actually changes staged
+            if ! git diff --staged --quiet; then
+              git commit -m "docs: generate ODT from Markdown [skip ci]"
+              git push
+              echo "Changes pushed successfully."
+            else
+              echo "No changes to commit (ODT files might be unchanged)."
+            fi
+          else
+            echo "No ODT files generated."
+          fi

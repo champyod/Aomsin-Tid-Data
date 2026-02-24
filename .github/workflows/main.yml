@@ -108,7 +108,7 @@ jobs:
             echo "Running $notebook..."
             uv run jupyter nbconvert --to notebook --execute "$notebook"
           done
-      
+
       - name: Upload Analysis Data
         uses: actions/upload-artifact@v4
         with:

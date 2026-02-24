@@ -7,13 +7,12 @@ import { Activity } from "lucide-react";
 import { getBasePath } from "@/utils/basePath";
 import { fetchToml } from "@/utils/tomlLoader";
 import { UniversalChart, ChartConfig } from "@/components/UniversalChart";
-
-interface ChartsPayload {
-  charts: ChartConfig[];
-}
+import { DataTable } from "@/components/DataTable";
+import ReactMarkdown from "react-markdown";
+import { GlassCard } from "@/components/ui/GlassCard";
 
 export default function AnalysisPage() {
-  const [charts, setCharts] = useState<ChartConfig[]>([]);
+  const [items, setItems] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -26,45 +25,44 @@ export default function AnalysisPage() {
         const res = await fetch(`${basePath}/data/analysis/manifest.json`);
         if (!res.ok) {
           console.warn("No manifest.json found for analysis data");
-          setCharts([]);
+          setItems([]);
           setLoading(false);
           return;
         }
 
         const { files } = await res.json();
-        
+
         if (!files || files.length === 0) {
             console.warn("No analysis files found.");
-            setCharts([]);
+            setItems([]);
             return;
         }
 
         // 2. Fetch content for each TOML file
-        const loadedCharts: ChartConfig[] = [];
-        
+        const loadedItems: any[] = [];
+
         for (const file of files) {
             try {
-                // Using fetchToml to parse the file content
-                // Note: file.path from API is relative to public (e.g. /data/analysis/foo.toml)
-                const config = await fetchToml(`${basePath}${file.path}`);
-                
+                // Using data from manifest if available
+                const config = file.data || await fetchToml(`${basePath}${file.path}`);
+
                 if (config) {
-                    // Check if it's a wrapper { charts: [...] } or single config
+                    // Check if it's a wrapper { charts: [...] }
                     if ((config as any).charts) {
-                        loadedCharts.push(...(config as any).charts);
+                        loadedItems.push(...(config as any).charts);
                     } else {
-                        loadedCharts.push(config as unknown as ChartConfig);
+                        loadedItems.push(config);
                     }
                 }
             } catch (e) {
                 console.error(`Failed to load ${file.name}:`, e);
             }
         }
-        
+
         // Sort by order field (ascending)
-        loadedCharts.sort((a, b) => ((a as any).order || 0) - ((b as any).order || 0));
-        
-        setCharts(loadedCharts);
+        loadedItems.sort((a, b) => ((a as any).order || 0) - ((b as any).order || 0));
+
+        setItems(loadedItems);
 
       } catch (err) {
         console.error("Error loading analysis data:", err);
@@ -91,21 +89,36 @@ export default function AnalysisPage() {
         <ScrollReveal direction="none">
           <h2 className="text-2xl font-bold text-white mb-6">Detailed Analysis</h2>
         </ScrollReveal>
-        
-        {charts.length === 0 ? (
+
+        {items.length === 0 ? (
            <div className="text-center text-gray-400 py-10">
              No chart data available. Run the analysis notebook to generate insights.
            </div>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-             {charts.map((config, index) => (
+             {items.map((item, index) => (
                 <ScrollReveal
                   key={index}
                   direction={index % 2 === 0 ? "left" : "right"}
                   delay={index * 0.1}
-                  className={config.size === 'full' ? "lg:col-span-2" : ""}
+                  className={item.size === 'full' ? "lg:col-span-2" : ""}
                 >
-                   <UniversalChart config={config} />
+                   {item.type === 'table' ? (
+                     <DataTable
+                        title={item.title}
+                        data={item.data}
+                        columns={item.columns}
+                     />
+                   ) : item.type === 'text' ? (
+                     <GlassCard className="p-6">
+                        <h3 className="text-xl font-semibold text-white mb-2">{item.title}</h3>
+                        <div className="prose prose-invert prose-sm max-w-none prose-headings:text-white prose-p:text-white/80 prose-a:text-primary prose-strong:text-white prose-li:text-white/80">
+                          <ReactMarkdown>{item.description}</ReactMarkdown>
+                        </div>
+                     </GlassCard>
+                   ) : (
+                     <UniversalChart config={item} />
+                   )}
                 </ScrollReveal>
              ))}
           </div>

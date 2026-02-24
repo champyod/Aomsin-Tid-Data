@@ -75,3 +75,6 @@ htmlcov/
 
 # Jupyter Execution artifacts
 *.nbconvert.ipynb
+
+# Temporary files
+.tmp

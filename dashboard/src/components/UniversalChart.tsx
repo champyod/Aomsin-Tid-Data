@@ -144,15 +144,48 @@ const getSeriesColor = (variant: string | undefined, index: number): string => {
   }
 };
 
+/**
+ * Determine a per-chart palette (array of colors).
+ * - If a chart-level `variant` is provided, rotate the base palette to start with that color.
+ * - Otherwise pick a deterministic rotation based on the chart title so different charts get different schemes.
+ */
+const getChartPalette = (chartVariant?: string, title?: string): string[] => {
+  const base = CHART_COLORS;
+  const rotate = (arr: string[], offset: number) => arr.slice(offset).concat(arr.slice(0, offset));
+
+  if (chartVariant) {
+    if (chartVariant.startsWith('chart-')) {
+      const num = parseInt(chartVariant.replace('chart-', ''), 10);
+      const offset = (num - 1) % base.length;
+      return rotate(base, offset);
+    }
+    const named = NAMED_COLORS[chartVariant];
+    if (named) {
+      const idx = base.findIndex(c => c.toLowerCase() === named.toLowerCase());
+      return rotate(base, idx === -1 ? 0 : idx);
+    }
+    return base;
+  }
+
+  if (title) {
+    const hash = Array.from(title).reduce((acc, ch) => acc + ch.charCodeAt(0), 0);
+    const offset = hash % base.length;
+    return rotate(base, offset);
+  }
+
+  return base;
+};
+
 export const UniversalChart: React.FC<UniversalChartProps> = ({ config, className }) => {
   const { type, data, xAxis, yAxis, series, title, description } = config;
+  const chartPalette = getChartPalette(config.variant, title);
 
   const renderChart = () => {
     switch (type) {
       case 'bar':
         return (
           <BarChart data={data}>
-            <CartesianGrid strokeDasharray="3 3" stroke="rgba(245,194,231,0.15)" />
+            <CartesianGrid strokeDasharray="3 3" stroke="rgba(245,194,231,0.1)" />
             <XAxis
               dataKey={xAxis?.dataKey}
               stroke="var(--color-overlay-1)"
@@ -167,10 +200,13 @@ export const UniversalChart: React.FC<UniversalChartProps> = ({ config, classNam
               axisLine={false}
               unit={yAxis?.unit}
             />
-            <Tooltip content={<CustomTooltip />} />
+            <Tooltip
+              content={<CustomTooltip />}
+              cursor={{ fill: 'rgba(255, 255, 255, 0.05)' }}
+            />
             <Legend wrapperStyle={{ color: 'var(--color-text)' }} iconType="circle" />
             {series.map((s, i) => {
-              const color = getSeriesColor(s.variant, i);
+              const color = s.variant ? getSeriesColor(s.variant, i) : chartPalette[i % chartPalette.length];
               return (
                 <Bar
                   key={s.dataKey}
@@ -180,7 +216,12 @@ export const UniversalChart: React.FC<UniversalChartProps> = ({ config, classNam
                   fillOpacity={0.8}
                   radius={[4, 4, 0, 0]}
                   stackId={s.stackId}
-                  activeBar={{ fill: color, fillOpacity: 0.8, stroke: color, strokeWidth: 2 }}
+                  activeBar={{
+                    fillOpacity: 1,
+                    stroke: color,
+                    strokeWidth: 1,
+                    filter: 'brightness(1.1)'
+                  }}
                 />
               );
             })}
@@ -205,10 +246,13 @@ export const UniversalChart: React.FC<UniversalChartProps> = ({ config, classNam
               axisLine={false}
               unit={yAxis?.unit}
             />
-            <Tooltip content={<CustomTooltip />} />
+            <Tooltip
+              content={<CustomTooltip />}
+              cursor={{ fill: 'rgba(255, 255, 255, 0.05)' }}
+            />
             <Legend wrapperStyle={{ color: 'var(--color-text)' }} iconType="circle" />
             {series.map((s, i) => {
-              const color = getSeriesColor(s.variant, i);
+              const color = s.variant ? getSeriesColor(s.variant, i) : chartPalette[i % chartPalette.length];
               return (
                 <Line
                   key={s.dataKey}
@@ -232,8 +276,8 @@ export const UniversalChart: React.FC<UniversalChartProps> = ({ config, classNam
             <defs>
               {series.map((s, i) => (
                 <linearGradient key={s.dataKey} id={`color${s.dataKey}`} x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor={getSeriesColor(s.variant, i)} stopOpacity={0.8}/>
-                  <stop offset="95%" stopColor={getSeriesColor(s.variant, i)} stopOpacity={0}/>
+                  <stop offset="5%" stopColor={s.variant ? getSeriesColor(s.variant, i) : chartPalette[i % chartPalette.length]} stopOpacity={0.8}/>
+                  <stop offset="95%" stopColor={s.variant ? getSeriesColor(s.variant, i) : chartPalette[i % chartPalette.length]} stopOpacity={0}/>
                 </linearGradient>
               ))}
             </defs>
@@ -252,7 +296,10 @@ export const UniversalChart: React.FC<UniversalChartProps> = ({ config, classNam
               axisLine={false}
               unit={yAxis?.unit}
             />
-            <Tooltip content={<CustomTooltip />} />
+            <Tooltip
+              content={<CustomTooltip />}
+              cursor={{ fill: 'rgba(255, 255, 255, 0.05)' }}
+            />
             <Legend wrapperStyle={{ color: 'var(--color-text)' }} iconType="circle" />
             {series.map((s, i) => {
               const color = getSeriesColor(s.variant, i);
@@ -273,17 +320,20 @@ export const UniversalChart: React.FC<UniversalChartProps> = ({ config, classNam
             })}
           </AreaChart>
         );
-      
+
       case 'radar':
         return (
           <RadarChart cx="50%" cy="50%" outerRadius="80%" data={data}>
             <PolarGrid stroke="rgba(245,194,231,0.15)" />
             <PolarAngleAxis dataKey={xAxis?.dataKey} tick={{ fill: 'var(--color-overlay-1)', fontSize: 12 }} />
             <PolarRadiusAxis angle={30} domain={[0, 'auto']} tick={false} axisLine={false} />
-            <Tooltip content={<CustomTooltip />} />
+            <Tooltip
+              content={<CustomTooltip />}
+              cursor={{ fill: 'rgba(255, 255, 255, 0.05)' }}
+            />
             <Legend wrapperStyle={{ color: 'var(--color-text)' }} iconType="circle" />
             {series.map((s, i) => {
-              const color = getSeriesColor(s.variant, i);
+              const color = s.variant ? getSeriesColor(s.variant, i) : chartPalette[i % chartPalette.length];
               return (
                 <Radar
                   key={s.dataKey}
@@ -344,11 +394,14 @@ export const UniversalChart: React.FC<UniversalChartProps> = ({ config, classNam
                {data.map((entry, index) => (
                 <Cell
                   key={`cell-${index}`}
-                  fill={getSeriesColor(series[0]?.variant, index)}
+                  fill={series[0]?.variant ? getSeriesColor(series[0]?.variant, index) : chartPalette[index % chartPalette.length]}
                 />
               ))}
             </Pie>
-            <Tooltip content={<CustomTooltip />} />
+            <Tooltip
+              content={<CustomTooltip />}
+              cursor={{ fill: 'rgba(255, 255, 255, 0.05)' }}
+            />
             <Legend
               wrapperStyle={{ color: 'var(--color-text)' }}
               iconType="circle"
@@ -374,10 +427,13 @@ export const UniversalChart: React.FC<UniversalChartProps> = ({ config, classNam
               axisLine={false}
               unit={yAxis?.unit}
             />
-            <Tooltip content={<CustomTooltip />} />
+            <Tooltip
+              content={<CustomTooltip />}
+              cursor={{ fill: 'rgba(255, 255, 255, 0.05)' }}
+            />
             <Legend wrapperStyle={{ color: 'var(--color-text)' }} iconType="circle" />
             {series.map((s, i) => {
-              const color = getSeriesColor(s.variant, i);
+              const color = s.variant ? getSeriesColor(s.variant, i) : chartPalette[i % chartPalette.length];
               const commonProps = {
                 dataKey: s.dataKey,
                 name: s.name,

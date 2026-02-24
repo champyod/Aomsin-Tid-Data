@@ -139,6 +139,8 @@ def save_to(destination: Literal["cleaned"], filename: str) -> Path:
     Get the target absolute path for saving a file to the specified destination.
     Example: save_to("cleaned", "Cars_cleaned.csv")
     """
+    if destination == "raw":
+        raise ValueError("Modifying raw data is prohibited. You can only view it.")
     return _resolve_path(destination, filename)
 
 
@@ -146,40 +148,135 @@ def save_result(
     data: Any,
     filename: str,
     topic: Topic = "general",
-    visual_type: Optional[str] = None,
+    order: Optional[int] = None,
 ):
     """
     Saves published data/metrics/configs to the dashboard's data store (data/{topic}).
-    Automatically assigns an incremental order index for display ordering.
+    Automatically assigns an incremental order index for display ordering unless specified.
 
     Args:
         data (Any): The data to save (dict, list, or ChartConfig).
         filename (str): The output filename (e.g., 'analysis_summary').
         topic (Topic): The dashboard section ('analysis', 'modeling', etc.).
-        visual_type (str, optional): Metadata about visualization type (unused currently but kept for compat).
+        order (int, optional): Override the display order.
 
     Note: Always saves as TOML.
     """
+    if topic == "raw":
+        raise ValueError("Modifying raw data is prohibited. You can only view it.")
+
     # Ensure extension is .toml
     base_name = os.path.splitext(filename)[0]
     final_filename = f"{base_name}.toml"
 
     file_path = _resolve_path(topic, final_filename)
-    
+
     # Determine next order index by counting existing files in topic
     topic_dir = get_project_root() / "data" / topic
     existing_files = list(topic_dir.glob("*.toml")) if topic_dir.exists() else []
-    next_order = len(existing_files)
+
+    # If file already exists, we might want to keep its order if not specified
+    current_order = None
+    if file_path.exists() and order is None:
+        try:
+            with open(file_path, "r") as f:
+                existing_data = toml.load(f)
+                current_order = existing_data.get("order")
+        except:
+            pass
 
     # If data is a ChartConfig object, convert to dict
     if hasattr(data, "to_dict"):
         data = data.to_dict()
-    
-    # Add order if not present
-    if isinstance(data, dict) and "order" not in data:
-        data["order"] = next_order
+
+    # Add order
+    if isinstance(data, dict):
+        if order is not None:
+            data["order"] = order
+        elif current_order is not None:
+            data["order"] = current_order
+        elif "order" not in data:
+            data["order"] = len(existing_files)
 
     with open(file_path, "w", encoding="utf-8") as f:
         toml.dump(data, f)
 
     print(f"✅ [{topic.upper()}] Data saved to: {file_path}")
+
+
+def save_table(
+    df: Any,
+    title: str,
+    filename: str,
+    topic: Topic = "data",
+    description: str = "",
+    max_rows: int = 100,
+    size: Literal["full", "half"] = "full",
+    variant: str = "primary",
+    order: Optional[int] = None,
+):
+    """
+    Saves a sample of a DataFrame as a table for the dashboard.
+    Works with both Polars and Pandas DataFrames.
+
+    Args:
+        df: The DataFrame to sample and save.
+        title: Display title for the table.
+        filename: Output filename.
+        topic: Dashboard section.
+        description: Optional description text.
+        max_rows: Maximum number of rows to include in the sample.
+        size: Layout size ('full' or 'half').
+        variant: UI color variant.
+        order: Optional display order.
+    """
+    # Convert to list of dicts
+    if hasattr(df, "head"):
+        sample_df = df.head(max_rows)
+        if hasattr(sample_df, "to_dicts"):  # Polars
+            data = sample_df.to_dicts()
+        elif hasattr(sample_df, "to_dict"):  # Pandas
+            data = sample_df.to_dict(orient="records")
+        else:
+            data = list(sample_df)
+    else:
+        data = list(df)[:max_rows]
+
+    # Get column names/types if possible
+    columns = []
+    if hasattr(df, "columns"):
+        for col in df.columns:
+            columns.append({"header": col.replace("_", " ").title(), "accessorKey": col})
+
+    table_config = {
+        "type": "table",
+        "title": title,
+        "description": description,
+        "size": size,
+        "variant": variant,
+        "columns": columns,
+        "data": data,
+    }
+
+    save_result(table_config, filename, topic=topic, order=order)
+
+
+def schema_to_markdown(df: Any, title: str, total_records: int) -> str:
+    """
+    Generates a Markdown formatted table describing the schema of a DataFrame.
+    """
+    markdown = f"### {title}\n"
+    markdown += f"**Total Records:** {total_records:,}\n\n"
+    markdown += "| Column Name | Data Type | Description |\n"
+    markdown += "|---|---|---|\n"
+
+    # Handle Polars
+    if hasattr(df, "schema"):
+        for name, dtype in df.schema.items():
+            markdown += f"| `{name}` | `{dtype}` | - |\n"
+    # Handle Pandas
+    elif hasattr(df, "dtypes"):
+        for name, dtype in df.dtypes.items():
+            markdown += f"| `{name}` | `{dtype}` | - |\n"
+
+    return markdown
