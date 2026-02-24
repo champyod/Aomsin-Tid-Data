@@ -20,19 +20,16 @@ interface ModelData {
   training_samples: number;
   testing_samples: number;
   training_date: string;
-  hyperparameters: {
-    n_estimators: number;
-    max_depth: number;
-    learning_rate: number;
-    subsample: number;
-  };
+  hyperparameters?: Record<string, string | number | boolean | null>;
 }
 
 export default function ModelingPage() {
   const [data, setData] = useState<ModelData | null>(null);
   const [charts, setCharts] = useState<ChartConfig[]>([]);
   const [loading, setLoading] = useState(true);
-  const isEnsembleModel = data?.model_type === "VotingRegressor";
+  const hyperparameterEntries = Object.entries(data?.hyperparameters ?? {}).filter(
+    ([, value]) => value !== null && value !== undefined && value !== ""
+  );
 
   useEffect(() => {
     async function fetchData() {
@@ -167,31 +164,24 @@ export default function ModelingPage() {
             </div>
         )}
 
-        {/* Hyperparameters */}
         <ScrollGlassCard direction="up" delay={0.5} className="p-6" variant="hover">
-          <div className="flex items-center gap-3 mb-4">
-            <Settings className="w-5 h-5 text-primary" />
-            <h3 className="text-lg font-semibold text-white">Model Hyperparameters</h3>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="p-3 bg-white/5 rounded-lg">
-              <p className="text-xs text-gray-400">n_estimators</p>
-              <p className="text-lg font-mono text-white">{isEnsembleModel ? "N/A" : data?.hyperparameters?.n_estimators}</p>
-            </div>
-            <div className="p-3 bg-white/5 rounded-lg">
-              <p className="text-xs text-gray-400">max_depth</p>
-              <p className="text-lg font-mono text-white">{isEnsembleModel ? "N/A" : data?.hyperparameters?.max_depth}</p>
-            </div>
-            <div className="p-3 bg-white/5 rounded-lg">
-              <p className="text-xs text-gray-400">learning_rate</p>
-              <p className="text-lg font-mono text-white">{isEnsembleModel ? "N/A" : data?.hyperparameters?.learning_rate}</p>
-            </div>
-            <div className="p-3 bg-white/5 rounded-lg">
-              <p className="text-xs text-gray-400">subsample</p>
-              <p className="text-lg font-mono text-white">{isEnsembleModel ? "N/A" : data?.hyperparameters?.subsample}</p>
-            </div>
-          </div>
-          <div className="flex gap-4 mt-4 text-sm text-gray-400">
+          {hyperparameterEntries.length > 0 && (
+            <>
+              <div className="flex items-center gap-3 mb-4">
+                <Settings className="w-5 h-5 text-primary" />
+                <h3 className="text-lg font-semibold text-white">Model Hyperparameters</h3>
+              </div>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                {hyperparameterEntries.map(([key, value]) => (
+                  <div key={key} className="p-3 bg-white/5 rounded-lg">
+                    <p className="text-xs text-gray-400">{key}</p>
+                    <p className="text-lg font-mono text-white">{String(value)}</p>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+          <div className="flex gap-4 text-sm text-gray-400">
             <span>📊 Training: {data?.training_samples} samples</span>
             <span>🧪 Testing: {data?.testing_samples} samples</span>
           </div>
