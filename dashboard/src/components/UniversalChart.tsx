@@ -479,11 +479,11 @@ export const UniversalChart: React.FC<UniversalChartProps> = ({ config, classNam
 
       case 'scatter':
         return (
-          <ScatterChart data={data}>
+          <ScatterChart>
             <CartesianGrid strokeDasharray="3 3" stroke="rgba(245,194,231,0.15)" />
             <XAxis
               type="number"
-              dataKey={xAxis?.dataKey}
+              dataKey="x"
               stroke="var(--color-overlay-1)"
               fontSize={12}
               tickLine={false}
@@ -491,6 +491,7 @@ export const UniversalChart: React.FC<UniversalChartProps> = ({ config, classNam
             />
             <YAxis
               type="number"
+              dataKey="y"
               stroke="var(--color-overlay-1)"
               fontSize={12}
               tickLine={false}
@@ -504,10 +505,15 @@ export const UniversalChart: React.FC<UniversalChartProps> = ({ config, classNam
             <Legend wrapperStyle={{ color: 'var(--color-text)' }} iconType="circle" />
             {series.map((s, i) => {
               const color = s.variant ? getSeriesColor(s.variant, i) : chartPalette[i % chartPalette.length];
+              const scatterData = data.map((row) => ({
+                x: Number(row[xAxis?.dataKey || 'x']),
+                y: Number(row[s.dataKey]),
+              }));
+
               return (
                 <Scatter
                   key={s.dataKey}
-                  dataKey={s.dataKey}
+                  data={scatterData}
                   name={s.name}
                   fill={color}
                   fillOpacity={0.8}

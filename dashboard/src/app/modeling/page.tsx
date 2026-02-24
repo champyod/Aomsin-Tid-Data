@@ -32,6 +32,7 @@ export default function ModelingPage() {
   const [data, setData] = useState<ModelData | null>(null);
   const [charts, setCharts] = useState<ChartConfig[]>([]);
   const [loading, setLoading] = useState(true);
+  const isEnsembleModel = data?.model_type === "VotingRegressor";
 
   useEffect(() => {
     async function fetchData() {
@@ -175,19 +176,19 @@ export default function ModelingPage() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="p-3 bg-white/5 rounded-lg">
               <p className="text-xs text-gray-400">n_estimators</p>
-              <p className="text-lg font-mono text-white">{data?.hyperparameters?.n_estimators}</p>
+              <p className="text-lg font-mono text-white">{isEnsembleModel ? "N/A" : data?.hyperparameters?.n_estimators}</p>
             </div>
             <div className="p-3 bg-white/5 rounded-lg">
               <p className="text-xs text-gray-400">max_depth</p>
-              <p className="text-lg font-mono text-white">{data?.hyperparameters?.max_depth}</p>
+              <p className="text-lg font-mono text-white">{isEnsembleModel ? "N/A" : data?.hyperparameters?.max_depth}</p>
             </div>
             <div className="p-3 bg-white/5 rounded-lg">
               <p className="text-xs text-gray-400">learning_rate</p>
-              <p className="text-lg font-mono text-white">{data?.hyperparameters?.learning_rate}</p>
+              <p className="text-lg font-mono text-white">{isEnsembleModel ? "N/A" : data?.hyperparameters?.learning_rate}</p>
             </div>
             <div className="p-3 bg-white/5 rounded-lg">
               <p className="text-xs text-gray-400">subsample</p>
-              <p className="text-lg font-mono text-white">{data?.hyperparameters?.subsample}</p>
+              <p className="text-lg font-mono text-white">{isEnsembleModel ? "N/A" : data?.hyperparameters?.subsample}</p>
             </div>
           </div>
           <div className="flex gap-4 mt-4 text-sm text-gray-400">
