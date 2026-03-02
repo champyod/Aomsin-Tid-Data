@@ -141,7 +141,7 @@ export default function DataPage() {
                        )}
                        <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6">
                          {block.metrics.map((metric, idx) => (
-                           <StaggerItem key={idx} index={idx}>
+                           <StaggerItem key={idx}>
                              <StatCard
                                label={metric.label}
                                value={metric.value}
