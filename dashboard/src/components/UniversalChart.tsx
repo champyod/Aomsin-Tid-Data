@@ -394,8 +394,6 @@ export const UniversalChart: React.FC<UniversalChartProps> = ({ config, classNam
               dataKey={pieValueKey}
               nameKey={pieNameKey}
               fillOpacity={0.8}
-              activeIndex={undefined}
-              activeShape={false}
             >
                {data.map((entry, index) => (
                 <Cell
